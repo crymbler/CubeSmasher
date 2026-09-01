@@ -1,0 +1,34 @@
+name: PolzaAI Config
+version: 1.0.0
+schema: v1
+
+models:
+  # 1. Основная модель для чата
+  - name: Qwen 3 Coder Chat
+    provider: openai
+    # Проверь точное название на polza.ai. Qwen 3 еще нет, скорее всего это 2.5
+    model: qwen/qwen3-coder
+    apiKey: ak_3Y5umuSNCtdARZnGXeqFfzqj66w3p2ghURt_7UZcrkU
+    apiBase: https://api.polza.ai/api/v1
+    roles:
+      - chat
+      - edit
+      - apply
+    # Опционально: параметры генерации
+    defaultCompletionOptions:
+      temperature: 0.1
+      maxTokens: 2048
+
+  # 2. Модель для автодополнения (по Tab)
+  - name: mistralai/codestral
+    provider: openai
+    model: mistralai/codestral-2508
+    apiKey: ak_3Y5umuSNCtdARZnGXeqFfzqj66w3p2ghURt_7UZcrkU
+    apiBase: https://api.polza.ai/api/v1
+    roles:
+      - autocomplete
+    # Настройки автокомплита внутри объекта модели, как в доке
+    autocompleteOptions:
+      debounceDelay: 350
+      maxPromptTokens: 1024
+      onlyMyCode: true

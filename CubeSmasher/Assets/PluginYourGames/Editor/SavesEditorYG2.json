@@ -1,0 +1,134 @@
+{
+    "idSave": 164,
+    "bestScore": 3,
+    "isAdsRemoved": false,
+    "level": 2,
+    "balance": 3188.0,
+    "clickPerSecond": 0.0,
+    "tapPower": 1.0,
+    "soundVolume": 0.5519999861717224,
+    "musicVolume": 0.5519999861717224,
+    "passiveUpgrades": [
+        {
+            "id": "pas1",
+            "level": 0,
+            "price": 174.9006104958062,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "pas2",
+            "level": 0,
+            "price": 1379.9999713897705,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "pas3",
+            "level": 0,
+            "price": 17249.99964237213,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "pas4",
+            "level": 0,
+            "price": 229999.99523162849,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "pas5",
+            "level": 0,
+            "price": 2874999.940395355,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "pas6",
+            "level": 0,
+            "price": 35000000.0,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "pas7",
+            "level": 0,
+            "price": 500000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "pas8",
+            "level": 0,
+            "price": 8000000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "pas9",
+            "level": 0,
+            "price": 150000000000.0,
+            "value": 0.0,
+            "isLocked": true
+        }
+    ],
+    "tapUpgrades": [
+        {
+            "id": "tap1",
+            "level": 0,
+            "price": 66.12499725818637,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "tap2",
+            "level": 0,
+            "price": 574.999988079071,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "tap3",
+            "level": 0,
+            "price": 5749.99988079071,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "tap4",
+            "level": 0,
+            "price": 68999.99856948853,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "tap5",
+            "level": 0,
+            "price": 919999.9809265136,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "tap6",
+            "level": 0,
+            "price": 12000000.0,
+            "value": 0.0,
+            "isLocked": false
+        },
+        {
+            "id": "hammer_damage",
+            "level": 15,
+            "price": 3339.2032623291016,
+            "value": 128.39190673828126,
+            "isLocked": false
+        },
+        {
+            "id": "hammer_radius",
+            "level": 1,
+            "price": 100.0,
+            "value": 10.0,
+            "isLocked": true
+        }
+    ]
+}

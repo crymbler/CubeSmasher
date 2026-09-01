@@ -1,0 +1,3 @@
+﻿Build path: D:/Csharp and unity/Builds and Projects/Builds/Kvacker
+Build number: 7
+PluginYG version: 2.0092
