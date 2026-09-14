@@ -38,6 +38,7 @@ public class Bootstrapper : MonoBehaviour
     private TopHudPresenter _topHudPresenter;
     private StageModel _stageModel;
 
+    private int _activeBigParts = 0;
     private BagRandomizer _bagRandomizer;
     private Dictionary<CarPart, ObjectPool<CarPart>> _pools = new Dictionary<CarPart, ObjectPool<CarPart>>();
 
@@ -48,7 +49,7 @@ public class Bootstrapper : MonoBehaviour
         // 1. Инициализация систем разрушения
         _fractureCalculator = new FractureCalculator();
         _partPool = new ObjectPool<CarPart>(_carPartPrefab, _poolContainer, initialCapacity: _gameConfig.PoolCapacity);
-        _fractureSystem = new FractureSystem(GetPartFromPool, _fractureCalculator);
+        _fractureSystem = new FractureSystem(GetPartFromPool, _fractureCalculator, _gameConfig);
         _decaySystem = new DecaySystem();
 
         _gamePause = new GamePause();
@@ -121,8 +122,9 @@ public class Bootstrapper : MonoBehaviour
     {
         _decaySystem?.Tick();
 
-        // Спавним новые детали, только если на сцене вообще не осталось активных осколков
-        if (GetTotalActiveParts() == 0)
+        // Спавним новую машину, как только кончились крупные детали. 
+        // Не ждем, пока игрок добьет мелочь!
+        if (_activeBigParts <= 0)
         {
             SpawnNewStagePart(_stageModel.CurrentStage);
         }
@@ -177,39 +179,47 @@ public class Bootstrapper : MonoBehaviour
     {
         for (int i = 0; i < _gameConfig.StartPartsPerWave; i++)
         {
-            // 1. Берем случайный префаб из мешка
             int randomPrefabIndex = _bagRandomizer != null ? _bagRandomizer.GetNext() : 0;
             CarPart prefabToSpawn = _gameConfig.PartPrefabs[randomPrefabIndex];
 
-            // 2. Достаем его из правильного пула
             CarPart initialPart = GetPartFromPool(prefabToSpawn);
 
-            // 3. Расставляем
             float randomX = UnityEngine.Random.Range(-_gameConfig.SpawnRadius, _gameConfig.SpawnRadius);
             float randomZ = UnityEngine.Random.Range(-_gameConfig.SpawnRadius, _gameConfig.SpawnRadius);
             initialPart.transform.position = new Vector3(randomX, 10f, randomZ);
-            initialPart.transform.localScale = Vector3.one * 2f;
+            initialPart.transform.localScale = Vector3.one * _gameConfig.InitialPartScale;
 
             float hp = _fractureCalculator.CalculateHP(generation: 0, stageLevel);
             initialPart.Setup(generation: 0, maxHp: hp);
             initialPart.OnDestroyed += HandlePartDestroyed;
+
+            // Регистрируем появление крупной детали
+            _activeBigParts++;
         }
     }
 
     private void HandlePartDestroyed(CarPart destroyedPart)
     {
-        // 1. Отписываемся от события, чтобы избежать повторных вызовов и утечек памяти
         destroyedPart.OnDestroyed -= HandlePartDestroyed;
 
-        // 2. Вызываем систему деления кубов с тремя параметрами:
-        //    - destroyedPart (разрушенная деталь)
-        //    - _stageModel.CurrentStage (текущий уровень для расчета ХП)
-        //    - HandlePartDestroyed (коллбек для новых осколков)
-        _fractureSystem.ProcessFracture(destroyedPart, _stageModel.CurrentStage, HandlePartDestroyed);
+        // Если уничтожена крупная деталь, вычитаем её из счетчика
+        if (destroyedPart.Generation < _gameConfig.MaxGenerations)
+        {
+            _activeBigParts--;
+        }
 
-        // 3. Начисляем монеты и двигаем прогресс сборки,
-        //    если это самый мелкий кубик (Gen 2) ИЛИ если деталь окончательно разрушилась без деления
-        if (destroyedPart.Generation == 2 || !_fractureCalculator.TrySplit(destroyedPart.Generation, 0.85f))
+        // Пытаемся раздробить и узнаем, сколько вылетело новых кусков
+        int newFragmentsCount = _fractureSystem.ProcessFracture(destroyedPart, _stageModel.CurrentStage, HandlePartDestroyed);
+
+        // Если вылетевшие куски всё еще крупные (не финальная мелочь) — добавляем их в счетчик
+        int nextGeneration = destroyedPart.Generation + 1;
+        if (nextGeneration < _gameConfig.MaxGenerations && newFragmentsCount > 0)
+        {
+            _activeBigParts += newFragmentsCount;
+        }
+
+        // Даем деньги, если деталь была финальной (самой мелкой) ИЛИ просто не захотела делиться
+        if (destroyedPart.Generation >= _gameConfig.MaxGenerations || newFragmentsCount == 0)
         {
             _wallet.AddMoney(_gameConfig.BasePartReward);
             _stageModel.AddProgress(1);

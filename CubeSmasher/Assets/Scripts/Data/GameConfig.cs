@@ -25,6 +25,17 @@ public class GameConfig : ScriptableObject
     public float MaxCritChance = 0.35f; // Лимит 35%
     public float CritMultiplier = 5f; // Урон х5
 
+    [Header("Настройки разрушения (Размеры и Шансы)")]
+    [Tooltip("Стартовый размер деталей при падении сверху (Gen 0)")]
+    public float InitialPartScale = 1f;
+
+    [Tooltip("Базовый шанс деления детали на осколки (от 0 до 1)")]
+    [Range(0f, 1f)]
+    public float BaseSplitChance = 0.85f;
+
+    [Tooltip("Насколько меньше становятся осколки при взрыве (0.5 = в 2 раза)")]
+    public float SplitScaleMultiplier = 0.5f;
+
     [Header("Экономика деталей (Стадии)")]
     public float BasePartHP = 20f;
     public float PartHPMultiplier = 1.45f;
@@ -40,6 +51,9 @@ public class GameConfig : ScriptableObject
 
     [Tooltip("Сколько больших деталей (Gen 0) падает за один раз")]
     public int StartPartsPerWave = 1;
+
+    [Tooltip("Максимальное количество делений (2 = 3 стадии, 3 = 4 стадии)")]
+    public int MaxGenerations = 3;
 
     // --- МЕТОДЫ РАСЧЕТА (Используют формулы из GDD) ---
 

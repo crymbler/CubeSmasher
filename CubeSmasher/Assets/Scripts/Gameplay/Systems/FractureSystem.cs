@@ -6,20 +6,25 @@ public class FractureSystem
 {
     private readonly Func<CarPart, CarPart> _getPartMethod;
     private readonly FractureCalculator _calculator;
+    private readonly GameConfig _config; // <-- Добавили конфиг
 
     private float _explosionForce = 300f;
     private float _explosionRadius = 2f;
 
-    public FractureSystem(Func<CarPart, CarPart> getPartMethod, FractureCalculator calculator)
+    // Конструктор теперь принимает GameConfig
+    public FractureSystem(Func<CarPart, CarPart> getPartMethod, FractureCalculator calculator, GameConfig config)
     {
         _getPartMethod = getPartMethod;
         _calculator = calculator;
+        _config = config;
     }
 
-    public void ProcessFracture(CarPart destroyedPart, int currentStage, Action<CarPart> onPartDestroyedCallback)
+    // БЫЛО: public void ProcessFracture(...)
+    // СТАЛО:
+    public int ProcessFracture(CarPart destroyedPart, int currentStage, Action<CarPart> onPartDestroyedCallback)
     {
-        float baseSplitChance = 0.85f;
-        if (!_calculator.TrySplit(destroyedPart.Generation, baseSplitChance)) return;
+        if (!_calculator.TrySplit(destroyedPart.Generation, _config.BaseSplitChance))
+            return 0; // Возвращаем 0, если деталь не разделилась
 
         int fragmentsCount = Random.Range(2, 5);
         int nextGeneration = destroyedPart.Generation + 1;
@@ -27,10 +32,9 @@ public class FractureSystem
 
         for (int i = 0; i < fragmentsCount; i++)
         {
-            // Запрашиваем из пула клон той же самой детали
             CarPart fragment = _getPartMethod(destroyedPart.SourcePrefab);
+            fragment.transform.localScale = destroyedPart.transform.localScale * _config.SplitScaleMultiplier;
 
-            fragment.transform.localScale = destroyedPart.transform.localScale * 0.5f;
             Vector3 randomOffset = Random.insideUnitSphere * 0.2f;
             fragment.transform.position = destroyedPart.transform.position + randomOffset;
 
@@ -42,5 +46,7 @@ public class FractureSystem
                 rb.AddExplosionForce(_explosionForce, destroyedPart.transform.position, _explosionRadius);
             }
         }
+
+        return fragmentsCount; // Возвращаем количество созданных осколков
     }
 }

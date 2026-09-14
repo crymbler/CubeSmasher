@@ -340,7 +340,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 20, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -359,7 +359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameConfig: {fileID: 11400000, guid: 9b03c80788ebbd04fbc628833cb451a7, type: 2}
   _hammerCaster: {fileID: 243728791}
-  _carPartPrefab: {fileID: 1482632821502565030, guid: 4884536b7a1b9d0489d6310d3e20c6c0, type: 3}
+  _carPartPrefab: {fileID: 647332116769642720, guid: 690610e33d6d65a44bde61f78517bfd2, type: 3}
   _poolContainer: {fileID: 2121819275}
   _topHudView: {fileID: 1644052854}
   _shopView: {fileID: 825908066}

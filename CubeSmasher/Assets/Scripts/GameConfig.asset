@@ -40,10 +40,13 @@ MonoBehaviour:
   CritChanceStep: 0.01
   MaxCritChance: 0.35
   CritMultiplier: 5
+  InitialPartScale: 0.7
+  BaseSplitChance: 0.85
+  SplitScaleMultiplier: 0.5
   BasePartHP: 20
   PartHPMultiplier: 1.45
   BasePartReward: 5
   PartRewardMultiplier: 1.25
   SpawnRadius: 4
   PoolCapacity: 250
-  StartPartsPerWave: 1
+  StartPartsPerWave: 2
