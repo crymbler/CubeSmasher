@@ -24,6 +24,9 @@ public class ShopModel
     {
         bool isDataChanged = false;
 
+        // Получаем текущую стадию игрока (если 0, считаем как 1)
+        int currentStage = YG2.saves.level < 1 ? 1 : YG2.saves.level;
+
         foreach (var config in _availableUpgrades)
         {
             // Выбираем нужный список на основе категории (Tap или Passive)
@@ -41,7 +44,8 @@ public class ShopModel
                 {
                     id = config.Id,
                     level = 1,
-                    isLocked = config.IsLockedByDefault
+                    // Теперь проверяем блокировку по текущей стадии игрока
+                    isLocked = currentStage < config.UnlockStageLevel
                 };
 
                 // Считаем стартовые значения по формулам из конфига
@@ -59,6 +63,7 @@ public class ShopModel
         //    YG2.SaveProgress();
         //}
     }
+
 
     // Метод для получения текущих данных апгрейда (используем в UI и для получения Урона/Радиуса)
     public UpgradeData GetUpgradeData(string id)

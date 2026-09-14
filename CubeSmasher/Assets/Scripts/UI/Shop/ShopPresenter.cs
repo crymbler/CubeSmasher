@@ -6,22 +6,27 @@ public class ShopPresenter : IDisposable
     private readonly ShopModel _model;
     private readonly ShopView _view;
     private readonly Wallet _wallet;
+    private readonly StageModel _stageModel;
     private readonly List<UpgradeConfig> _configs;
 
-    public ShopPresenter(ShopModel model, ShopView view, Wallet wallet, List<UpgradeConfig> configs)
+    public ShopPresenter(ShopModel model, ShopView view, Wallet wallet, List<UpgradeConfig> configs, StageModel stageModel)
     {
-        if (model == null || view == null || wallet == null || configs == null) return;
-
         _model = model;
         _view = view;
         _wallet = wallet;
         _configs = configs;
+        _stageModel = stageModel;
 
-        // Подписываемся на изменения
         _model.OnUpgradeChanged += UpdateSingleItemUI;
         _wallet.OnBalanceChanged += CheckAffordability;
+        _stageModel.OnStageCompleted += HandleStageCompleted; // Обновляем магазин при переходе на новую машину
 
         InitializeUI();
+    }
+
+    private void HandleStageCompleted(int newStage)
+    {
+        CheckAffordability(0); // Форсируем перерисовку всех кнопок
     }
 
     // Создаем кнопки при старте
@@ -47,15 +52,19 @@ public class ShopPresenter : IDisposable
     {
         var data = _model.GetUpgradeData(id);
         var config = _model.GetConfig(id);
-
         if (data == null || config == null) return;
 
         UpgradeItemView itemView = _view.GetOrCreateItem(id);
 
         bool isMaxLevel = data.level >= config.MaxLevel;
-        bool canAfford = !isMaxLevel && _wallet.Balance >= data.price;
 
-        itemView.UpdateData(config.Icon, config.UpgradeName, data.level, data.price, canAfford, isMaxLevel);
+        // Проверяем, дорос ли игрок до нужной стадии
+        bool isLocked = _stageModel.CurrentStage < config.UnlockStageLevel;
+
+        bool canAfford = !isMaxLevel && !isLocked && _wallet.Balance >= data.price;
+
+        // Передаем новые данные в кнопку
+        itemView.UpdateData(config.Icon, config.UpgradeName, data.level, data.price, canAfford, isMaxLevel, isLocked, config.UnlockStageLevel);
     }
 
     // Обновляем доступность кнопок, когда меняется баланс монет
@@ -72,5 +81,6 @@ public class ShopPresenter : IDisposable
     {
         _model.OnUpgradeChanged -= UpdateSingleItemUI;
         _wallet.OnBalanceChanged -= CheckAffordability;
+        _stageModel.OnStageCompleted -= HandleStageCompleted;
     }
 }

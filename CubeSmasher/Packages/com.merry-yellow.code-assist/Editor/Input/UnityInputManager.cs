@@ -98,7 +98,8 @@ namespace Meryel.UnityCodeAssist.Editor.Input
 
             //var reader = new StreamReader(yamlPath);
             var deserializer = new YamlDotNet.Serialization.DeserializerBuilder()
-                .WithTagMapping("tag:unity3d.com,2011:13", typeof(Class13Mapper))
+                //.WithTagMapping("tag:unity3d.com,2011:13", typeof(Class13Mapper))
+                .WithNodeTypeResolver(new Tag13Resolver()) // some users have "tag:yousandi.cn,2023:13" instead, so use a more generic approach
                 .IgnoreUnmatchedProperties()
                 .Build();
             //serializer.Settings.RegisterTagMapping("tag:unity3d.com,2011:13", typeof(Class13));
@@ -115,6 +116,11 @@ namespace Meryel.UnityCodeAssist.Editor.Input
                     Serilog.Log.Error(semanticErrorException, "Couldn't parse InputManager.asset yaml file unexpectedly");
 
                 hasSemanticError = true;
+                return;
+            }
+            catch (YamlDotNet.Core.YamlException yamlEx)
+            {
+                Serilog.Log.Warning(yamlEx, "Couldn't parse InputManager.asset yaml file 2");
                 return;
             }
             finally
@@ -151,7 +157,7 @@ namespace Meryel.UnityCodeAssist.Editor.Input
             catch (InvalidOperationException)
             {
                 // Occurs if user have switched active Input handling to Input System package in Player Settings.
-                joystickNames = new string[0];
+                joystickNames = Array.Empty<string>();
             }
 
             MQTTnetInitializer.Publisher?.SendInputManager(axisNames, axisInfos, buttonKeys, buttonAxis, joystickNames);
@@ -240,7 +246,7 @@ namespace Meryel.UnityCodeAssist.Editor.Input
         /// <returns></returns>
         public static string GetMD5Hash(string filePath)
         {
-            using var md5 = new MD5CryptoServiceProvider();
+            using var md5 = MD5.Create();
             return GetHash(filePath, md5);
         }
 
@@ -335,9 +341,14 @@ namespace Meryel.UnityCodeAssist.Editor.Input
         public string? altNegativeButton => map.altNegativeButton;
         public string? altPositiveButton => map.altPositiveButton;
 
-        public float gravity => float.Parse(map.gravity);//**--format
-        public float dead => float.Parse(map.dead);//**--format
-        public float sensitivity => float.Parse(map.sensitivity);//**--format
+
+        public float gravity => float.TryParse(map.gravity,
+            System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0f;
+        public float dead => float.TryParse(map.dead,
+            System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0f;
+        public float sensitivity => float.TryParse(map.sensitivity,
+            System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0f;
+
 
         public bool snap => map.snap != 0;
         public bool invert => map.invert != 0;
@@ -407,5 +418,22 @@ namespace Meryel.UnityCodeAssist.Editor.Input
     public class Class13Mapper
     {
         public InputManagerMapper? InputManager { get; set; }
+    }
+
+    public class Tag13Resolver : YamlDotNet.Serialization.INodeTypeResolver
+    {
+        public bool Resolve(YamlDotNet.Core.Events.NodeEvent? nodeEvent, ref Type currentType)
+        {
+            if (nodeEvent != null && !nodeEvent.Tag.IsEmpty && !nodeEvent.Tag.IsNonSpecific)
+            {
+                var tagValue = nodeEvent.Tag.Value;
+                if (tagValue.EndsWith(":13"))
+                {
+                    currentType = typeof(Class13Mapper);
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

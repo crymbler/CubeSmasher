@@ -12,6 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb6341fad5e7e6488686c2e367fda3e, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
+  PartPrefabs:
+  - {fileID: 647332116769642720, guid: 690610e33d6d65a44bde61f78517bfd2, type: 3}
+  - {fileID: 3749039155405282613, guid: a066670c0eced6149a2bb7bcf4b16ba7, type: 3}
+  - {fileID: 4919010331580243469, guid: 6b0132c92e86cd14cb3fa30209d6b3ee, type: 3}
+  - {fileID: 4671144210264404130, guid: b899ae5aadc649e42bad882e93bdc754, type: 3}
+  - {fileID: 2258121369140293428, guid: b95bbd74b8be4414e8944291544383bd, type: 3}
+  - {fileID: 991725699277314837, guid: 102916a7acc0dee489a58d28a3e16011, type: 3}
+  - {fileID: 4919831509923311068, guid: 98332c97f9cbeda4d8c241ab1b7e5782, type: 3}
+  - {fileID: 3435264453124604954, guid: 15f7ecfc6f7bc2b4b9bb434fc95239e0, type: 3}
+  - {fileID: 3802726159482782970, guid: 834c31f4734149643a2682c446500588, type: 3}
+  - {fileID: 507518475336257251, guid: 02726f3d61a89bb4292c644613ea9ac0, type: 3}
+  - {fileID: 8881278752067567896, guid: 1f74198592526f74ab1f735538433420, type: 3}
+  - {fileID: 8411122839606891928, guid: 68a9d1a785f9477408b251a5f4b4a375, type: 3}
+  - {fileID: 57269785867563620, guid: 1de432767f4b633449afd50947a7c775, type: 3}
+  - {fileID: 6309054319991202048, guid: 808859f0db8aa1242a66c66b90f6bef9, type: 3}
+  - {fileID: 3289245971641299442, guid: cbbbc373236affa48a534a67555768ae, type: 3}
   BaseDamage: 10
   DamageMultiplier: 1.2
   BaseDamageCost: 50
@@ -30,4 +46,4 @@ MonoBehaviour:
   PartRewardMultiplier: 1.25
   SpawnRadius: 4
   PoolCapacity: 250
-  StartPartsPerWave: 2
+  StartPartsPerWave: 1

@@ -16,7 +16,10 @@ public class UpgradeConfig : ScriptableObject
 
     [Header("Лимиты")]
     public int MaxLevel = 50;
-    public bool IsLockedByDefault = false;
+
+    [Header("Разблокировка")]
+    [Tooltip("На какой стадии сборки машины откроется это улучшение")]
+    public int UnlockStageLevel = 1;
 
     [Header("Формула Цены (Экспонента)")]
     public double BasePrice = 50;

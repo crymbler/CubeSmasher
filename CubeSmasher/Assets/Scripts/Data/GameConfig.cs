@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameConfig", menuName = "Tycoon/Game Config")]
 public class GameConfig : ScriptableObject
 {
+    [Header("Визуал деталей")]
+    [Tooltip("Перетащи сюда все модели (Mesh)")]
+    public CarPart[] PartPrefabs;
+
     [Header("Молот: Урон")]
     public float BaseDamage = 10f;
     public float DamageMultiplier = 1.20f; // Урон растет на 20%

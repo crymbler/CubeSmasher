@@ -4,43 +4,31 @@ using Random = UnityEngine.Random;
 
 public class FractureSystem
 {
-    private readonly ObjectPool<CarPart> _pool;
+    private readonly Func<CarPart, CarPart> _getPartMethod;
     private readonly FractureCalculator _calculator;
 
-    private readonly float _explosionForce = 400f;
-    private readonly float _explosionRadius = 2.5f;
+    private float _explosionForce = 300f;
+    private float _explosionRadius = 2f;
 
-    public FractureSystem(ObjectPool<CarPart> pool, FractureCalculator calculator)
+    public FractureSystem(Func<CarPart, CarPart> getPartMethod, FractureCalculator calculator)
     {
-        if (pool == null) Debug.LogError("[FractureSystem] Pool is null!");
-        if (calculator == null) Debug.LogError("[FractureSystem] Calculator is null!");
-
-        _pool = pool;
+        _getPartMethod = getPartMethod;
         _calculator = calculator;
     }
 
-    // Добавили int currentStage в параметры
     public void ProcessFracture(CarPart destroyedPart, int currentStage, Action<CarPart> onPartDestroyedCallback)
     {
-        if (destroyedPart == null) return;
-        if (onPartDestroyedCallback == null) return;
-
-        // Увеличенный лимит для создания хаоса
-        if (_pool.ActiveCount >= 250) return;
-
-        // Рассчитываем шанс деления
         float baseSplitChance = 0.85f;
         if (!_calculator.TrySplit(destroyedPart.Generation, baseSplitChance)) return;
 
         int fragmentsCount = Random.Range(2, 5);
-
-        // ИСПРАВЛЕНИЕ ТУТ: Передаем новое поколение и текущую стадию
         int nextGeneration = destroyedPart.Generation + 1;
         float newHp = _calculator.CalculateHP(nextGeneration, currentStage);
 
         for (int i = 0; i < fragmentsCount; i++)
         {
-            CarPart fragment = _pool.Get();
+            // Запрашиваем из пула клон той же самой детали
+            CarPart fragment = _getPartMethod(destroyedPart.SourcePrefab);
 
             fragment.transform.localScale = destroyedPart.transform.localScale * 0.5f;
             Vector3 randomOffset = Random.insideUnitSphere * 0.2f;

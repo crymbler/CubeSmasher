@@ -38,6 +38,9 @@ public class Bootstrapper : MonoBehaviour
     private TopHudPresenter _topHudPresenter;
     private StageModel _stageModel;
 
+    private BagRandomizer _bagRandomizer;
+    private Dictionary<CarPart, ObjectPool<CarPart>> _pools = new Dictionary<CarPart, ObjectPool<CarPart>>();
+
     private void Awake()
     {
         if (_gameConfig == null) Debug.LogError("Не назначен GameConfig в Bootstrapper!");
@@ -45,7 +48,7 @@ public class Bootstrapper : MonoBehaviour
         // 1. Инициализация систем разрушения
         _fractureCalculator = new FractureCalculator();
         _partPool = new ObjectPool<CarPart>(_carPartPrefab, _poolContainer, initialCapacity: _gameConfig.PoolCapacity);
-        _fractureSystem = new FractureSystem(_partPool, _fractureCalculator);
+        _fractureSystem = new FractureSystem(GetPartFromPool, _fractureCalculator);
         _decaySystem = new DecaySystem();
 
         _gamePause = new GamePause();
@@ -56,6 +59,11 @@ public class Bootstrapper : MonoBehaviour
 
         // На старте жестко закрываем магазин
         _shopView.Close();
+
+        if (_gameConfig.PartPrefabs != null && _gameConfig.PartPrefabs.Length > 0)
+        {
+            _bagRandomizer = new BagRandomizer(_gameConfig.PartPrefabs.Length);
+        }
 
         // 2. Инициализация Экономики и Прогрессии
         _wallet = new Wallet(initialBalance: YG2.saves.balance);
@@ -76,7 +84,7 @@ public class Bootstrapper : MonoBehaviour
         _topHudPresenter = new TopHudPresenter(_wallet, _topHudView);
 
         // Создаем презентер магазина, связывая UI с логикой
-        _shopPresenter = new ShopPresenter(_shopModel, _shopView, _wallet, _upgradeConfigs);
+        _shopPresenter = new ShopPresenter(_shopModel, _shopView, _wallet, _upgradeConfigs, _stageModel);
 
         _shopModel.OnUpgradeChanged += HandleUpgradePurchased;
 
@@ -111,14 +119,35 @@ public class Bootstrapper : MonoBehaviour
 
     private void Update()
     {
-        _decaySystem.Tick();
+        _decaySystem?.Tick();
 
-        // Если пуст, значит игрок всё разбил, но уровень еще не пройден
-        // Спавним новую деталь текущей стадии, чтобы ему было что ломать
-        if (_partPool.ActiveCount == 0)
+        // Спавним новые детали, только если на сцене вообще не осталось активных осколков
+        if (GetTotalActiveParts() == 0)
         {
             SpawnNewStagePart(_stageModel.CurrentStage);
         }
+    }
+
+    public CarPart GetPartFromPool(CarPart prefab)
+    {
+        if (!_pools.ContainsKey(prefab))
+        {
+            _pools[prefab] = new ObjectPool<CarPart>(prefab, _poolContainer, initialCapacity: 20);
+        }
+
+        CarPart part = _pools[prefab].Get();
+        part.SourcePrefab = prefab;
+        return part;
+    }
+
+    private int GetTotalActiveParts()
+    {
+        int total = 0;
+        foreach (var pool in _pools.Values)
+        {
+            total += pool.ActiveCount;
+        }
+        return total;
     }
 
     private void HandleUpgradePurchased(string upgradeId)
@@ -146,21 +175,23 @@ public class Bootstrapper : MonoBehaviour
 
     private void SpawnNewStagePart(int stageLevel)
     {
-        // Цикл спавнит столько больших деталей, сколько указано в конфиге
         for (int i = 0; i < _gameConfig.StartPartsPerWave; i++)
         {
-            CarPart initialPart = _partPool.Get();
+            // 1. Берем случайный префаб из мешка
+            int randomPrefabIndex = _bagRandomizer != null ? _bagRandomizer.GetNext() : 0;
+            CarPart prefabToSpawn = _gameConfig.PartPrefabs[randomPrefabIndex];
 
-            // Берем радиус из GameConfig
+            // 2. Достаем его из правильного пула
+            CarPart initialPart = GetPartFromPool(prefabToSpawn);
+
+            // 3. Расставляем
             float randomX = UnityEngine.Random.Range(-_gameConfig.SpawnRadius, _gameConfig.SpawnRadius);
             float randomZ = UnityEngine.Random.Range(-_gameConfig.SpawnRadius, _gameConfig.SpawnRadius);
-
             initialPart.transform.position = new Vector3(randomX, 10f, randomZ);
             initialPart.transform.localScale = Vector3.one * 2f;
 
             float hp = _fractureCalculator.CalculateHP(generation: 0, stageLevel);
             initialPart.Setup(generation: 0, maxHp: hp);
-
             initialPart.OnDestroyed += HandlePartDestroyed;
         }
     }

@@ -1,23 +1,30 @@
-using System;
+ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(ColorChanger))]
 public class CarPart : MonoBehaviour, IDestructible, IPoolable
 {
     private Action<IPoolable> _returnToPool;
-    private Rigidbody _rb;
+    private Rigidbody _rigidbody;
     private ColorChanger _colorChanger;
     private float _currentHp;
     private int _generation;
+    private MeshFilter _meshFilter;
+    private BoxCollider _boxCollider;
 
     // Событие смерти. На него подпишется система раскола и экономика
     public event Action<CarPart> OnDestroyed;
+
+    // Чтобы осколки знали, какой префаб копировать при взрыве
+    public CarPart SourcePrefab { get; set; }
 
     public int Generation => _generation;
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        _meshFilter = GetComponent<MeshFilter>();
+        _boxCollider = GetComponent<BoxCollider>();
+        _rigidbody = GetComponent<Rigidbody>();
         _colorChanger = GetComponent<ColorChanger>();
     }
 
@@ -32,11 +39,13 @@ public class CarPart : MonoBehaviour, IDestructible, IPoolable
         _currentHp = 0f;
         _generation = 0;
         transform.localScale = Vector3.one;
-        _rb.velocity = Vector3.zero;
-        _rb.angularVelocity = Vector3.zero;
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
 
         _colorChanger.ApplyAcidColor();
     }
+
+    public Mesh CurrentMesh => _meshFilter.mesh;
 
     public void ReturnToPool()
     {

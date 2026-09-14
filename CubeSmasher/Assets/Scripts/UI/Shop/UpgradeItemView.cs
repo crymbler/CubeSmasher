@@ -26,13 +26,20 @@ public class UpgradeItemView : MonoBehaviour
         _buyButton.onClick.AddListener(() => OnBuyClicked?.Invoke(_id));
     }
 
-    public void UpdateData(Sprite icon, string name, int level, double price, bool canAfford, bool isMaxLevel)
+    // Добавили два параметра в конец: isLocked и unlockStage
+    public void UpdateData(Sprite icon, string name, int level, double price, bool canAfford, bool isMaxLevel, bool isLocked, int unlockStage)
     {
         if (_iconImage != null) _iconImage.sprite = icon;
         if (_nameText != null) _nameText.text = name;
         if (_levelText != null) _levelText.text = "Ур. " + level;
 
-        if (isMaxLevel)
+        if (isLocked)
+        {
+            _priceText.text = $"Сцена {unlockStage}"; // Пишем условие разблокировки
+            _buttonBackground.color = _expensiveColor;
+            _buyButton.interactable = false;
+        }
+        else if (isMaxLevel)
         {
             _priceText.text = "МАКС";
             _buttonBackground.color = _expensiveColor;
@@ -40,7 +47,7 @@ public class UpgradeItemView : MonoBehaviour
         }
         else
         {
-            _priceText.text = price.ToString("N0"); // N0 разделяет тысячи пробелами
+            _priceText.text = price.ToString("N0");
             _buttonBackground.color = canAfford ? _affordableColor : _expensiveColor;
             _buyButton.interactable = canAfford;
         }

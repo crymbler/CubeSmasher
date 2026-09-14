@@ -1,8 +1,8 @@
 {
-    "idSave": 164,
+    "idSave": 167,
     "bestScore": 3,
     "isAdsRemoved": false,
-    "level": 2,
+    "level": 4,
     "balance": 3188.0,
     "clickPerSecond": 0.0,
     "tapPower": 1.0,
@@ -118,9 +118,9 @@
         },
         {
             "id": "hammer_damage",
-            "level": 15,
-            "price": 3339.2032623291016,
-            "value": 128.39190673828126,
+            "level": 16,
+            "price": 4507.924652099609,
+            "value": 154.0703125,
             "isLocked": false
         },
         {
