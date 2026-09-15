@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,7 +39,7 @@ public class Bootstrapper : MonoBehaviour
     private TopHudPresenter _topHudPresenter;
     private StageModel _stageModel;
 
-    private int _activeBigParts = 0;
+    private int _currentRootParts = 0;
     private BagRandomizer _bagRandomizer;
     private Dictionary<CarPart, ObjectPool<CarPart>> _pools = new Dictionary<CarPart, ObjectPool<CarPart>>();
 
@@ -111,23 +112,18 @@ public class Bootstrapper : MonoBehaviour
 
     private void Start()
     {
-        // Принудительно обновляем UI на старте
         _stageModel.ForceUpdateUI();
 
-        // Запуск спавна первой машины
-        SpawnNewStagePart(_stageModel.CurrentStage);
+        // Запускаем стартовый спавн из конфига (например, 2 штуки)
+        for (int i = 0; i < _gameConfig.StartPartsPerWave; i++)
+        {
+            SpawnRootPart();
+        }
     }
 
     private void Update()
     {
         _decaySystem?.Tick();
-
-        // Спавним новую машину, как только кончились крупные детали. 
-        // Не ждем, пока игрок добьет мелочь!
-        if (_activeBigParts <= 0)
-        {
-            SpawnNewStagePart(_stageModel.CurrentStage);
-        }
     }
 
     public CarPart GetPartFromPool(CarPart prefab)
@@ -170,55 +166,43 @@ public class Bootstrapper : MonoBehaviour
         // 1. Сохраняем достигнутый уровень в облако
         YG2.saves.level = newStageLevel;
         YG2.SaveProgress();
-
-        // 2. Спавним детали для новой машины
-        SpawnNewStagePart(newStageLevel);
     }
 
-    private void SpawnNewStagePart(int stageLevel)
+    private void SpawnRootPart()
     {
-        for (int i = 0; i < _gameConfig.StartPartsPerWave; i++)
-        {
-            int randomPrefabIndex = _bagRandomizer != null ? _bagRandomizer.GetNext() : 0;
-            CarPart prefabToSpawn = _gameConfig.PartPrefabs[randomPrefabIndex];
+        int randomPrefabIndex = _bagRandomizer != null ? _bagRandomizer.GetNext() : 0;
+        CarPart prefabToSpawn = _gameConfig.PartPrefabs[randomPrefabIndex];
 
-            CarPart initialPart = GetPartFromPool(prefabToSpawn);
+        CarPart initialPart = GetPartFromPool(prefabToSpawn);
 
-            float randomX = UnityEngine.Random.Range(-_gameConfig.SpawnRadius, _gameConfig.SpawnRadius);
-            float randomZ = UnityEngine.Random.Range(-_gameConfig.SpawnRadius, _gameConfig.SpawnRadius);
-            initialPart.transform.position = new Vector3(randomX, 10f, randomZ);
-            initialPart.transform.localScale = Vector3.one * _gameConfig.InitialPartScale;
+        float randomX = UnityEngine.Random.Range(-_gameConfig.SpawnRadius, _gameConfig.SpawnRadius);
+        float randomZ = UnityEngine.Random.Range(-_gameConfig.SpawnRadius, _gameConfig.SpawnRadius);
+        initialPart.transform.position = new Vector3(randomX, 10f, randomZ);
+        initialPart.transform.localScale = Vector3.one * _gameConfig.InitialPartScale;
 
-            float hp = _fractureCalculator.CalculateHP(generation: 0, stageLevel);
-            initialPart.Setup(generation: 0, maxHp: hp);
-            initialPart.OnDestroyed += HandlePartDestroyed;
+        // Берем актуальную стадию для расчета ХП
+        float hp = _fractureCalculator.CalculateHP(generation: 0, _stageModel.CurrentStage);
+        initialPart.Setup(generation: 0, maxHp: hp);
+        initialPart.OnDestroyed += HandlePartDestroyed;
 
-            // Регистрируем появление крупной детали
-            _activeBigParts++;
-        }
+        _currentRootParts++; // Деталь появилась на столе: +1
     }
 
     private void HandlePartDestroyed(CarPart destroyedPart)
     {
         destroyedPart.OnDestroyed -= HandlePartDestroyed;
 
-        // Если уничтожена крупная деталь, вычитаем её из счетчика
-        if (destroyedPart.Generation < _gameConfig.MaxGenerations)
+        // ТВОЯ ЛОГИКА: Если разбита именно ГЛАВНАЯ деталь (Gen 0)
+        if (destroyedPart.Generation == 0)
         {
-            _activeBigParts--;
+            _currentRootParts--; // Деталь ушла: -1
+            StartCoroutine(SpawnNewPartWithDelay(2f)); // Ждем 2 секунды и спавним
         }
 
-        // Пытаемся раздробить и узнаем, сколько вылетело новых кусков
+        // Пытаемся раздробить деталь
         int newFragmentsCount = _fractureSystem.ProcessFracture(destroyedPart, _stageModel.CurrentStage, HandlePartDestroyed);
 
-        // Если вылетевшие куски всё еще крупные (не финальная мелочь) — добавляем их в счетчик
-        int nextGeneration = destroyedPart.Generation + 1;
-        if (nextGeneration < _gameConfig.MaxGenerations && newFragmentsCount > 0)
-        {
-            _activeBigParts += newFragmentsCount;
-        }
-
-        // Даем деньги, если деталь была финальной (самой мелкой) ИЛИ просто не захотела делиться
+        // Начисляем деньги и прогресс за самую мелкую деталь
         if (destroyedPart.Generation >= _gameConfig.MaxGenerations || newFragmentsCount == 0)
         {
             _wallet.AddMoney(_gameConfig.BasePartReward);
@@ -248,6 +232,17 @@ public class Bootstrapper : MonoBehaviour
 
             _shopView.OnWindowClosed -= _gamePause.Disable;
             _shopView.OnWindowClosed -= _cursorHider.Hide;
+        }
+    }
+
+    private IEnumerator SpawnNewPartWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // Защита: спавним новую, только если на столе их меньше лимита
+        if (_currentRootParts < _gameConfig.StartPartsPerWave)
+        {
+            SpawnRootPart();
         }
     }
 }
