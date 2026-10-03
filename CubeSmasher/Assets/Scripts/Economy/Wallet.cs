@@ -1,36 +1,41 @@
 using System;
+using YG; // Обязательно для работы с Яндексом
 
 public class Wallet
 {
-    private double _balance;
+    public double Balance { get; private set; }
 
-    // Событие, которое кричит: "Баланс изменился, вот новое значение!"
+    // Возвращаем Action<double>, чтобы презентеры получали сумму
     public event Action<double> OnBalanceChanged;
 
-    public double Balance => _balance;
-
-    // Инициализация при загрузке (из облака YG)
     public Wallet(double initialBalance)
     {
-        _balance = initialBalance < 0 ? 0 : initialBalance;
+        Balance = initialBalance;
     }
 
     public void AddMoney(double amount)
     {
-        if (amount <= 0) return;
-
-        _balance += amount;
-        OnBalanceChanged?.Invoke(_balance);
+        Balance += amount;
+        UpdateSaveData();
+        OnBalanceChanged?.Invoke(Balance); // Передаем новую сумму всем, кто подписан
     }
 
-    // Возвращает true, если покупка успешна
+    // Возвращаем TrySpend, который ждет ShopModel
     public bool TrySpend(double amount)
     {
-        if (amount <= 0 || _balance < amount)
-            return false;
+        if (Balance >= amount)
+        {
+            Balance -= amount;
+            UpdateSaveData();
+            OnBalanceChanged?.Invoke(Balance); // Передаем новую сумму
+            return true; // Успешно потратили
+        }
+        return false; // Не хватает денег
+    }
 
-        _balance -= amount;
-        OnBalanceChanged?.Invoke(_balance);
-        return true;
+    // Тихо обновляем данные в памяти
+    private void UpdateSaveData()
+    {
+        YG2.saves.balance = Balance;
     }
 }

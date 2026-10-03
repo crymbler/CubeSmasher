@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,10 @@ public class Bootstrapper : MonoBehaviour
     [SerializeField] private List<UpgradeConfig> _upgradeConfigs;
     [SerializeField] private Button _openShopButton;
 
+    [Header("UI - Гараж")]
+    [SerializeField] private GarageView _garageView;
+    [SerializeField] private Button _openGarageButton;
+
     private ShopModel _shopModel; // Добавили переменную магазина
     private ShopPresenter _shopPresenter;
 
@@ -38,6 +43,8 @@ public class Bootstrapper : MonoBehaviour
     private Wallet _wallet;
     private TopHudPresenter _topHudPresenter;
     private StageModel _stageModel;
+
+    private PassiveIncome _passiveIncome;
 
     private int _currentRootParts = 0;
     private BagRandomizer _bagRandomizer;
@@ -59,9 +66,6 @@ public class Bootstrapper : MonoBehaviour
         // На старте прячем курсор (вызов читается как песня!)
         _cursorHider.Hide();
 
-        // На старте жестко закрываем магазин
-        _shopView.Close();
-
         if (_gameConfig.PartPrefabs != null && _gameConfig.PartPrefabs.Length > 0)
         {
             _bagRandomizer = new BagRandomizer(_gameConfig.PartPrefabs.Length);
@@ -70,17 +74,28 @@ public class Bootstrapper : MonoBehaviour
         // 2. Инициализация Экономики и Прогрессии
         _wallet = new Wallet(initialBalance: YG2.saves.balance);
 
-        // Создаем модель магазина
-        _shopModel = new ShopModel(_wallet, _upgradeConfigs);
-
         // Загружаем текущую стадию из YG2 (если игра запущена впервые и там 0, берем 1)
         int savedStage = YG2.saves.level < 1 ? 1 : YG2.saves.level;
         _stageModel = new StageModel(initialStage: savedStage);
+
+        _passiveIncome = new PassiveIncome(_gameConfig);
+
+        _passiveIncome.OnIncomeGenerated += _wallet.AddMoney;
+        _stageModel.OnStageCompleted += _passiveIncome.RecalculateIncome;
+
+        // Создаем модель магазина
+        _shopModel = new ShopModel(_wallet, _upgradeConfigs);
 
         if (_openShopButton != null)
         {
             _openShopButton.onClick.AddListener(_shopView.Open);
         }
+
+        // Подписываем кнопку на главном экране на открытие гаража
+        if (_openGarageButton != null)
+        {
+            _openGarageButton.onClick.AddListener(_garageView.Open);
+        }   
 
         // 3. Инициализация UI (Верхний HUD и Магазин)
         _topHudPresenter = new TopHudPresenter(_wallet, _topHudView);
@@ -96,11 +111,17 @@ public class Bootstrapper : MonoBehaviour
         // Подписываемся на прохождение уровня (чтобы спавнить новую машину)
         _stageModel.OnStageCompleted += HandleStageCompleted;
 
-        _shopView.OnWindowOpened += _gamePause.Enable;
-        _shopView.OnWindowOpened += _cursorHider.Show;
+        _shopView.OnOpened += _gamePause.Enable;
+        _shopView.OnOpened += _cursorHider.Show;
 
-        _shopView.OnWindowClosed += _gamePause.Disable;
-        _shopView.OnWindowClosed += _cursorHider.Hide;
+        _shopView.OnClosed += _gamePause.Disable;
+        _shopView.OnClosed += _cursorHider.Hide;
+
+        _garageView.OnOpened += _gamePause.Enable;
+        _garageView.OnOpened += _cursorHider.Show;
+
+        _garageView.OnClosed += _gamePause.Disable;
+        _garageView.OnClosed += _cursorHider.Hide;
 
         // 4. Настройка оружия (Загружаем сохраненный урон из магазина)
         var damageData = _shopModel.GetUpgradeData("hammer_damage");
@@ -114,16 +135,42 @@ public class Bootstrapper : MonoBehaviour
     {
         _stageModel.ForceUpdateUI();
 
-        // Запускаем стартовый спавн из конфига (например, 2 штуки)
+        if (YG2.saves.lastSaveTime > 0) // Если игрок заходит не в первый раз
+        {
+            // Берем мировое время по Гринвичу в секундах
+            long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            long offlineSeconds = currentTime - YG2.saves.lastSaveTime;
+
+            // Защита от "читеров" и сломанной экономики (максимум копим за 24 часа = 86400 сек)
+            long maxOfflineSeconds = 86400;
+            if (offlineSeconds > maxOfflineSeconds)
+            {
+                offlineSeconds = maxOfflineSeconds;
+            }
+
+            if (offlineSeconds > 0 && _passiveIncome.CurrentIncomePerSecond > 0)
+            {
+                double earnedOffline = offlineSeconds * _passiveIncome.CurrentIncomePerSecond;
+                _wallet.AddMoney(earnedOffline);
+
+                // Выводим в консоль для проверки (позже прикрутим UI окошко)
+                UnityEngine.Debug.Log($"[Оффлайн] Игрок отсутствовал {offlineSeconds} сек. Заработано: {earnedOffline} монет!");
+            }
+        }
+
         for (int i = 0; i < _gameConfig.StartPartsPerWave; i++)
         {
             SpawnRootPart();
         }
+
+        // ЗАПУСКАЕМ АВТОСОХРАНЕНИЕ
+        StartCoroutine(AutoSaveRoutine());
     }
 
     private void Update()
     {
         _decaySystem?.Tick();
+        _passiveIncome?.Tick(UnityEngine.Time.deltaTime);
     }
 
     public CarPart GetPartFromPool(CarPart prefab)
@@ -227,11 +274,24 @@ public class Bootstrapper : MonoBehaviour
 
         if (_shopView != null)
         {
-            _shopView.OnWindowOpened -= _gamePause.Enable;
-            _shopView.OnWindowOpened -= _cursorHider.Show;
+            _shopView.OnOpened -= _gamePause.Enable;
+            _shopView.OnOpened -= _cursorHider.Show;
 
-            _shopView.OnWindowClosed -= _gamePause.Disable;
-            _shopView.OnWindowClosed -= _cursorHider.Hide;
+            _shopView.OnClosed -= _gamePause.Disable;
+            _shopView.OnClosed -= _cursorHider.Hide;
+        }
+    }
+
+    private IEnumerator AutoSaveRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(10f);
+
+            // Записываем точное время сохранения (в секундах)
+            YG2.saves.lastSaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            YG2.SaveProgress();
         }
     }
 

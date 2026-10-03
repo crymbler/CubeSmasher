@@ -1,5 +1,17 @@
 using UnityEngine;
 
+[System.Serializable]
+public struct GarageCarData
+{
+    public string CarName;
+    public int UnlockStage;
+    public double IncomePerSecond;
+    [TextArea] public string Description;
+
+    public GameObject ModelPrefab; // 3D-префаб для подиума
+    public Sprite MiniIcon;        // 2D-картинка для нижней ленты
+}
+
 [CreateAssetMenu(fileName = "GameConfig", menuName = "Tycoon/Game Config")]
 public class GameConfig : ScriptableObject
 {
@@ -54,6 +66,9 @@ public class GameConfig : ScriptableObject
 
     [Tooltip("Максимальное количество делений (2 = 3 стадии, 3 = 4 стадии)")]
     public int MaxGenerations = 3;
+
+    [Header("Гараж и Пассивный доход")]
+    public GarageCarData[] GarageCars;
 
     // --- МЕТОДЫ РАСЧЕТА (Используют формулы из GDD) ---
 

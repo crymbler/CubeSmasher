@@ -1,134 +1,37 @@
 {
-    "idSave": 168,
-    "bestScore": 3,
+    "idSave": 97,
+    "lastSaveTime": 1790627641,
+    "bestScore": 0,
     "isAdsRemoved": false,
-    "level": 5,
-    "balance": 3188.0,
-    "clickPerSecond": 0.0,
+    "level": 7,
+    "lastGarageCarIndex": 0,
+    "balance": 60.50560736656189,
+    "clickPerSecond": 1.0,
     "tapPower": 1.0,
-    "soundVolume": 0.5519999861717224,
-    "musicVolume": 0.5519999861717224,
-    "passiveUpgrades": [
-        {
-            "id": "pas1",
-            "level": 0,
-            "price": 174.9006104958062,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "pas2",
-            "level": 0,
-            "price": 1379.9999713897705,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "pas3",
-            "level": 0,
-            "price": 17249.99964237213,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "pas4",
-            "level": 0,
-            "price": 229999.99523162849,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "pas5",
-            "level": 0,
-            "price": 2874999.940395355,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "pas6",
-            "level": 0,
-            "price": 35000000.0,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "pas7",
-            "level": 0,
-            "price": 500000000.0,
-            "value": 0.0,
-            "isLocked": true
-        },
-        {
-            "id": "pas8",
-            "level": 0,
-            "price": 8000000000.0,
-            "value": 0.0,
-            "isLocked": true
-        },
-        {
-            "id": "pas9",
-            "level": 0,
-            "price": 150000000000.0,
-            "value": 0.0,
-            "isLocked": true
-        }
-    ],
+    "soundVolume": 0.5,
+    "musicVolume": 0.5,
+    "passiveUpgrades": [],
     "tapUpgrades": [
         {
-            "id": "tap1",
-            "level": 0,
-            "price": 66.12499725818637,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "tap2",
-            "level": 0,
-            "price": 574.999988079071,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "tap3",
-            "level": 0,
-            "price": 5749.99988079071,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "tap4",
-            "level": 0,
-            "price": 68999.99856948853,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "tap5",
-            "level": 0,
-            "price": 919999.9809265136,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
-            "id": "tap6",
-            "level": 0,
-            "price": 12000000.0,
-            "value": 0.0,
-            "isLocked": false
-        },
-        {
             "id": "hammer_damage",
-            "level": 16,
-            "price": 4507.924652099609,
-            "value": 154.0703125,
+            "level": 8,
+            "price": 408.6075782775879,
+            "value": 35.831817626953128,
             "isLocked": false
         },
         {
             "id": "hammer_radius",
-            "level": 1,
-            "price": 100.0,
-            "value": 10.0,
-            "isLocked": true
+            "level": 9,
+            "price": 1103.2404899597168,
+            "value": 42.99818420410156,
+            "isLocked": false
+        },
+        {
+            "id": "debug molot",
+            "level": 21,
+            "price": 0.0,
+            "value": 0.0,
+            "isLocked": false
         }
     ]
 }

@@ -12,8 +12,8 @@ public class ShopView : MonoBehaviour
     [SerializeField] private Button _closeButton; // Крестик внутри окна магазина
 
     // События, на которые подписывается Bootstrapper
-    public event Action OnWindowOpened;
-    public event Action OnWindowClosed;
+    public event Action OnOpened;
+    public event Action OnClosed;
 
     private readonly Dictionary<string, UpgradeItemView> _items = new Dictionary<string, UpgradeItemView>();
 
@@ -28,13 +28,13 @@ public class ShopView : MonoBehaviour
     public void Open()
     {
         gameObject.SetActive(true);
-        OnWindowOpened?.Invoke(); // Кричим "Я открылся!"
+        OnOpened?.Invoke(); // Кричим "Я открылся!"
     }
 
     public void Close()
     {
         gameObject.SetActive(false);
-        OnWindowClosed?.Invoke(); // Кричим "Я закрылся!"
+        OnClosed?.Invoke(); // Кричим "Я закрылся!"
     }
 
     public UpgradeItemView GetOrCreateItem(string id)

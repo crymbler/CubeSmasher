@@ -43,10 +43,12 @@ MonoBehaviour:
   InitialPartScale: 0.7
   BaseSplitChance: 0.85
   SplitScaleMultiplier: 0.5
-  BasePartHP: 20
+  BasePartHP: 1
   PartHPMultiplier: 1.45
   BasePartReward: 5
   PartRewardMultiplier: 1.25
   SpawnRadius: 4
   PoolCapacity: 250
   StartPartsPerWave: 2
+  MaxGenerations: 3
+  GarageCars: []

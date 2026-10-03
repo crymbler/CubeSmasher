@@ -15,10 +15,12 @@ namespace YG
 
     public partial class SavesYG
     {
+        public long lastSaveTime;
         public int bestScore = 0;
         public bool isAdsRemoved = false;
 
         public int level = 0;
+        public int lastGarageCarIndex = 0;
 
         public double balance = 1;
         public double clickPerSecond = 1;
