@@ -262,15 +262,18 @@ public class Bootstrapper : MonoBehaviour
             StartCoroutine(SpawnNewPartWithDelay(2f)); // Ждем 2 секунды и спавним
         }
 
-        // Пытаемся раздробить деталь
-        int newFragmentsCount = _fractureSystem.ProcessFracture(destroyedPart, _stageModel.CurrentStage, HandlePartDestroyed);
+        // Награда за КАЖДУЮ разбитую деталь, а не только за конечный осколок.
+        // Раньше монеты давали лишь за деталь, которая больше не делится (Gen 2):
+        // до неё ~120 ударов, а осколки Gen 1 разлетаются от взрыва и падают за стол
+        // в KillZone, где уходят в пул вообще без награды. Баланс не рос.
+        // Чем глубже поколение, тем дороже осколок.
+        double reward = _gameConfig.BasePartReward
+                        * Mathf.Pow(_gameConfig.PartRewardMultiplier, destroyedPart.Generation);
+        _wallet.Add(reward);
+        _stageModel.AddProgress(1);
 
-        // Начисляем деньги и прогресс за самую мелкую деталь
-        if (destroyedPart.Generation >= _gameConfig.MaxGenerations || newFragmentsCount == 0)
-        {
-            _wallet.Add(_gameConfig.BasePartReward);
-            _stageModel.AddProgress(1);
-        }
+        // Дробим деталь на осколки следующего поколения
+        _fractureSystem.ProcessFracture(destroyedPart, _stageModel.CurrentStage, HandlePartDestroyed);
     }
 
     private void OnDestroy()
