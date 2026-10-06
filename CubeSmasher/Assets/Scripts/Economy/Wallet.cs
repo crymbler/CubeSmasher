@@ -1,7 +1,8 @@
 using System;
-using YG; // ќб€зательно дл€ работы с яндексом
+using CubeSmasher.Core.Interfaces;
+using YG;
 
-public class Wallet
+public class Wallet : IWallet
 {
     public double Balance { get; private set; }
 
@@ -13,7 +14,7 @@ public class Wallet
         Balance = initialBalance;
     }
 
-    public void AddMoney(double amount)
+    public void Add(double amount)
     {
         Balance += amount;
         UpdateSaveData();

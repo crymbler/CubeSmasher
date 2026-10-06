@@ -1,13 +1,19 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using CubeSmasher.Core.Interfaces;
+using CubeSmasher.Infrastructure;
 using YG;
 
 public class LifetimeRewardAd : MonoBehaviour
 {
+    // Wallet — обычный C# класс, Unity его не сериализует,
+    // поэтому берём сервис из контейнера при первом обращении
+    private IWallet _wallet;
+    private IWallet WalletRef => _wallet ??= ServiceLocator.Instance.Get<IWallet>();
+
     [Header("Ссылки на компоненты")]
-    [SerializeField] private Wallet _wallet;
     [SerializeField] private GameObject _rewardPanel; // Корневой объект подарка (LifetimeReward)
     [SerializeField] private Button _rewardButton;
     [SerializeField] private Slider _timerSlider;
@@ -70,7 +76,7 @@ public class LifetimeRewardAd : MonoBehaviour
     private void ShowGift()
     {
         // Берем ровно 10% от текущего баланса
-        _currentRewardAmount = _wallet.Balance * 0.1;
+        _currentRewardAmount = WalletRef.Balance * 0.1;
         
         // Обновляем текст (F0 округлит число для красивого отображения в UI, без десятых долей)
         _rewardText.text = $"+ {_currentRewardAmount:F0}";
@@ -125,7 +131,7 @@ public class LifetimeRewardAd : MonoBehaviour
         if (id == _rewardId)
         {
             _isRewarded = true;
-            _wallet.AddMoney(_currentRewardAmount);
+            WalletRef.Add(_currentRewardAmount);
         }
     }
 

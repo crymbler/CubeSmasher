@@ -1,20 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using YG; // Пространство имен плагина Яндекса
+using CubeSmasher.Core.Interfaces;
+using YG;
 
-public class ShopModel
+public class ShopModel : IShopService
 {
-    private readonly Wallet _wallet;
+    private readonly IWallet _wallet;
+    private readonly ISaveService _saveService;
     private readonly List<UpgradeConfig> _availableUpgrades;
 
     // Событие для UI и игровых систем: "Апгрейд куплен, обновите картинку и статы!"
-    public event Action<string> OnUpgradeChanged;
+    public event Action<string> OnUpgradePurchased;
 
-    public ShopModel(Wallet wallet, List<UpgradeConfig> availableUpgrades)
+    public ShopModel(IWallet wallet, List<UpgradeConfig> availableUpgrades, ISaveService saveService)
     {
         _wallet = wallet;
         _availableUpgrades = availableUpgrades;
+        _saveService = saveService;
 
         InitializeSaves();
     }
@@ -79,7 +82,7 @@ public class ShopModel
     }
 
     // Логика покупки (вызывается из UI)
-    public bool TryBuyUpgrade(string id)
+    public bool TryPurchaseUpgrade(string id)
     {
         UpgradeData data = GetUpgradeData(id);
         UpgradeConfig config = GetConfig(id);
@@ -99,10 +102,10 @@ public class ShopModel
             data.value = config.CalculateValue(data.level);
 
             // Сохраняем прогресс в облако Яндекса
-            YG2.SaveProgress();
+            _saveService.Save();
 
             // Кричим всем системам, что апгрейд обновился
-            OnUpgradeChanged?.Invoke(id);
+            OnUpgradePurchased?.Invoke(id);
 
             return true;
         }

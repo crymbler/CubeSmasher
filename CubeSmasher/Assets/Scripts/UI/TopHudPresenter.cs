@@ -1,11 +1,12 @@
 using System;
+using CubeSmasher.Core.Interfaces;
 
 public class TopHudPresenter : IDisposable
 {
-    private readonly Wallet _wallet;
+    private readonly IWallet _wallet;
     private readonly TopHudView _view;
 
-    public TopHudPresenter(Wallet wallet, TopHudView view)
+    public TopHudPresenter(IWallet wallet, TopHudView view)
     {
         if (wallet == null) throw new ArgumentNullException(nameof(wallet));
         if (view == null) throw new ArgumentNullException(nameof(view));

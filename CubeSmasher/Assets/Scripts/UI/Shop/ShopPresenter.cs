@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
+using CubeSmasher.Core.Interfaces;
 
 public class ShopPresenter : IDisposable
 {
     private readonly ShopModel _model;
     private readonly ShopView _view;
-    private readonly Wallet _wallet;
+    private readonly IWallet _wallet;
     private readonly StageModel _stageModel;
     private readonly List<UpgradeConfig> _configs;
 
-    public ShopPresenter(ShopModel model, ShopView view, Wallet wallet, List<UpgradeConfig> configs, StageModel stageModel)
+    public ShopPresenter(ShopModel model, ShopView view, IWallet wallet, List<UpgradeConfig> configs, StageModel stageModel)
     {
         _model = model;
         _view = view;
@@ -17,7 +18,7 @@ public class ShopPresenter : IDisposable
         _configs = configs;
         _stageModel = stageModel;
 
-        _model.OnUpgradeChanged += UpdateSingleItemUI;
+        _model.OnUpgradePurchased += UpdateSingleItemUI;
         _wallet.OnBalanceChanged += CheckAffordability;
         _stageModel.OnStageCompleted += HandleStageCompleted; // Обновляем магазин при переходе на новую машину
 
@@ -44,7 +45,7 @@ public class ShopPresenter : IDisposable
     // Игрок кликнул "Купить"
     private void HandleBuyClicked(string id)
     {
-        _model.TryBuyUpgrade(id);
+        _model.TryPurchaseUpgrade(id);
     }
 
     // Обновляем конкретную кнопку
@@ -79,7 +80,7 @@ public class ShopPresenter : IDisposable
     // Отписка для предотвращения утечек
     public void Dispose()
     {
-        _model.OnUpgradeChanged -= UpdateSingleItemUI;
+        _model.OnUpgradePurchased -= UpdateSingleItemUI;
         _wallet.OnBalanceChanged -= CheckAffordability;
         _stageModel.OnStageCompleted -= HandleStageCompleted;
     }

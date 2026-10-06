@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CubeSmasher.Core.Interfaces;
+using CubeSmasher.Infrastructure;
 using UnityEngine;
 using UnityEngine.UI;
 using YG;
 
+[DefaultExecutionOrder(-1000)] // контейнер сервисов должен быть собран раньше всех
 public class Bootstrapper : MonoBehaviour
 {
     [Header("Настройки")]
@@ -46,12 +49,22 @@ public class Bootstrapper : MonoBehaviour
 
     private PassiveIncome _passiveIncome;
 
+    private ISaveService _saveService;
+    private ServiceLocator _services;
+
     private int _currentRootParts = 0;
     private BagRandomizer _bagRandomizer;
     private Dictionary<CarPart, ObjectPool<CarPart>> _pools = new Dictionary<CarPart, ObjectPool<CarPart>>();
 
     private void Awake()
     {
+        // 1. Собираем контейнер сервисов
+        _services = ServiceLocator.Instance;
+        _services.Clear();
+
+        _saveService = new YandexSaveService();
+        _services.Register(_saveService);
+
         if (_gameConfig == null) Debug.LogError("Не назначен GameConfig в Bootstrapper!");
 
         // 1. Инициализация систем разрушения
@@ -73,18 +86,21 @@ public class Bootstrapper : MonoBehaviour
 
         // 2. Инициализация Экономики и Прогрессии
         _wallet = new Wallet(initialBalance: YG2.saves.balance);
+        _services.Register<IWallet>(_wallet);
 
         // Загружаем текущую стадию из YG2 (если игра запущена впервые и там 0, берем 1)
         int savedStage = YG2.saves.level < 1 ? 1 : YG2.saves.level;
         _stageModel = new StageModel(initialStage: savedStage);
 
         _passiveIncome = new PassiveIncome(_gameConfig);
+        _services.Register<IPassiveIncomeService>(_passiveIncome);
 
-        _passiveIncome.OnIncomeGenerated += _wallet.AddMoney;
+        _passiveIncome.OnIncomeGenerated += _wallet.Add;
         _stageModel.OnStageCompleted += _passiveIncome.RecalculateIncome;
 
         // Создаем модель магазина
-        _shopModel = new ShopModel(_wallet, _upgradeConfigs);
+        _shopModel = new ShopModel(_wallet, _upgradeConfigs, _saveService);
+        _services.Register<IShopService>(_shopModel);
 
         if (_openShopButton != null)
         {
@@ -103,7 +119,7 @@ public class Bootstrapper : MonoBehaviour
         // Создаем презентер магазина, связывая UI с логикой
         _shopPresenter = new ShopPresenter(_shopModel, _shopView, _wallet, _upgradeConfigs, _stageModel);
 
-        _shopModel.OnUpgradeChanged += HandleUpgradePurchased;
+        _shopModel.OnUpgradePurchased += HandleUpgradePurchased;
 
         // Связываем Модель Стадии с UI Презентером
         _stageModel.OnProgressChanged += _topHudPresenter.UpdateMachineProgress;
@@ -151,7 +167,7 @@ public class Bootstrapper : MonoBehaviour
             if (offlineSeconds > 0 && _passiveIncome.CurrentIncomePerSecond > 0)
             {
                 double earnedOffline = offlineSeconds * _passiveIncome.CurrentIncomePerSecond;
-                _wallet.AddMoney(earnedOffline);
+                _wallet.Add(earnedOffline);
 
                 // Выводим в консоль для проверки (позже прикрутим UI окошко)
                 UnityEngine.Debug.Log($"[Оффлайн] Игрок отсутствовал {offlineSeconds} сек. Заработано: {earnedOffline} монет!");
@@ -212,7 +228,7 @@ public class Bootstrapper : MonoBehaviour
     {
         // 1. Сохраняем достигнутый уровень в облако
         YG2.saves.level = newStageLevel;
-        YG2.SaveProgress();
+        _saveService.Save();
     }
 
     private void SpawnRootPart()
@@ -252,7 +268,7 @@ public class Bootstrapper : MonoBehaviour
         // Начисляем деньги и прогресс за самую мелкую деталь
         if (destroyedPart.Generation >= _gameConfig.MaxGenerations || newFragmentsCount == 0)
         {
-            _wallet.AddMoney(_gameConfig.BasePartReward);
+            _wallet.Add(_gameConfig.BasePartReward);
             _stageModel.AddProgress(1);
         }
     }
@@ -268,7 +284,7 @@ public class Bootstrapper : MonoBehaviour
         _topHudPresenter?.Dispose();
         _shopPresenter?.Dispose();
 
-        if (_shopModel != null) _shopModel.OnUpgradeChanged -= HandleUpgradePurchased;
+        if (_shopModel != null) _shopModel.OnUpgradePurchased -= HandleUpgradePurchased;
 
         if (_openShopButton != null) _openShopButton.onClick.RemoveListener(_shopView.Open);
 
@@ -280,6 +296,8 @@ public class Bootstrapper : MonoBehaviour
             _shopView.OnClosed -= _gamePause.Disable;
             _shopView.OnClosed -= _cursorHider.Hide;
         }
+
+        _services?.Clear();
     }
 
     private IEnumerator AutoSaveRoutine()
@@ -291,7 +309,7 @@ public class Bootstrapper : MonoBehaviour
             // Записываем точное время сохранения (в секундах)
             YG2.saves.lastSaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            YG2.SaveProgress();
+            _saveService.Save();
         }
     }
 

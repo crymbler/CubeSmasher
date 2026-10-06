@@ -1,11 +1,10 @@
 using System;
+using CubeSmasher.Core.Interfaces;
 
-public class PassiveIncome
+public class PassiveIncome : IPassiveIncomeService
 {
     public event Action<double> OnIncomeGenerated;
 
-    // Событие, если захочешь потом вывести цифру "Доход: Х/сек" в UI
-    public event Action<double> OnIncomeRecalculated;
 
     public double CurrentIncomePerSecond { get; private set; }
 
@@ -47,7 +46,5 @@ public class PassiveIncome
                 CurrentIncomePerSecond += car.IncomePerSecond;
             }
         }
-
-        OnIncomeRecalculated?.Invoke(CurrentIncomePerSecond);
     }
 }
