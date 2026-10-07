@@ -34,6 +34,3 @@ MonoBehaviour:
   PoolCapacity: 250
   BaseSplitChance: 0.85
   SplitScaleMultiplier: 0.5
-  MaxGenerations: 3
-  BasePartHP: 1
-  PartHPMultiplier: 1.45

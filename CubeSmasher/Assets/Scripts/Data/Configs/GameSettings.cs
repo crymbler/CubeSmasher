@@ -11,9 +11,6 @@ namespace CubeSmasher.Data.Configs
     public class GameSettings : ScriptableObject
     {
         [Header("Тематические конфиги")]
-        [Tooltip("Параметры молота и формулы роста по уровням")]
-        public WeaponConfig Weapon;
-
         [Tooltip("Награды за разбитые детали")]
         public EconomyConfig Economy;
 

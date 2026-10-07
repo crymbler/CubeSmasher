@@ -34,15 +34,5 @@ namespace CubeSmasher.Data.Configs
 
         [Tooltip("Во сколько раз уменьшается осколок (0.5 = в два раза)")]
         public float SplitScaleMultiplier = 0.5f;
-
-        [Tooltip("Максимальное количество поколений деталей (2 = 3 поколения)")]
-        public int MaxGenerations = 3;
-
-        // Прочность считает FractureCalculator по своим константам,
-        // поэтому поля ниже пока не читаются кодом — оставлены для баланса.
-
-        [Header("Прочность деталей (пока не используется)")]
-        public float BasePartHP = 20f;
-        public float PartHPMultiplier = 1.45f;
     }
 }
