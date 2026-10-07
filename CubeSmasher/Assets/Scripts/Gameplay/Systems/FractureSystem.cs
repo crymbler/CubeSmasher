@@ -1,4 +1,5 @@
 using System;
+using CubeSmasher.Data.Configs;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -6,13 +7,12 @@ public class FractureSystem
 {
     private readonly Func<CarPart, CarPart> _getPartMethod;
     private readonly FractureCalculator _calculator;
-    private readonly GameConfig _config; // <-- Добавили конфиг
+    private readonly PhysicsConfig _config;
 
     private float _explosionForce = 300f;
     private float _explosionRadius = 2f;
 
-    // Конструктор теперь принимает GameConfig
-    public FractureSystem(Func<CarPart, CarPart> getPartMethod, FractureCalculator calculator, GameConfig config)
+    public FractureSystem(Func<CarPart, CarPart> getPartMethod, FractureCalculator calculator, PhysicsConfig config)
     {
         _getPartMethod = getPartMethod;
         _calculator = calculator;

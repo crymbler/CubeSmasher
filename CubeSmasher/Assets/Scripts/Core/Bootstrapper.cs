@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
+using CubeSmasher.Data.Configs;
 using CubeSmasher.Infrastructure;
 using CubeSmasher.Infrastructure.Initializers;
 using UnityEngine;
@@ -17,7 +18,8 @@ using YG;
 public class Bootstrapper : MonoBehaviour
 {
     [Header("Настройки")]
-    [SerializeField] private GameConfig _gameConfig;
+    [Tooltip("Корневой конфиг игры со ссылками на тематические конфиги")]
+    [SerializeField] private GameSettings _gameSettings;
     [SerializeField] private HammerCaster _hammerCaster;
 
     [Header("Пул и Префабы")]
@@ -48,9 +50,9 @@ public class Bootstrapper : MonoBehaviour
         _services = ServiceLocator.Instance;
         _services.Clear();
 
-        if (_gameConfig == null)
+        if (_gameSettings == null)
         {
-            Debug.LogError("Не назначен GameConfig в Bootstrapper!");
+            Debug.LogError("Не назначен GameSettings в Bootstrapper!");
             return;
         }
 
@@ -68,8 +70,8 @@ public class Bootstrapper : MonoBehaviour
         // Порядок инициализации явный: экономика, геймплей, оружие, UI
         var initializers = new List<IGameInitializer>
         {
-            new EconomyInitializer(_gameConfig, saveService, _upgradeConfigs),
-            new GameplayInitializer(_gameConfig, _carPartPrefab, _poolContainer),
+            new EconomyInitializer(_gameSettings, saveService, _upgradeConfigs),
+            new GameplayInitializer(_gameSettings, _carPartPrefab, _poolContainer),
             new WeaponInitializer(_hammerCaster),
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
                                     _openShopButton, _openGarageButton, _upgradeConfigs)

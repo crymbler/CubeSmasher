@@ -53,7 +53,7 @@ public class StageModel
     private void CalculateRequiredDetails()
     {
         // ѕроста€ математика: 1 уровень = 50 осколков, каждый следующий на 25 больше
-        // ћожно вынести эту формулу в GameConfig, если захочешь
+        // ћожно вынести эту формулу в EconomyConfig, если захочешь
         _requiredDetails = 50 + (_currentStage - 1) * 25;
     }
 }

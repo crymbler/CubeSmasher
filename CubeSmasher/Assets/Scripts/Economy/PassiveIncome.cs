@@ -1,5 +1,6 @@
 using System;
 using CubeSmasher.Core.Interfaces;
+using CubeSmasher.Data.Configs;
 
 public class PassiveIncome : IPassiveIncomeService
 {
@@ -9,10 +10,10 @@ public class PassiveIncome : IPassiveIncomeService
     public double CurrentIncomePerSecond { get; private set; }
 
     private float _timer = 0f;
-    private readonly GameConfig _config;
+    private readonly GarageConfig _config;
 
     // Теперь он получает конфиг при рождении
-    public PassiveIncome(GameConfig config)
+    public PassiveIncome(GarageConfig config)
     {
         _config = config;
     }
@@ -36,7 +37,7 @@ public class PassiveIncome : IPassiveIncomeService
         CurrentIncomePerSecond = 0;
 
         // Если машин в конфиге нет — выходим
-        if (_config.GarageCars == null) return;
+        if (_config == null || _config.GarageCars == null) return;
 
         // Проходимся по всем машинам и суммируем доход тех, которые открыты
         foreach (var car in _config.GarageCars)

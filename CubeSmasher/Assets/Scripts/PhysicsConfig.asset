@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb6341fad5e7e6488686c2e367fda3e, type: 3}
-  m_Name: GameConfig
+  m_Script: {fileID: 11500000, guid: 8e774ec98c1e46e58ad0e3ce40403e05, type: 3}
+  m_Name: PhysicsConfig
   m_EditorClassIdentifier: 
   PartPrefabs:
   - {fileID: 647332116769642720, guid: 690610e33d6d65a44bde61f78517bfd2, type: 3}
@@ -28,27 +28,12 @@ MonoBehaviour:
   - {fileID: 57269785867563620, guid: 1de432767f4b633449afd50947a7c775, type: 3}
   - {fileID: 6309054319991202048, guid: 808859f0db8aa1242a66c66b90f6bef9, type: 3}
   - {fileID: 3289245971641299442, guid: cbbbc373236affa48a534a67555768ae, type: 3}
-  BaseDamage: 10
-  DamageMultiplier: 1.2
-  BaseDamageCost: 50
-  DamageCostMultiplier: 1.35
-  BaseRadius: 1
-  RadiusStep: 0.15
-  BaseRadiusCost: 150
-  RadiusCostMultiplier: 1.5
-  BaseCritChance: 0.01
-  CritChanceStep: 0.01
-  MaxCritChance: 0.35
-  CritMultiplier: 5
+  SpawnRadius: 4
+  StartPartsPerWave: 2
   InitialPartScale: 0.7
+  PoolCapacity: 250
   BaseSplitChance: 0.85
   SplitScaleMultiplier: 0.5
+  MaxGenerations: 3
   BasePartHP: 1
   PartHPMultiplier: 1.45
-  BasePartReward: 5
-  PartRewardMultiplier: 1.25
-  SpawnRadius: 4
-  PoolCapacity: 250
-  StartPartsPerWave: 2
-  MaxGenerations: 3
-  GarageCars: []

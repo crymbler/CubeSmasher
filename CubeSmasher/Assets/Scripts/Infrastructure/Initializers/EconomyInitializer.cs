@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
+using CubeSmasher.Data.Configs;
 using YG;
 
 namespace CubeSmasher.Infrastructure.Initializers
@@ -10,13 +11,13 @@ namespace CubeSmasher.Infrastructure.Initializers
     /// </summary>
     public class EconomyInitializer : IGameInitializer
     {
-        private readonly GameConfig _config;
+        private readonly GameSettings _settings;
         private readonly ISaveService _saveService;
         private readonly List<UpgradeConfig> _upgradeConfigs;
 
-        public EconomyInitializer(GameConfig config, ISaveService saveService, List<UpgradeConfig> upgradeConfigs)
+        public EconomyInitializer(GameSettings settings, ISaveService saveService, List<UpgradeConfig> upgradeConfigs)
         {
-            _config = config;
+            _settings = settings;
             _saveService = saveService;
             _upgradeConfigs = upgradeConfigs;
         }
@@ -33,7 +34,7 @@ namespace CubeSmasher.Infrastructure.Initializers
             var stageModel = new StageModel(savedStage);
             services.Register(stageModel);
 
-            var passiveIncome = new PassiveIncome(_config);
+            var passiveIncome = new PassiveIncome(_settings.Garage);
             services.Register<IPassiveIncomeService>(passiveIncome);
 
             var shopModel = new ShopModel(wallet, _upgradeConfigs, _saveService);

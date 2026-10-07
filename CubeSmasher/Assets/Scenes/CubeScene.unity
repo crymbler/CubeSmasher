@@ -383,7 +383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7210a0f0d8ef584bbfa742b228d31ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameConfig: {fileID: 11400000, guid: 9b03c80788ebbd04fbc628833cb451a7, type: 2}
+  _gameSettings: {fileID: 11400000, guid: 4db5de3d91624bbfbba2d9e2d51940cd, type: 2}
   _hammerCaster: {fileID: 243728791}
   _carPartPrefab: {fileID: 647332116769642720, guid: 690610e33d6d65a44bde61f78517bfd2, type: 3}
   _poolContainer: {fileID: 2121819275}

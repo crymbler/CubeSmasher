@@ -1,4 +1,5 @@
 ﻿using CubeSmasher.Core.Interfaces;
+using CubeSmasher.Data.Configs;
 using UnityEngine;
 
 namespace CubeSmasher.Infrastructure.Initializers
@@ -9,13 +10,13 @@ namespace CubeSmasher.Infrastructure.Initializers
     /// </summary>
     public class GameplayInitializer : IGameInitializer
     {
-        private readonly GameConfig _config;
+        private readonly GameSettings _settings;
         private readonly CarPart _carPartPrefab;
         private readonly Transform _poolContainer;
 
-        public GameplayInitializer(GameConfig config, CarPart carPartPrefab, Transform poolContainer)
+        public GameplayInitializer(GameSettings settings, CarPart carPartPrefab, Transform poolContainer)
         {
-            _config = config;
+            _settings = settings;
             _carPartPrefab = carPartPrefab;
             _poolContainer = poolContainer;
         }
@@ -31,7 +32,8 @@ namespace CubeSmasher.Infrastructure.Initializers
             services.TryGet(out StageModel stageModel);
 
             var lifecycle = new PartLifecycleService(
-                _config, _carPartPrefab, _poolContainer, fractureCalculator, decaySystem, wallet, stageModel);
+                _settings.Physics, _settings.Economy, _carPartPrefab, _poolContainer,
+                fractureCalculator, decaySystem, wallet, stageModel);
 
             services.Register(lifecycle);
         }
