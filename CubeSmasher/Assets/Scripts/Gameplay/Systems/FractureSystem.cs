@@ -21,7 +21,8 @@ public class FractureSystem
 
     // БЫЛО: public void ProcessFracture(...)
     // СТАЛО:
-    public int ProcessFracture(CarPart destroyedPart, int currentStage, Action<CarPart> onPartDestroyedCallback)
+    public int ProcessFracture(CarPart destroyedPart, int currentStage, Action<CarPart> onPartDestroyedCallback,
+                               Action<CarPart> onFragmentSpawned = null)
     {
         if (!_calculator.TrySplit(destroyedPart.Generation, _config.BaseSplitChance))
             return 0; // Возвращаем 0, если деталь не разделилась
@@ -40,6 +41,9 @@ public class FractureSystem
 
             fragment.Setup(nextGeneration, newHp);
             fragment.OnDestroyed += onPartDestroyedCallback;
+
+            // Сообщаем наружу, что появился новый осколок (нужно для гниения)
+            onFragmentSpawned?.Invoke(fragment);
 
             if (fragment.TryGetComponent(out Rigidbody rb))
             {

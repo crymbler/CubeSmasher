@@ -15,6 +15,10 @@ public class CarPart : MonoBehaviour, IDestructible, IPoolable
     // Событие смерти. На него подпишется система раскола и экономика
     public event Action<CarPart> OnDestroyed;
 
+    // Событие возврата в пул: деталь ушла со стола (разбита или упала за край).
+    // Нужно, чтобы учёт деталей знал о потере и мог заспавнить замену.
+    public event Action<CarPart> OnReturnedToPool;
+
     // Чтобы осколки знали, какой префаб копировать при взрыве
     public CarPart SourcePrefab { get; set; }
 
@@ -49,6 +53,13 @@ public class CarPart : MonoBehaviour, IDestructible, IPoolable
 
     public void ReturnToPool()
     {
+        OnReturnedToPool?.Invoke(this);
+
+        // Объект уходит в пул и будет переиспользован. Если оставить подписки,
+        // новая жизнь детали получит старых слушателей и награда удвоится.
+        OnDestroyed = null;
+        OnReturnedToPool = null;
+
         _returnToPool?.Invoke(this);
     }
 
