@@ -21,6 +21,15 @@ public class PartLifecycleService
     /// <summary>Сколько объектов заранее создаётся в пуле для нового префаба.</summary>
     private const int PoolPrewarmCapacity = 20;
 
+    /// <summary>
+    /// Гниение мелких осколков: детали поколения 2 исчезают через 5 секунд.
+    /// Система DecaySystem есть в проекте, но Register в старом коде не вызывался
+    /// ни разу, поэтому она ничего не делала. Включать её в коммите про рефакторинг
+    /// нельзя: осколки начнут пропадать до того, как игрок их разобьёт, и доход упадёт.
+    /// Поставьте true, если хотите вернуть задуманное по GDD поведение.
+    /// </summary>
+    private const bool EnableShardDecay = false;
+
     private readonly GameConfig _config;
     private readonly CarPart _carPartPrefab;
     private readonly Transform _poolContainer;
@@ -57,7 +66,9 @@ public class PartLifecycleService
         _stageModel = stageModel;
 
         _fractureSystem = new FractureSystem(GetPartFromPool, _fractureCalculator, _config);
-        _onFragmentSpawned = _decaySystem != null ? new Action<CarPart>(_decaySystem.Register) : null;
+        _onFragmentSpawned = (EnableShardDecay && _decaySystem != null)
+            ? new Action<CarPart>(_decaySystem.Register)
+            : null;
     }
 
     /// <summary>Первичный спавн кубов на столе.</summary>
