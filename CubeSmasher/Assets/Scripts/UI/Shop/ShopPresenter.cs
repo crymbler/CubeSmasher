@@ -2,86 +2,88 @@ using System;
 using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
 
+/// <summary>
+/// Презентер магазина: связывает IShopView с IShopService и IWallet.
+/// Правил покупки и цен здесь нет, только перевод состояния модели в строки для View.
+/// </summary>
 public class ShopPresenter : IDisposable
 {
-    private readonly ShopModel _model;
-    private readonly ShopView _view;
+    private readonly IShopService _shop;
+    private readonly IShopView _view;
     private readonly IWallet _wallet;
-    private readonly StageModel _stageModel;
+    private readonly StageModel _stage;
     private readonly List<UpgradeConfig> _configs;
 
-    public ShopPresenter(ShopModel model, ShopView view, IWallet wallet, List<UpgradeConfig> configs, StageModel stageModel)
+    public ShopPresenter(IShopService shop, IShopView view, IWallet wallet,
+                         List<UpgradeConfig> configs, StageModel stage)
     {
-        _model = model;
-        _view = view;
-        _wallet = wallet;
+        _shop = shop ?? throw new ArgumentNullException(nameof(shop));
+        _view = view ?? throw new ArgumentNullException(nameof(view));
+        _wallet = wallet ?? throw new ArgumentNullException(nameof(wallet));
+        _stage = stage ?? throw new ArgumentNullException(nameof(stage));
         _configs = configs;
-        _stageModel = stageModel;
 
-        _model.OnUpgradePurchased += UpdateSingleItemUI;
-        _wallet.OnBalanceChanged += CheckAffordability;
-        _stageModel.OnStageCompleted += HandleStageCompleted; // Обновляем магазин при переходе на новую машину
+        _view.BuyRequested += HandleBuyRequested;
+        _shop.OnUpgradePurchased += RefreshUpgrade;
+        _wallet.OnBalanceChanged += HandleBalanceChanged;
+        _stage.OnStageCompleted += HandleStageCompleted;
 
-        InitializeUI();
+        RefreshAll();
     }
 
-    private void HandleStageCompleted(int newStage)
+    private void HandleBuyRequested(string id)
     {
-        CheckAffordability(0); // Форсируем перерисовку всех кнопок
+        _shop.TryPurchaseUpgrade(id);
     }
 
-    // Создаем кнопки при старте
-    private void InitializeUI()
+    private void HandleBalanceChanged(double balance)
     {
-        foreach (var config in _configs)
+        RefreshAll();
+    }
+
+    private void HandleStageCompleted(int stage)
+    {
+        RefreshAll();
+    }
+
+    private void RefreshAll()
+    {
+        if (_configs == null) return;
+
+        foreach (UpgradeConfig config in _configs)
         {
-            UpgradeItemView itemView = _view.GetOrCreateItem(config.Id);
-            itemView.OnBuyClicked += HandleBuyClicked;
-
-            UpdateSingleItemUI(config.Id);
+            RefreshUpgrade(config.Id);
         }
     }
 
-    // Игрок кликнул "Купить"
-    private void HandleBuyClicked(string id)
+    private void RefreshUpgrade(string id)
     {
-        _model.TryPurchaseUpgrade(id);
-    }
-
-    // Обновляем конкретную кнопку
-    private void UpdateSingleItemUI(string id)
-    {
-        var data = _model.GetUpgradeData(id);
-        var config = _model.GetConfig(id);
+        var data = _shop.GetUpgradeData(id);
+        UpgradeConfig config = _shop.GetConfig(id);
         if (data == null || config == null) return;
 
-        UpgradeItemView itemView = _view.GetOrCreateItem(id);
-
         bool isMaxLevel = data.level >= config.MaxLevel;
-
-        // Проверяем, дорос ли игрок до нужной стадии
-        bool isLocked = _stageModel.CurrentStage < config.UnlockStageLevel;
-
+        bool isLocked = _stage.CurrentStage < config.UnlockStageLevel;
         bool canAfford = !isMaxLevel && !isLocked && _wallet.Balance >= data.price;
 
-        // Передаем новые данные в кнопку
-        itemView.UpdateData(config.Icon, config.UpgradeName, data.level, data.price, canAfford, isMaxLevel, isLocked, config.UnlockStageLevel);
-    }
-
-    // Обновляем доступность кнопок, когда меняется баланс монет
-    private void CheckAffordability(double currentBalance)
-    {
-        foreach (var config in _configs)
+        _view.Render(id, new UpgradeRowData
         {
-            UpdateSingleItemUI(config.Id);
-        }
+            Name = config.UpgradeName,
+            Icon = config.Icon,
+            Level = data.level,
+            Price = data.price,
+            UnlockStage = config.UnlockStageLevel,
+            IsLocked = isLocked,
+            IsMaxLevel = isMaxLevel,
+            CanAfford = canAfford
+        });
     }
 
-    // Отписка для предотвращения утечек
     public void Dispose()
     {
-        _model.OnUpgradePurchased -= UpdateSingleItemUI;
-        _wallet.OnBalanceChanged -= CheckAffordability;
-        _stageModel.OnStageCompleted -= HandleStageCompleted;
+        _view.BuyRequested -= HandleBuyRequested;
+        _shop.OnUpgradePurchased -= RefreshUpgrade;
+        _wallet.OnBalanceChanged -= HandleBalanceChanged;
+        _stage.OnStageCompleted -= HandleStageCompleted;
     }
 }

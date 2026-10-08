@@ -4,9 +4,9 @@ using CubeSmasher.Core.Interfaces;
 public class TopHudPresenter : IDisposable
 {
     private readonly IWallet _wallet;
-    private readonly TopHudView _view;
+    private readonly ITopHudView _view;
 
-    public TopHudPresenter(IWallet wallet, TopHudView view)
+    public TopHudPresenter(IWallet wallet, ITopHudView view)
     {
         if (wallet == null) throw new ArgumentNullException(nameof(wallet));
         if (view == null) throw new ArgumentNullException(nameof(view));

@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TopHudView : MonoBehaviour
+public class TopHudView : MonoBehaviour, ITopHudView
 {
     [Header("Ёкономика")]
     [SerializeField] private TextMeshProUGUI _balanceText;

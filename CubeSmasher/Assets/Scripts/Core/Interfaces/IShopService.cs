@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using YG;
 
 namespace CubeSmasher.Core.Interfaces
@@ -12,6 +12,9 @@ namespace CubeSmasher.Core.Interfaces
         /// Получить данные улучшения (уровень, цена, значение)
         /// </summary>
         UpgradeData GetUpgradeData(string id);
+
+        /// <summary>Конфиг улучшения: название, иконка, лимиты, стадия разблокировки.</summary>
+        UpgradeConfig GetConfig(string id);
 
         /// <summary>
         /// Попытка купить улучшение
