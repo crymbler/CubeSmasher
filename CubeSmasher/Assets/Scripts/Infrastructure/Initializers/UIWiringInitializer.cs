@@ -47,6 +47,13 @@ namespace CubeSmasher.Infrastructure.Initializers
             services.Register(topHudPresenter);
             stageModel.OnProgressChanged += topHudPresenter.UpdateMachineProgress;
 
+            // Гараж: окно выбора машин
+            if (services.TryGet(out IGarageService garage) && _garageView != null)
+            {
+                var garagePresenter = new GaragePresenter(garage, _garageView);
+                services.Register(garagePresenter);
+            }
+
             // Магазин
             var shopPresenter = new ShopPresenter(shopModel, _shopView, wallet, _upgradeConfigs, stageModel);
             services.Register(shopPresenter);

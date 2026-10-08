@@ -34,7 +34,11 @@ namespace CubeSmasher.Infrastructure.Initializers
             var stageModel = new StageModel(savedStage);
             services.Register(stageModel);
 
-            var passiveIncome = new PassiveIncome(_settings.Garage);
+            // Гараж создаём до дохода: доход считает по открытым машинам
+            var garage = new GarageService(_settings.Garage, _saveService);
+            services.Register<IGarageService>(garage);
+
+            var passiveIncome = new PassiveIncome(_settings.Garage, garage);
             services.Register<IPassiveIncomeService>(passiveIncome);
 
             var shopModel = new ShopModel(wallet, _upgradeConfigs, _saveService);
@@ -48,6 +52,12 @@ namespace CubeSmasher.Infrastructure.Initializers
             passiveIncome.OnIncomeGenerated += wallet.Add;
 
             // На новой стадии пересчитываем доход и сохраняем прогресс
+            // Открытие машин и пересчёт дохода по стадии: при старте (сохранённая стадия)
+            // и при каждом переходе на новую. Раньше при старте доход оставался нулевым.
+            garage.RefreshForStage(stageModel.CurrentStage);
+            passiveIncome.RecalculateIncome(stageModel.CurrentStage);
+
+            stageModel.OnStageCompleted += garage.RefreshForStage;
             stageModel.OnStageCompleted += passiveIncome.RecalculateIncome;
             stageModel.OnStageCompleted += newStage =>
             {

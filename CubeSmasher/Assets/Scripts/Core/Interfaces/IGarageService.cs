@@ -1,35 +1,32 @@
 using System;
+using CubeSmasher.Data.Configs;
 
 namespace CubeSmasher.Core.Interfaces
 {
     /// <summary>
-    /// Интерфейс для сервиса гаража (управление машинами)
+    /// Гараж: какие машины открыты и какая сейчас выбрана. Доход машин считает PassiveIncome.
     /// </summary>
     public interface IGarageService
     {
-        /// <summary>
-        /// Получить данные машины по индексу
-        /// </summary>
-        GarageCarData GetCarData(int index);
+        /// <summary>Все машины из конфига, в порядке конфига.</summary>
+        GarageCarData[] AllCars { get; }
 
-        /// <summary>
-        /// Получить все разблокированные машины
-        /// </summary>
-        GarageCarData[] GetUnlockedCars();
+        /// <summary>Открыта ли машина с данным индексом.</summary>
+        bool IsUnlocked(int index);
 
-        /// <summary>
-        /// Проверить разблокирована ли машина
-        /// </summary>
-        bool IsCarUnlocked(int index);
+        /// <summary>Индекс выбранной машины (то, что показано в гараже).</summary>
+        int SelectedIndex { get; }
 
-        /// <summary>
-        /// Разблокировать машину при достижении уровня
-        /// </summary>
-        void UnlockCar(int stageLevel);
+        /// <summary>Выбрать машину. Возвращает false, если она закрыта или индекс некорректен.</summary>
+        bool TrySelect(int index);
 
-        /// <summary>
-        /// Событие разблокировки машины
-        /// </summary>
-        event Action<GarageCarData> OnCarUnlocked;
+        /// <summary>Пересчитать открытые машины по текущей стадии.</summary>
+        void RefreshForStage(int stage);
+
+        /// <summary>Вызывается, когда открылась новая машина.</summary>
+        event Action<int> CarUnlocked;
+
+        /// <summary>Вызывается при смене выбранной машины.</summary>
+        event Action<int> SelectionChanged;
     }
 }

@@ -13,9 +13,12 @@ public class PassiveIncome : IPassiveIncomeService
     private readonly GarageConfig _config;
 
     // Теперь он получает конфиг при рождении
-    public PassiveIncome(GarageConfig config)
+    private readonly IGarageService _garage;
+
+    public PassiveIncome(GarageConfig config, IGarageService garage = null)
     {
         _config = config;
+        _garage = garage;
     }
 
     public void Tick(float deltaTime)
@@ -39,12 +42,12 @@ public class PassiveIncome : IPassiveIncomeService
         // Если машин в конфиге нет — выходим
         if (_config == null || _config.GarageCars == null) return;
 
-        // Проходимся по всем машинам и суммируем доход тех, которые открыты
-        foreach (var car in _config.GarageCars)
+        // Суммируем доход открытых машин; открытость берём из GarageService
+        for (int i = 0; i < _config.GarageCars.Length; i++)
         {
-            if (currentStage >= car.UnlockStage)
+            if (_garage != null ? _garage.IsUnlocked(i) : currentStage >= _config.GarageCars[i].UnlockStage)
             {
-                CurrentIncomePerSecond += car.IncomePerSecond;
+                CurrentIncomePerSecond += _config.GarageCars[i].IncomePerSecond;
             }
         }
     }
