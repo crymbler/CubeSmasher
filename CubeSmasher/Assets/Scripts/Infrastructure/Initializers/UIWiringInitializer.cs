@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +7,8 @@ namespace CubeSmasher.Infrastructure.Initializers
 {
     /// <summary>
     /// Создаёт презентеры и связывает UI с моделями: баланс, прогресс сборки,
-    /// кнопки магазина и гаража, пауза и показ курсора при открытых окнах.
+    /// кнопки магазина и гаража, пауза и курсор при открытых окнах.
+    /// Подписки ведутся через Subscriptions и снимаются в Bootstrapper.OnDestroy.
     /// </summary>
     public class UIWiringInitializer : IGameInitializer
     {
@@ -33,6 +34,7 @@ namespace CubeSmasher.Infrastructure.Initializers
         public void Initialize()
         {
             ServiceLocator services = ServiceLocator.Instance;
+            services.TryGet(out Subscriptions subs);
 
             if (!services.TryGet(out IWallet wallet)) return;
             if (!services.TryGet(out StageModel stageModel)) return;
@@ -45,13 +47,16 @@ namespace CubeSmasher.Infrastructure.Initializers
             // HUD: баланс монет и прогресс сборки машины
             var topHudPresenter = new TopHudPresenter(wallet, _topHudView);
             services.Register(topHudPresenter);
-            stageModel.OnProgressChanged += topHudPresenter.UpdateMachineProgress;
+            if (subs != null)
+            {
+                subs.Track(() => stageModel.OnProgressChanged += topHudPresenter.UpdateMachineProgress,
+                           () => stageModel.OnProgressChanged -= topHudPresenter.UpdateMachineProgress);
+            }
 
             // Гараж: окно выбора машин
             if (services.TryGet(out IGarageService garage) && _garageView != null)
             {
-                var garagePresenter = new GaragePresenter(garage, _garageView);
-                services.Register(garagePresenter);
+                services.Register(new GaragePresenter(garage, _garageView));
             }
 
             // Магазин
@@ -69,20 +74,23 @@ namespace CubeSmasher.Infrastructure.Initializers
             }
 
             // На время открытых окон ставим паузу и показываем курсор
-            if (_shopView != null)
+            if (subs != null)
             {
-                _shopView.OnOpened += gamePause.Enable;
-                _shopView.OnOpened += cursorHider.Show;
-                _shopView.OnClosed += gamePause.Disable;
-                _shopView.OnClosed += cursorHider.Hide;
-            }
+                if (_shopView != null)
+                {
+                    subs.Track(() => _shopView.OnOpened += gamePause.Enable, () => _shopView.OnOpened -= gamePause.Enable);
+                    subs.Track(() => _shopView.OnOpened += cursorHider.Show, () => _shopView.OnOpened -= cursorHider.Show);
+                    subs.Track(() => _shopView.OnClosed += gamePause.Disable, () => _shopView.OnClosed -= gamePause.Disable);
+                    subs.Track(() => _shopView.OnClosed += cursorHider.Hide, () => _shopView.OnClosed -= cursorHider.Hide);
+                }
 
-            if (_garageView != null)
-            {
-                _garageView.OnOpened += gamePause.Enable;
-                _garageView.OnOpened += cursorHider.Show;
-                _garageView.OnClosed += gamePause.Disable;
-                _garageView.OnClosed += cursorHider.Hide;
+                if (_garageView != null)
+                {
+                    subs.Track(() => _garageView.OnOpened += gamePause.Enable, () => _garageView.OnOpened -= gamePause.Enable);
+                    subs.Track(() => _garageView.OnOpened += cursorHider.Show, () => _garageView.OnOpened -= cursorHider.Show);
+                    subs.Track(() => _garageView.OnClosed += gamePause.Disable, () => _garageView.OnClosed -= gamePause.Disable);
+                    subs.Track(() => _garageView.OnClosed += cursorHider.Hide, () => _garageView.OnClosed -= cursorHider.Hide);
+                }
             }
         }
     }
