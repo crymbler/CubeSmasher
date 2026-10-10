@@ -1,11 +1,11 @@
 {
-    "idSave": 118,
-    "lastSaveTime": 1791063602,
+    "idSave": 178,
+    "lastSaveTime": 1791533414,
     "bestScore": 0,
     "isAdsRemoved": false,
     "level": 7,
     "lastGarageCarIndex": 0,
-    "balance": 60.50560736656189,
+    "balance": 186.1306073665619,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 0.5,
@@ -28,9 +28,9 @@
         },
         {
             "id": "debug molot",
-            "level": 21,
+            "level": 44,
             "price": 0.0,
-            "value": 0.0,
+            "value": 100.0,
             "isLocked": false
         }
     ]
