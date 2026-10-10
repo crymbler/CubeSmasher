@@ -44,6 +44,7 @@ public class Bootstrapper : MonoBehaviour
     private IPassiveIncomeService _passiveIncome;
     private TopHudPresenter _topHudPresenter;
     private ShopPresenter _shopPresenter;
+    private Subscriptions _subscriptions;
 
     private void Awake()
     {
@@ -66,6 +67,10 @@ public class Bootstrapper : MonoBehaviour
         // Сохранение — самый первый сервис, остальные на него опираются
         var saveService = new YandexSaveService();
         _services.Register<ISaveService>(saveService);
+
+        // Все подписки UI пишутся сюда, чтобы OnDestroy снял их разом
+        _subscriptions = new Subscriptions();
+        _services.Register(_subscriptions);
 
         // Порядок инициализации явный: экономика, геймплей, оружие, UI
         var initializers = new List<IGameInitializer>
@@ -115,6 +120,8 @@ public class Bootstrapper : MonoBehaviour
 
     private void OnDestroy()
     {
+        // Сначала снимаем подписки UI (в обратном порядке), затем презентеры и контейнер
+        _subscriptions?.Dispose();
         _topHudPresenter?.Dispose();
         _shopPresenter?.Dispose();
 
