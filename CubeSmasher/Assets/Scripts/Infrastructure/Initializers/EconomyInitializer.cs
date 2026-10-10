@@ -62,7 +62,15 @@ namespace CubeSmasher.Infrastructure.Initializers
             stageModel.OnStageCompleted += newStage =>
             {
                 YG2.saves.level = newStage;
+                YG2.saves.stageDetails = 0;
                 _saveService.Save();
+            };
+
+            // Прогресс внутри стадии (детали N из M) сохраняем сразу,
+            // иначе после перезапуска счётчик обнулялся
+            stageModel.OnDetailsChanged += details =>
+            {
+                YG2.saves.stageDetails = details;
             };
         }
     }
