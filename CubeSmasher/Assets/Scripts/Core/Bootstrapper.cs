@@ -122,6 +122,13 @@ public class Bootstrapper : MonoBehaviour
     {
         // Сначала снимаем подписки UI (в обратном порядке), затем презентеры и контейнер
         _subscriptions?.Dispose();
+
+        // Презентер гаража не хранится полем: достаём его из контейнера, пока он ещё зарегистрирован
+        if (_services != null && _services.TryGet(out GaragePresenter garagePresenter))
+        {
+            garagePresenter.Dispose();
+        }
+
         _topHudPresenter?.Dispose();
         _shopPresenter?.Dispose();
 
