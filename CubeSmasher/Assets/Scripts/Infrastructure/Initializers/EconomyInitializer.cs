@@ -31,7 +31,7 @@ namespace CubeSmasher.Infrastructure.Initializers
 
             // Если игра запущена впервые, в сейве level = 0, а стадии начинаются с 1
             int savedStage = YG2.saves.level < 1 ? 1 : YG2.saves.level;
-            var stageModel = new StageModel(savedStage);
+            var stageModel = new StageModel(savedStage, YG2.saves.stageDetails);
             services.Register(stageModel);
 
             // Гараж создаём до дохода: доход считает по открытым машинам

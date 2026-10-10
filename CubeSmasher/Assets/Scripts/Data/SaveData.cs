@@ -20,6 +20,10 @@ namespace YG
         public bool isAdsRemoved = false;
 
         public int level = 0;
+
+        /// <summary>Сколько деталей уже разбито на текущей стадии. Иначе прогресс обнулялся при перезапуске.</summary>
+        public int stageDetails = 0;
+
         public int lastGarageCarIndex = 0;
 
         public double balance = 1;

@@ -12,12 +12,24 @@ public class StageModel
     // Событие для Ядра игры: "Уровень пройден, вот номер нового!"
     public event Action<int> OnStageCompleted;
 
+    // Событие для сохранения: прогресс стадии изменился (текущие детали)
+    public event Action<int> OnDetailsChanged;
+
     public int CurrentStage => _currentStage;
 
-    public StageModel(int initialStage)
+    /// <summary>Сколько деталей разбито на текущей стадии (для сохранения).</summary>
+    public int CurrentDetails => _currentDetails;
+
+    /// <summary>Сколько деталей нужно разбить на текущей стадии.</summary>
+    public int RequiredDetails => _requiredDetails;
+
+    public StageModel(int initialStage, int initialDetails = 0)
     {
         _currentStage = initialStage < 1 ? 1 : initialStage;
         CalculateRequiredDetails();
+
+        // Незавершённый прогресс стадии из сохранения, но не больше требуемого
+        _currentDetails = initialDetails > 0 ? Math.Min(initialDetails, _requiredDetails - 1) : 0;
     }
 
     // Инициализация UI при старте
@@ -32,6 +44,7 @@ public class StageModel
         _currentDetails += amount;
 
         OnProgressChanged?.Invoke(_currentDetails, _requiredDetails, $"Машина {_currentStage}");
+        OnDetailsChanged?.Invoke(_currentDetails);
 
         if (_currentDetails >= _requiredDetails)
         {
@@ -48,6 +61,7 @@ public class StageModel
         // Уведомляем игру, что пора спавнить новую машину
         OnStageCompleted?.Invoke(_currentStage);
         OnProgressChanged?.Invoke(_currentDetails, _requiredDetails, $"Машина {_currentStage}");
+        OnDetailsChanged?.Invoke(_currentDetails);
     }
 
     private void CalculateRequiredDetails()
