@@ -1,33 +1,28 @@
-п»їusing System;
+using System;
 using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
 using CubeSmasher.Data.Configs;
 using UnityEngine;
 
 /// <summary>
-/// Р–РёР·РЅРµРЅРЅС‹Р№ С†РёРєР» РґРµС‚Р°Р»РµР№: СЃРїР°РІРЅ РєРѕСЂРЅРµРІС‹С… РєСѓР±РѕРІ, РЅР°РіСЂР°РґР° Рё РїСЂРѕРіСЂРµСЃСЃ Р·Р° РєР°Р¶РґСѓСЋ
-/// СЂР°Р·Р±РёС‚СѓСЋ РґРµС‚Р°Р»СЊ, СЂР°СЃРєРѕР» РЅР° РѕСЃРєРѕР»РєРё, СѓС‡С‘С‚ РґРµС‚Р°Р»РµР№, РїРѕРєРёРЅСѓРІС€РёС… СЃС‚РѕР» (СѓРїР°Р»Рё Р·Р°
-/// РєСЂР°Р№ Рё РІРµСЂРЅСѓР»РёСЃСЊ РІ РїСѓР»), РіРЅРёРµРЅРёРµ РѕСЃРєРѕР»РєРѕРІ Рё РѕС‚Р»РѕР¶РµРЅРЅС‹Р№ СЂРµСЃРїР°РІРЅ.
-/// Р Р°РЅСЊС€Рµ СЌС‚Р° Р»РѕРіРёРєР° Р±С‹Р»Р° СЂР°Р·РјР°Р·Р°РЅР° РїРѕ Bootstrapper.
+/// Жизненный цикл деталей: спавн корневых кубов, награда и прогресс за каждую
+/// разбитую деталь, раскол на осколки, учёт деталей, покинувших стол, и респавн.
 ///
-/// РљР»СЋС‡РµРІРѕРµ РѕС‚Р»РёС‡РёРµ РѕС‚ СЃС‚Р°СЂРѕРіРѕ РєРѕРґР°: РєРѕР»РёС‡РµСЃС‚РІРѕ РґРµС‚Р°Р»РµР№ РЅР° СЃС‚РѕР»Рµ СЃС‡РёС‚Р°РµС‚СЃСЏ РїРѕ
-/// СЃРїРёСЃРєСѓ Р¶РёРІС‹С… РѕР±СЉРµРєС‚РѕРІ, Р° РЅРµ РїРѕ СЃС‡С‘С‚С‡РёРєСѓ, РєРѕС‚РѕСЂС‹Р№ СѓРјРµРЅСЊС€Р°Р»СЃСЏ С‚РѕР»СЊРєРѕ РїСЂРё
-/// СЂР°Р·Р±РёС‚РёРё РјРѕР»РѕС‚РѕРј. РР·-Р·Р° СЌС‚РѕРіРѕ СЂР°РЅСЊС€Рµ РґРµС‚Р°Р»Рё, СѓРїР°РІС€РёРµ Р·Р° РєСЂР°Р№, РЅРµ Р·Р°РјРµРЅСЏР»РёСЃСЊ.
+/// Пулы: у каждого префаба детали свой CarPartPool (как в старом проекте, где на
+/// каждую из разновидностей был отдельный словарь). Все пулы лежат в _pools.
+/// Пул создаётся по требованию под _poolContainer, поэтому сцену настраивать не нужно.
 /// </summary>
 public class PartLifecycleService
 {
-    /// <summary>Р—Р°РґРµСЂР¶РєР° РїРµСЂРµРґ РїРѕСЏРІР»РµРЅРёРµРј РЅРѕРІРѕРіРѕ РєРѕСЂРЅРµРІРѕРіРѕ РєСѓР±Р° РїРѕСЃР»Рµ РїРѕС‚РµСЂРё РїСЂРµРґС‹РґСѓС‰РµРіРѕ.</summary>
+    /// <summary>Задержка перед появлением нового корневого куба после потери предыдущего.</summary>
     private const float RespawnDelay = 2f;
 
-    /// <summary>РЎРєРѕР»СЊРєРѕ РѕР±СЉРµРєС‚РѕРІ Р·Р°СЂР°РЅРµРµ СЃРѕР·РґР°С‘С‚СЃСЏ РІ РїСѓР»Рµ РґР»СЏ РЅРѕРІРѕРіРѕ РїСЂРµС„Р°Р±Р°.</summary>
-    private const int PoolPrewarmCapacity = 20;
+    /// <summary>Сколько объектов создаётся заранее в новом пуле. Держим малым ради быстрой загрузки.</summary>
+    private const int PoolWarmup = 4;
 
     /// <summary>
-    /// Р“РЅРёРµРЅРёРµ РјРµР»РєРёС… РѕСЃРєРѕР»РєРѕРІ: РґРµС‚Р°Р»Рё РїРѕРєРѕР»РµРЅРёСЏ 2 РёСЃС‡РµР·Р°СЋС‚ С‡РµСЂРµР· 5 СЃРµРєСѓРЅРґ.
-    /// РЎРёСЃС‚РµРјР° DecaySystem РµСЃС‚СЊ РІ РїСЂРѕРµРєС‚Рµ, РЅРѕ Register РІ СЃС‚Р°СЂРѕРј РєРѕРґРµ РЅРµ РІС‹Р·С‹РІР°Р»СЃСЏ
-    /// РЅРё СЂР°Р·Сѓ, РїРѕСЌС‚РѕРјСѓ РѕРЅР° РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°Р»Р°. Р’РєР»СЋС‡Р°С‚СЊ РµС‘ РІ РєРѕРјРјРёС‚Рµ РїСЂРѕ СЂРµС„Р°РєС‚РѕСЂРёРЅРі
-    /// РЅРµР»СЊР·СЏ: РѕСЃРєРѕР»РєРё РЅР°С‡РЅСѓС‚ РїСЂРѕРїР°РґР°С‚СЊ РґРѕ С‚РѕРіРѕ, РєР°Рє РёРіСЂРѕРє РёС… СЂР°Р·РѕР±СЊС‘С‚, Рё РґРѕС…РѕРґ СѓРїР°РґС‘С‚.
-    /// РџРѕСЃС‚Р°РІСЊС‚Рµ true, РµСЃР»Рё С…РѕС‚РёС‚Рµ РІРµСЂРЅСѓС‚СЊ Р·Р°РґСѓРјР°РЅРЅРѕРµ РїРѕ GDD РїРѕРІРµРґРµРЅРёРµ.
+    /// Гниение мелких осколков: детали поколения 2 исчезают через 5 секунд.
+    /// Включать только вместе с переработкой награды, иначе игрок теряет доход.
     /// </summary>
     private const bool EnableShardDecay = false;
 
@@ -40,17 +35,15 @@ public class PartLifecycleService
     private readonly IWallet _wallet;
     private readonly StageModel _stageModel;
     private readonly FractureSystem _fractureSystem;
-
-    // Р”РµР»РµРіР°С‚ СЃРѕР·РґР°С‘Рј РѕРґРёРЅ СЂР°Р·: РѕСЃРєРѕР»РѕРє, РїРѕСЏРІРёРІС€РёР№СЃСЏ РїСЂРё СЂР°СЃРєРѕР»Рµ, СѓС…РѕРґРёС‚ РІ СЃРёСЃС‚РµРјСѓ РіРЅРёРµРЅРёСЏ
     private readonly Action<CarPart> _onFragmentSpawned;
 
-    // РџСѓР» РґР»СЏ РєР°Р¶РґРѕРіРѕ РїСЂРµС„Р°Р±Р° РґРµС‚Р°Р»Рё
-    private readonly Dictionary<CarPart, ObjectPool<CarPart>> _pools = new Dictionary<CarPart, ObjectPool<CarPart>>();
+    /// <summary>Пул на каждый префаб детали: ключ — префаб, значение — его пул.</summary>
+    private readonly Dictionary<CarPart, CarPartPool> _pools = new Dictionary<CarPart, CarPartPool>();
 
-    // РљРѕСЂРЅРµРІС‹Рµ РєСѓР±С‹, РєРѕС‚РѕСЂС‹Рµ СЃРµР№С‡Р°СЃ Р»РµР¶Р°С‚ РЅР° СЃС‚РѕР»Рµ
+    /// <summary>Корневые кубы, которые сейчас лежат на столе.</summary>
     private readonly List<CarPart> _aliveRoots = new List<CarPart>();
 
-    // РњРѕРјРµРЅС‚С‹ РІСЂРµРјРµРЅРё, РєРѕРіРґР° РЅСѓР¶РЅРѕ Р·Р°СЃРїР°РІРЅРёС‚СЊ РЅРѕРІС‹Р№ РєРѕСЂРЅРµРІРѕР№ РєСѓР±
+    /// <summary>Моменты времени, когда нужно заспавнить новый корневой куб.</summary>
     private readonly List<float> _pendingRespawns = new List<float>();
 
     private BagRandomizer _bagRandomizer;
@@ -75,18 +68,18 @@ public class PartLifecycleService
             : null;
     }
 
-    /// <summary>РџРµСЂРІРёС‡РЅС‹Р№ СЃРїР°РІРЅ РєСѓР±РѕРІ РЅР° СЃС‚РѕР»Рµ.</summary>
+    /// <summary>Первичный спавн кубов на столе.</summary>
     public void Begin()
     {
         if (_physics.PartPrefabs != null && _physics.PartPrefabs.Length > 0)
         {
             _bagRandomizer = new BagRandomizer(_physics.PartPrefabs.Length);
-        }
 
-        // РџСЂРѕРіСЂРµРІР°РµРј РїСѓР» РѕСЃРЅРѕРІРЅРѕРіРѕ РїСЂРµС„Р°Р±Р°, С‡С‚РѕР±С‹ РїРµСЂРІС‹Р№ СЃРїР°РІРЅ РЅРµ С‚РѕСЂРјРѕР·РёР»
-        if (_carPartPrefab != null)
-        {
-            GetPool(_carPartPrefab, _physics.PoolCapacity);
+            // Пулы создаём для всех префабов сразу, чтобы не подтормаживало в бою
+            for (int i = 0; i < _physics.PartPrefabs.Length; i++)
+            {
+                GetPool(_physics.PartPrefabs[i]).Prewarm();
+            }
         }
 
         for (int i = 0; i < _physics.StartPartsPerWave; i++)
@@ -101,22 +94,41 @@ public class PartLifecycleService
         _decaySystem?.Tick();
     }
 
-    /// <summary>Р’Р·СЏС‚СЊ РґРµС‚Р°Р»СЊ РёР· РїСѓР»Р° (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРёСЃС‚РµРјРѕР№ СЂР°СЃРєРѕР»Р°).</summary>
+    /// <summary>Взять деталь из пула её префаба (используется системой раскола).</summary>
     public CarPart GetPartFromPool(CarPart prefab)
     {
-        CarPart part = GetPool(prefab, PoolPrewarmCapacity).Get();
+        CarPartPool pool = GetPool(prefab);
+
+        if (!pool.TryGetObject(out CarPart part))
+        {
+            return null;
+        }
+
         part.SourcePrefab = prefab;
         return part;
     }
 
-    private ObjectPool<CarPart> GetPool(CarPart prefab, int initialCapacity)
+    /// <summary>Пул для префаба. Создаётся под _poolContainer при первом обращении.</summary>
+    private CarPartPool GetPool(CarPart prefab)
     {
-        if (!_pools.TryGetValue(prefab, out ObjectPool<CarPart> pool))
+        if (prefab == null)
         {
-            pool = new ObjectPool<CarPart>(prefab, _poolContainer, initialCapacity);
-            _pools[prefab] = pool;
+            Debug.LogError("[PartLifecycleService] Передан null вместо префаба детали");
+            return null;
         }
 
+        if (_pools.TryGetValue(prefab, out CarPartPool pool))
+        {
+            return pool;
+        }
+
+        var holder = new GameObject($"Pool_{prefab.name}");
+        holder.transform.SetParent(_poolContainer, false);
+
+        pool = holder.AddComponent<CarPartPool>();
+        pool.Configure(prefab, PoolWarmup);
+
+        _pools[prefab] = pool;
         return pool;
     }
 
@@ -143,6 +155,7 @@ public class PartLifecycleService
         CarPart prefab = _physics.PartPrefabs[prefabIndex];
 
         CarPart part = GetPartFromPool(prefab);
+        if (part == null) return;
 
         float randomX = UnityEngine.Random.Range(-_physics.SpawnRadius, _physics.SpawnRadius);
         float randomZ = UnityEngine.Random.Range(-_physics.SpawnRadius, _physics.SpawnRadius);
@@ -158,7 +171,7 @@ public class PartLifecycleService
         _aliveRoots.Add(part);
     }
 
-    /// <summary>Р”РµС‚Р°Р»СЊ СЂР°Р·Р±РёС‚Р° РјРѕР»РѕС‚РѕРј: РЅР°РіСЂР°РґР°, РїСЂРѕРіСЂРµСЃСЃ Рё РїРѕРїС‹С‚РєР° СЂР°СЃРєРѕР»Р°.</summary>
+    /// <summary>Деталь разбита молотом: награда, прогресс и попытка раскола.</summary>
     private void HandlePartDestroyed(CarPart destroyedPart)
     {
         destroyedPart.OnDestroyed -= HandlePartDestroyed;
@@ -166,14 +179,14 @@ public class PartLifecycleService
 
         bool wasRootPart = _aliveRoots.Remove(destroyedPart);
 
-        // РќР°РіСЂР°РґР° Р·Р° РєР°Р¶РґСѓСЋ СЂР°Р·Р±РёС‚СѓСЋ РґРµС‚Р°Р»СЊ; С‡РµРј РіР»СѓР±Р¶Рµ РїРѕРєРѕР»РµРЅРёРµ, С‚РµРј РґРѕСЂРѕР¶Рµ РѕСЃРєРѕР»РѕРє
+        // Награда за каждую разбитую деталь; чем глубже поколение, тем дороже осколок
         double reward = _economy.BasePartReward
                         * Mathf.Pow(_economy.PartRewardMultiplier, destroyedPart.Generation);
 
         _wallet.Add(reward);
         _stageModel.AddProgress(1);
 
-        // РќРѕРІС‹Рµ РѕСЃРєРѕР»РєРё РѕС‚РґР°С‘Рј СЃРёСЃС‚РµРјРµ РіРЅРёРµРЅРёСЏ: РѕРЅР° СЃР°РјР° СЂРµС€Р°РµС‚, РєР°РєРёРµ РїРѕРєРѕР»РµРЅРёСЏ С‡РёСЃС‚РёС‚СЊ
+        // Новые осколки уходят в систему гниения (если она включена)
         _fractureSystem.ProcessFracture(
             destroyedPart, _stageModel.CurrentStage, HandlePartDestroyed, _onFragmentSpawned);
 
@@ -183,7 +196,7 @@ public class PartLifecycleService
         }
     }
 
-    /// <summary>Р”РµС‚Р°Р»СЊ СѓС€Р»Р° СЃРѕ СЃС‚РѕР»Р° РЅРµ СЂР°Р·Р±РёС‚РѕР№ (СѓРїР°Р»Р° Р·Р° РєСЂР°Р№) вЂ” СѓС‡РёС‚С‹РІР°РµРј Рё РїР»Р°РЅРёСЂСѓРµРј Р·Р°РјРµРЅСѓ.</summary>
+    /// <summary>Деталь ушла со стола не разбитой (упала за край) — планируем замену.</summary>
     private void HandleRootReturnedToPool(CarPart part)
     {
         if (!_aliveRoots.Remove(part)) return;
