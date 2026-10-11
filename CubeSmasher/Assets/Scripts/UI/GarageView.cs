@@ -18,6 +18,13 @@ public class GarageView : MonoBehaviour, IGarageView
     [SerializeField] private GameObject _window;
     [SerializeField] private Button _closeButton;
 
+    [Header("Камеры")]
+    [Tooltip("Камера арены (миска с деталями). Если пусто, берётся Camera.main")]
+    [SerializeField] private Camera _arenaCamera;
+
+    [Tooltip("Камера гаража, смотрит на витрину с машиной. Если пусто, камеры не переключаются")]
+    [SerializeField] private Camera _garageCamera;
+
     [Header("Витрина")]
     [Tooltip("Пустой объект, куда будет инстанцирована модель выбранной машины")]
     [SerializeField] private Transform _showcase;
@@ -38,6 +45,9 @@ public class GarageView : MonoBehaviour, IGarageView
 
     private void Awake()
     {
+        if (_arenaCamera == null) _arenaCamera = Camera.main;
+        if (_garageCamera != null) _garageCamera.enabled = false;
+
         if (_closeButton != null) _closeButton.onClick.AddListener(Close);
         if (_prevButton != null) _prevButton.onClick.AddListener(() => CarSelected?.Invoke(Mathf.Max(0, _index - 1)));
         if (_nextButton != null) _nextButton.onClick.AddListener(() => CarSelected?.Invoke(Mathf.Min(_count - 1, _index + 1)));
@@ -46,13 +56,24 @@ public class GarageView : MonoBehaviour, IGarageView
     public void Open()
     {
         _window.SetActive(true);
+        SwitchCamera(toGarage: true);
         OnOpened?.Invoke();
     }
 
     public void Close()
     {
         _window.SetActive(false);
+        SwitchCamera(toGarage: false);
         OnClosed?.Invoke();
+    }
+
+    /// <summary>Переключает вид: гараж показывает витрину, закрытие возвращает арену.</summary>
+    private void SwitchCamera(bool toGarage)
+    {
+        if (_garageCamera == null) return;
+
+        if (_arenaCamera != null) _arenaCamera.enabled = !toGarage;
+        _garageCamera.enabled = toGarage;
     }
 
     /// <summary>Презентер сообщает, сколько машин всего, чтобы кнопки знали границы.</summary>
