@@ -116,6 +116,7 @@ public class Bootstrapper : MonoBehaviour
         float dt = Time.deltaTime;
         _partLifecycle?.Tick(dt);
         _passiveIncome?.Tick(dt);
+
     }
 
     private void OnDestroy()

@@ -24,6 +24,9 @@ namespace YG
         /// <summary>Сколько деталей уже разбито на текущей стадии. Иначе прогресс обнулялся при перезапуске.</summary>
         public int stageDetails = 0;
 
+        /// <summary>Облако не приняло последнее сохранение: локальная копия ждёт отправки.</summary>
+        public bool hasPendingLocalSave = false;
+
         public int lastGarageCarIndex = 0;
 
         public double balance = 1;
