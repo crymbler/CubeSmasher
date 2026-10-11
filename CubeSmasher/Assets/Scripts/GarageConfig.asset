@@ -19,5 +19,5 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
-    ModelPrefab: {fileID: 2157896783189753309, guid: 0c6aa3b8724c6dc47ad57d877bed548a, type: 3}
-    MiniIcon: {fileID: 0}
+    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
+    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
