@@ -16,6 +16,9 @@ namespace CubeSmasher.Infrastructure.Initializers
         private readonly ISaveService _saveService;
         private readonly List<UpgradeConfig> _upgradeConfigs;
 
+        /// <summary>Имя лидерборда по стадии. Должно совпадать с таблицей в консоли Яндекс.Игр (см. MANUAL_TODO).</summary>
+        public const string LeaderboardName = "stage";
+
         public EconomyInitializer(GameSettings settings, ISaveService saveService, List<UpgradeConfig> upgradeConfigs)
         {
             _settings = settings;
@@ -87,6 +90,12 @@ namespace CubeSmasher.Infrastructure.Initializers
                            () => stageModel.OnStageCompleted -= onStageSaved);
                 subs.Track(() => stageModel.OnStageCompleted += onStageAd,
                            () => stageModel.OnStageCompleted -= onStageAd);
+
+                // Лидерборд по максимальной стадии. Название таблицы — как в консоли Яндекс.Игр.
+                // Плагин сам отправит результат только при включённых лидербордах и авторизации.
+                Action<int> onStageLeaderboard = stage => YG2.SetLeaderboard(LeaderboardName, stage);
+                subs.Track(() => stageModel.OnStageCompleted += onStageLeaderboard,
+                           () => stageModel.OnStageCompleted -= onStageLeaderboard);
                 subs.Track(() => stageModel.OnDetailsChanged += onDetailsSaved,
                            () => stageModel.OnDetailsChanged -= onDetailsSaved);
             }
