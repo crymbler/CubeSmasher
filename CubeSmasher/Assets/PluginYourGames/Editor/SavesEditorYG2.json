@@ -1,11 +1,12 @@
 {
-    "idSave": 178,
-    "lastSaveTime": 1791533414,
+    "idSave": 195,
+    "lastSaveTime": 1791708364,
     "bestScore": 0,
     "isAdsRemoved": false,
     "level": 7,
+    "stageDetails": 2,
     "lastGarageCarIndex": 0,
-    "balance": 186.1306073665619,
+    "balance": 50981.82528090477,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 0.5,
@@ -14,21 +15,21 @@
     "tapUpgrades": [
         {
             "id": "hammer_damage",
-            "level": 8,
-            "price": 408.6075782775879,
-            "value": 35.831817626953128,
+            "level": 10,
+            "price": 744.6873664855957,
+            "value": 51.59782409667969,
             "isLocked": false
         },
         {
             "id": "hammer_radius",
-            "level": 9,
-            "price": 1103.2404899597168,
-            "value": 42.99818420410156,
+            "level": 14,
+            "price": 4946.967697143555,
+            "value": 106.9932632446289,
             "isLocked": false
         },
         {
             "id": "debug molot",
-            "level": 44,
+            "level": 50,
             "price": 0.0,
             "value": 100.0,
             "isLocked": false

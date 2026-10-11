@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b66362de634a32beb846241a57408e, type: 3}
   m_Name: GarageConfig
   m_EditorClassIdentifier: 
-  GarageCars: []
+  GarageCars:
+  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
+    UnlockStage: 1
+    IncomePerSecond: 1
+    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
+      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
+      \u043D\u0430\u0447\u0430\u0442\u044C"
+    ModelPrefab: {fileID: 2157896783189753309, guid: 0c6aa3b8724c6dc47ad57d877bed548a, type: 3}
+    MiniIcon: {fileID: 0}
