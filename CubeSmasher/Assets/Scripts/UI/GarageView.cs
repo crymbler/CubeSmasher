@@ -1,4 +1,5 @@
 using System;
+using CubeSmasher.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,9 +91,9 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_nameText != null) _nameText.text = name;
         if (_descriptionText != null) _descriptionText.text = description;
         if (_incomeText != null)
-            _incomeText.text = isUnlocked ? $"Доход: {incomePerSecond:N0}/сек" : "Доход: —";
+            _incomeText.text = isUnlocked ? Localization.Get("gar.income", incomePerSecond.ToString("N0")) : Localization.Get("gar.income.none");
         if (_statusText != null)
-            _statusText.text = isUnlocked ? "Открыто" : $"Откроется на стадии {unlockStage}";
+            _statusText.text = isUnlocked ? Localization.Get("gar.status.open") : Localization.Get("gar.status.locked", unlockStage);
 
         ReplaceModel(isUnlocked ? modelPrefab : null);
     }

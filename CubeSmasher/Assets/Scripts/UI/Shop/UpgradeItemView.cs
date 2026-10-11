@@ -1,4 +1,5 @@
 using System;
+using CubeSmasher.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,17 +32,17 @@ public class UpgradeItemView : MonoBehaviour
     {
         if (_iconImage != null) _iconImage.sprite = icon;
         if (_nameText != null) _nameText.text = name;
-        if (_levelText != null) _levelText.text = "Ур. " + level;
+        if (_levelText != null) _levelText.text = Localization.Get("shop.level", level);
 
         if (isLocked)
         {
-            _priceText.text = $"Сцена {unlockStage}"; // Пишем условие разблокировки
+            _priceText.text = Localization.Get("shop.unlock", unlockStage); // Пишем условие разблокировки
             _buttonBackground.color = _expensiveColor;
             _buyButton.interactable = false;
         }
         else if (isMaxLevel)
         {
-            _priceText.text = "МАКС";
+            _priceText.text = Localization.Get("shop.max");
             _buttonBackground.color = _expensiveColor;
             _buyButton.interactable = false;
         }
