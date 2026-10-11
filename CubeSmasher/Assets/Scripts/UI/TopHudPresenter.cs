@@ -27,9 +27,15 @@ public class TopHudPresenter : IDisposable
     }
 
     // Этот метод мы будем вызывать из системы сборки машины (позже)
-    public void UpdateMachineProgress(int current, int max, string name)
+    public void UpdateMachineProgress(int current, int max, int stage)
     {
-        _view.UpdateProgress(current, max, name);
+        _view.UpdateProgress(current, max, stage);
+    }
+
+    /// <summary>Вызывается при пересчёте пассивного дохода (стадия, открытие машины).</summary>
+    public void UpdateIncome(double incomePerSecond)
+    {
+        _view.UpdateIncome(incomePerSecond);
     }
 
     public void Dispose()

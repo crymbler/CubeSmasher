@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
 using UnityEngine;
@@ -51,6 +52,20 @@ namespace CubeSmasher.Infrastructure.Initializers
             {
                 subs.Track(() => stageModel.OnProgressChanged += topHudPresenter.UpdateMachineProgress,
                            () => stageModel.OnProgressChanged -= topHudPresenter.UpdateMachineProgress);
+            }
+
+            // Доход в HUD: начальное значение и обновление при каждом пересчёте.
+            // Делегат хранится в переменной: иначе отписка создаёт новый делегат и не срабатывает.
+            if (services.TryGet(out IPassiveIncomeService income))
+            {
+                topHudPresenter.UpdateIncome(income.CurrentIncomePerSecond);
+
+                Action<int> refreshIncome = _ => topHudPresenter.UpdateIncome(income.CurrentIncomePerSecond);
+                if (subs != null)
+                {
+                    subs.Track(() => stageModel.OnStageCompleted += refreshIncome,
+                               () => stageModel.OnStageCompleted -= refreshIncome);
+                }
             }
 
             // Гараж: окно выбора машин

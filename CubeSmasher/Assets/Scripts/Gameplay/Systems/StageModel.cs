@@ -7,7 +7,7 @@ public class StageModel
     private int _requiredDetails;
 
     // Событие для UI: (Текущие детали, Требуемые детали, Название уровня)
-    public event Action<int, int, string> OnProgressChanged;
+    public event Action<int, int, int> OnProgressChanged; // (детали, нужно, номер стадии)
 
     // Событие для Ядра игры: "Уровень пройден, вот номер нового!"
     public event Action<int> OnStageCompleted;
@@ -35,7 +35,7 @@ public class StageModel
     // Инициализация UI при старте
     public void ForceUpdateUI()
     {
-        OnProgressChanged?.Invoke(_currentDetails, _requiredDetails, $"Машина {_currentStage}");
+        OnProgressChanged?.Invoke(_currentDetails, _requiredDetails, _currentStage);
     }
 
     // Добавляем прогресс (вызывается при уничтожении мелкого кубика)
@@ -43,7 +43,7 @@ public class StageModel
     {
         _currentDetails += amount;
 
-        OnProgressChanged?.Invoke(_currentDetails, _requiredDetails, $"Машина {_currentStage}");
+        OnProgressChanged?.Invoke(_currentDetails, _requiredDetails, _currentStage);
         OnDetailsChanged?.Invoke(_currentDetails);
 
         if (_currentDetails >= _requiredDetails)
@@ -60,7 +60,7 @@ public class StageModel
 
         // Уведомляем игру, что пора спавнить новую машину
         OnStageCompleted?.Invoke(_currentStage);
-        OnProgressChanged?.Invoke(_currentDetails, _requiredDetails, $"Машина {_currentStage}");
+        OnProgressChanged?.Invoke(_currentDetails, _requiredDetails, _currentStage);
         OnDetailsChanged?.Invoke(_currentDetails);
     }
 

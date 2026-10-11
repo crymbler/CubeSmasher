@@ -4,5 +4,6 @@
 public interface ITopHudView
 {
     void UpdateBalance(double balance);
-    void UpdateProgress(int currentDetails, int maxDetails, string stageName);
+    void UpdateProgress(int currentDetails, int maxDetails, int stage);
+    void UpdateIncome(double incomePerSecond);
 }
