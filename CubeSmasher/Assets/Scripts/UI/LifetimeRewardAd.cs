@@ -30,6 +30,11 @@ public class LifetimeRewardAd : MonoBehaviour
     private bool _isRewarded;
     private bool _isAdShowing; // Защита: вызвал ли рекламу именно этот скрипт?
 
+    // Сколько раз подарок уже появлялся: 5%, 10%, 15% от баланса по порядку, дальше 15%
+    private int _giftCount;
+    private static readonly double[] GiftPercents = { 0.05, 0.10, 0.15 };
+    private const double CompensationPercent = 0.05; // досрочное закрытие: 5% от баланса
+
     private void OnEnable()
     {
         // Подписываемся на события PluginYG
@@ -65,6 +70,14 @@ public class LifetimeRewardAd : MonoBehaviour
         _stateCoroutine = StartCoroutine(CooldownRoutine(waitTime));
     }
 
+    // Показывает сообщение, затем скрывает панель и запускает кулдаун
+    private IEnumerator ShowMessageThenCooldown(float showSeconds, float cooldownSeconds)
+    {
+        yield return new WaitForSeconds(showSeconds);
+        _rewardPanel.SetActive(false);
+        _stateCoroutine = StartCoroutine(CooldownRoutine(cooldownSeconds));
+    }
+
     // Корутина ожидания (3 минуты или 60 сек)
     private IEnumerator CooldownRoutine(float waitTime)
     {
@@ -76,7 +89,9 @@ public class LifetimeRewardAd : MonoBehaviour
     private void ShowGift()
     {
         // Берем ровно 10% от текущего баланса
-        _currentRewardAmount = WalletRef.Balance * 0.1;
+        double percent = GiftPercents[Mathf.Min(_giftCount, GiftPercents.Length - 1)];
+        _giftCount++;
+        _currentRewardAmount = WalletRef.Balance * percent;
         
         // Обновляем текст (F0 округлит число для красивого отображения в UI, без десятых долей)
         _rewardText.text = $"+ {_currentRewardAmount:F0}";
@@ -141,14 +156,23 @@ public class LifetimeRewardAd : MonoBehaviour
         if (!_isAdShowing) return; // Игнорируем, если закрылась реклама из другого места игры
         _isAdShowing = false;
 
-        // Если награда получена — КД 3 минуты, если скипнул — КД 60 секунд
+        // Если награда получена — КД 3 минуты
         if (_isRewarded)
         {
             StartCooldown(_cooldownNormal);
         }
         else
         {
-            StartCooldown(_cooldownPenalty);
+            // Досрочное закрытие: компенсация 5% от баланса и короткий КД
+            double compensation = WalletRef.Balance * CompensationPercent;
+            WalletRef.Add(compensation);
+            if (_rewardText != null) _rewardText.text = CubeSmasher.Settings.Localization.Get("reward.compensation");
+            if (_rewardButton != null) _rewardButton.interactable = false;
+            _rewardPanel.SetActive(true);
+
+            // Сообщение видно 2 секунды, потом панель прячется и идёт КД
+            if (_stateCoroutine != null) StopCoroutine(_stateCoroutine);
+            _stateCoroutine = StartCoroutine(ShowMessageThenCooldown(2f, _cooldownPenalty));
         }
     }
 

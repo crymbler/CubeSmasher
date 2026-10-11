@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
 using CubeSmasher.Data.Configs;
 using YG;
@@ -25,6 +26,7 @@ namespace CubeSmasher.Infrastructure.Initializers
         public void Initialize()
         {
             ServiceLocator services = ServiceLocator.Instance;
+            services.TryGet(out Subscriptions subs);
 
             var wallet = new Wallet(YG2.saves.balance);
             services.Register<IWallet>(wallet);
@@ -57,21 +59,37 @@ namespace CubeSmasher.Infrastructure.Initializers
             garage.RefreshForStage(stageModel.CurrentStage);
             passiveIncome.RecalculateIncome(stageModel.CurrentStage);
 
-            stageModel.OnStageCompleted += garage.RefreshForStage;
-            stageModel.OnStageCompleted += passiveIncome.RecalculateIncome;
-            stageModel.OnStageCompleted += newStage =>
+            // Все подписки — через Subscriptions, чтобы снимались при уничтожении Bootstrapper.
+            // Делегаты хранятся в переменных: отписка работает только с тем же объектом.
+            Action<int> onStageSaved = newStage =>
             {
                 YG2.saves.level = newStage;
                 YG2.saves.stageDetails = 0;
                 _saveService.Save();
             };
+            Action<int> onDetailsSaved = details => YG2.saves.stageDetails = details;
 
-            // Прогресс внутри стадии (детали N из M) сохраняем сразу,
-            // иначе после перезапуска счётчик обнулялся
-            stageModel.OnDetailsChanged += details =>
+            // Межстраничная реклама: плагин сам держит таймер (interAdvInterval).
+            // Здесь только просим показ, если игрок не купил отключение рекламы.
+            Action<int> onStageAd = _ =>
             {
-                YG2.saves.stageDetails = details;
+                if (YG2.saves.isAdsRemoved) return;
+                YG2.InterstitialAdvShow();
             };
+
+            if (subs != null)
+            {
+                subs.Track(() => stageModel.OnStageCompleted += garage.RefreshForStage,
+                           () => stageModel.OnStageCompleted -= garage.RefreshForStage);
+                subs.Track(() => stageModel.OnStageCompleted += passiveIncome.RecalculateIncome,
+                           () => stageModel.OnStageCompleted -= passiveIncome.RecalculateIncome);
+                subs.Track(() => stageModel.OnStageCompleted += onStageSaved,
+                           () => stageModel.OnStageCompleted -= onStageSaved);
+                subs.Track(() => stageModel.OnStageCompleted += onStageAd,
+                           () => stageModel.OnStageCompleted -= onStageAd);
+                subs.Track(() => stageModel.OnDetailsChanged += onDetailsSaved,
+                           () => stageModel.OnDetailsChanged -= onDetailsSaved);
+            }
         }
     }
 }
