@@ -109,8 +109,10 @@ public static class UIBuilderTool
 
         tex.SetPixels32(pixels);
         tex.Apply();
-        // Срез 9-slice должен быть не меньше радиуса, иначе углы поедут
-        var slice = new Vector4(radius, radius, radius, radius);
+        // Срез 9-slice берём с запасом над радиусом: иначе при смене радиуса углы поедут.
+        // Условие: срез*2 < размер текстуры.
+        float sliceSize = Mathf.Min(radius + 4f, size * 0.5f - 1f);
+        var slice = new Vector4(sliceSize, sliceSize, sliceSize, sliceSize);
         return SaveSpriteFromTexture(tex, name, slice);
     }
 
@@ -223,7 +225,10 @@ public static class UIBuilderTool
     private static GameObject NewUI(string name, Transform parent)
     {
         var go = new GameObject(name, typeof(RectTransform));
-        go.layer = LayerMask.NameToLayer("UI");
+
+        // Слой UI может быть переименован или отсутствовать: -1 в go.layer недопустим
+        int uiLayer = LayerMask.NameToLayer("UI");
+        go.layer = uiLayer >= 0 ? uiLayer : 0;
         if (parent != null) go.transform.SetParent(parent, false);
         return go;
     }
@@ -289,7 +294,8 @@ public static class UIBuilderTool
     private static void SetFontStyle(TextMeshProUGUI tmp, bool bold)
     {
         if (!bold) return;
-        if (TMP_Settings.defaultFontAsset != null) tmp.fontStyle = FontStyles.Bold | FontStyles.Normal;
+        // FontStyles.Normal == 0: OR с Bold ничего не добавлял
+        tmp.fontStyle = FontStyles.Bold;
     }
 
     private static void SavePrefab(GameObject root, string name)
@@ -398,7 +404,9 @@ public static class UIBuilderTool
         close.transform.SetParent(root.transform, false);
         Place(close.GetComponent<RectTransform>(), new Vector2(1, 1), new Vector2(1, 1),
             new Vector2(-24, -24), new Vector2(64, 64));
-        var closeShadow = close.transform.Find("Shadow");
+
+        // В углу панели тень кнопки свисает за обводку — убираем
+        Transform closeShadow = close.transform.Find("Shadow");
         if (closeShadow != null) Object.DestroyImmediate(closeShadow.gameObject);
 
         SavePrefab(root, "Panel_Window");
