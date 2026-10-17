@@ -9,8 +9,8 @@ using YG;
 /// </summary>
 public class OfflineEarningsService
 {
-    /// <summary>Больше 24 часов отсутствия не учитываем — защита от подмены времени.</summary>
-    private const long MaxOfflineSeconds = 86400;
+    /// <summary>Больше 4 часов отсутствия не учитываем. Решение владельца проекта (PLAN_V2, T18).</summary>
+    private const long MaxOfflineSeconds = 14400;
 
     private readonly IWallet _wallet;
     private readonly IPassiveIncomeService _passiveIncome;

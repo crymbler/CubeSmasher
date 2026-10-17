@@ -30,10 +30,10 @@ public class LifetimeRewardAd : MonoBehaviour
     private bool _isRewarded;
     private bool _isAdShowing; // Защита: вызвал ли рекламу именно этот скрипт?
 
-    // Сколько раз подарок уже появлялся: 5%, 10%, 15% от баланса по порядку, дальше 15%
+    // Сколько раз подарок уже появлялся: 3%, 5%, 8% от баланса по порядку, дальше 8%
     private int _giftCount;
-    private static readonly double[] GiftPercents = { 0.05, 0.10, 0.15 };
-    private const double CompensationPercent = 0.05; // досрочное закрытие: 5% от баланса
+    private static readonly double[] GiftPercents = { 0.03, 0.05, 0.08 };
+    private const double CompensationPercent = 0.03; // досрочное закрытие: 5% от баланса
 
     private void OnEnable()
     {
