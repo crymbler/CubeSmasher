@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: EconomyConfig
   m_EditorClassIdentifier: 
   BasePartReward: 5
-  PartRewardMultiplier: 1.25
+  PartRewardMultiplier: 1.3

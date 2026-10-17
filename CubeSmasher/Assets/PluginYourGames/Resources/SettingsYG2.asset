@@ -21,15 +21,15 @@ MonoBehaviour:
     payingStatus: 0
   InterstitialAdv:
     showFirstAdv: 1
-    interAdvInterval: 120
+    interAdvInterval: 300
     postponeCallByFail: 1
-    postponeCallTimer: 10
+    postponeCallTimer: 120
     labelAdvSimLabel: 0
   Leaderboards:
     enable: 1
     saveScoreAnonymousPlayers: 1
     listLBSim:
-    - technoName: TopPlayers
+    - technoName: stage
       entries: '1. Max: 10
 
         2. Masha: 15
@@ -121,65 +121,6 @@ MonoBehaviour:
         rank: 5
         score: 60
         extraData: 
-    - technoName: time
-      entries: '1. Max: 7123
-
-        2. Maria: 15321
-
-        3. anonymous: 62000
-
-        4.
-        Player 4: 122000
-
-        5. Player current: 127000
-
-        6. Player 6:
-        340000'
-      isDefault: 0
-      isInvertSortOrder: 1
-      decimalOffset: 0
-      type: numeric
-      players:
-      - rank: 1
-        name: Max
-        score: 7123
-        photo: demo image
-        uniqueID: 789
-        extraData: 
-      - rank: 2
-        name: Maria
-        score: 15321
-        photo: demo image
-        uniqueID: 987
-        extraData: 
-      - rank: 3
-        name: anonymous
-        score: 62000
-        photo: anonymous
-        uniqueID: 891
-        extraData: 
-      - rank: 4
-        name: Player 4
-        score: 122000
-        photo: demo image
-        uniqueID: 321
-        extraData: 
-      - rank: 5
-        name: Player current
-        score: 127000
-        photo: demo image
-        uniqueID: 000
-        extraData: 
-      - rank: 6
-        name: Player 6
-        score: 340000
-        photo: demo image
-        uniqueID: 321
-        extraData: 
-      currentPlayer:
-        rank: 5
-        score: 127000
-        extraData: 
   Localization:
     setLanguageMod: 1
   Payments:
@@ -187,8 +128,9 @@ MonoBehaviour:
     testBuyFail: 0
     purshases:
     - id: RemoveAd
-      title: Gun
-      description: Product - Gun
+      title: "\u0443\u0431\u0440\u0430\u0442\u044C \u0440\u0435\u043A\u043B\u0430\u043C\u0443"
+      description: "\u0443\u0431\u0435\u0440\u0438 \u0440\u0435\u043A\u043B\u0430\u043C\u0443
+        \u0438 \u0438\u0433\u0440\u0430\u0439 \u043D\u0435 \u043E\u0442\u0432\u043B\u0435\u043A\u0430\u044F\u0441\u044C"
       imageURI: demo image
       price: 10 YAN
       priceValue: 10
@@ -257,6 +199,9 @@ MonoBehaviour:
     pixelRatioValue: 1.3
     developerBuild: 0
   platformInfo:
+    localProdGameId: 
+    localProdPort: 8080
+    localProdUseCsp: 1
     ownHost: 0
   platformToggles:
     showFirstAdv: 0
