@@ -20,19 +20,25 @@ public static class UIBuilderTool
         EnsureFolders();
 
         Sprite roundedWhite = MakeRoundedSprite("rounded_white", 64, 16, Color.white, Color.white, 0);
+        Sprite voxelGreen = MakeVoxelButtonSprite("voxel_btn_green", 64, 64,
+            CubeSmasher.UI.UITheme.ButtonLight, CubeSmasher.UI.UITheme.ButtonMain,
+            CubeSmasher.UI.UITheme.ButtonDark, CubeSmasher.UI.UITheme.ButtonOutline);
+        Sprite voxelBlue = MakeVoxelButtonSprite("voxel_btn_blue", 64, 64,
+            CubeSmasher.UI.UITheme.ButtonSecondaryLight, CubeSmasher.UI.UITheme.ButtonSecondaryMain,
+            CubeSmasher.UI.UITheme.ButtonSecondaryDark, CubeSmasher.UI.UITheme.ButtonOutline);
         Sprite roundedPanel = MakeRoundedSprite("rounded_panel", 96, 24, Color.white,
             CubeSmasher.UI.UITheme.PanelBorder, CubeSmasher.UI.UITheme.BorderWidth);
         Sprite circle = MakeCircleSprite("circle_white", 64, Color.white);
         Sprite gradient = MakeGradientSprite("gradient_bar", 256, 16,
             CubeSmasher.UI.UITheme.ProgressFillFrom, CubeSmasher.UI.UITheme.ProgressFillTo);
 
-        BuildButtonPrimary(roundedWhite);
-        BuildButtonSecondary(roundedWhite);
-        BuildButtonIcon(roundedWhite);
+        BuildButtonPrimary(voxelGreen);
+        BuildButtonSecondary(voxelBlue);
+        BuildButtonIcon(voxelBlue);
         BuildPanelWindow(roundedPanel, roundedWhite);
         BuildProgressBar(roundedWhite, gradient);
         BuildCurrencyBadge(circle, roundedWhite);
-        BuildUpgradeCard(roundedPanel, roundedWhite);
+        BuildUpgradeCard(roundedPanel, voxelGreen);
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -114,6 +120,39 @@ public static class UIBuilderTool
         float sliceSize = Mathf.Min(radius + 4f, size * 0.5f - 1f);
         var slice = new Vector4(sliceSize, sliceSize, sliceSize, sliceSize);
         return SaveSpriteFromTexture(tex, name, slice);
+    }
+
+    /// <summary>
+    /// Voxel-кнопка: прямоугольник с полосой света сверху, темным краем снизу и контуром.
+    /// Берём фаску из UITheme.BevelHeight. Без скруглений.
+    /// </summary>
+    private static Sprite MakeVoxelButtonSprite(string name, int width, int height,
+                                                Color light, Color main, Color dark, Color outline)
+    {
+        int bevel = CubeSmasher.UI.UITheme.BevelHeight;
+        int border = CubeSmasher.UI.UITheme.BorderWidth;
+        var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        var pixels = new Color32[width * height];
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                Color c;
+                bool onEdge = x < border || x >= width - border || y < border || y >= height - border;
+                if (onEdge) c = outline;
+                else if (y >= height - border - bevel) c = light;   // верхняя полоса (y растёт вверх)
+                else if (y < border + bevel) c = dark;              // нижний край
+                else c = main;
+                pixels[y * width + x] = c;
+            }
+        }
+
+        tex.SetPixels32(pixels);
+        tex.Apply();
+        // Срез 9-slice: контур + фаска, чтобы растягивание не портило края
+        int slice = border + bevel;
+        return SaveSpriteFromTexture(tex, name, new Vector4(border, slice, border, slice));
     }
 
     private static Sprite MakeCircleSprite(string name, int size, Color fill)
@@ -496,68 +535,100 @@ public static class UIBuilderTool
         SavePrefab(root, "CurrencyBadge");
     }
 
-    private static void BuildUpgradeCard(Sprite panelSprite, Sprite rounded)
+    private static void BuildUpgradeCard(Sprite panelSprite, Sprite voxelButton)
     {
         GameObject root = NewUI("UpgradeCard", null);
-        var rt = root.GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(880, 200);
+        root.GetComponent<RectTransform>().sizeDelta = new Vector2(900, 240);
 
         Image bg = AddImage(root, panelSprite, CubeSmasher.UI.UITheme.Panel);
         bg.raycastTarget = true;
 
+        // Иконка улучшения (слева)
         GameObject iconBox = NewUI("Icon", root.transform);
         var iconBg = iconBox.AddComponent<Image>();
-        iconBg.sprite = rounded;
-        iconBg.type = Image.Type.Sliced;
-        iconBg.color = CubeSmasher.UI.UITheme.ProgressTrack;
+        iconBg.color = CubeSmasher.UI.UITheme.MetalMid;
         iconBg.raycastTarget = false;
         Place(iconBox.GetComponent<RectTransform>(), new Vector2(0, 0.5f), new Vector2(0, 0.5f),
-            new Vector2(24, 0), new Vector2(120, 120));
+            new Vector2(24, 0), new Vector2(128, 128));
 
-        GameObject iconImgGo = NewUI("Image", iconBox.transform);
-        var iconImg = iconImgGo.AddComponent<Image>();
-        iconImg.preserveAspect = true;
-        iconImg.raycastTarget = false;
-        Place(iconImgGo.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-            Vector2.zero, new Vector2(88, 88));
+        GameObject iconImg = NewUI("Image", iconBox.transform);
+        var img = iconImg.AddComponent<Image>();
+        img.preserveAspect = true;
+        img.raycastTarget = false;
+        Place(iconImg.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+            Vector2.zero, new Vector2(96, 96));
 
-        TextMeshProUGUI name = AddText(root, "Name", "Улучшение", 38, CubeSmasher.UI.UITheme.TextPrimary);
+        // Название (сверху справа от иконки)
+        TextMeshProUGUI name = AddText(root, "Name", "Название улучшения", 40, CubeSmasher.UI.UITheme.TextPrimary);
         name.alignment = TextAlignmentOptions.Left;
-        Place(name.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(0, 1),
-            new Vector2(168, -28), new Vector2(480, 44));
         SetFontStyle(name, true);
+        Place(name.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(0, 1),
+            new Vector2(176, -24), new Vector2(520, 48));
 
-        TextMeshProUGUI level = AddText(root, "Level", "Ур. 1", 28, CubeSmasher.UI.UITheme.TextSecondary);
+        // Уровень «Ур. 3 / 31» и полоска
+        TextMeshProUGUI level = AddText(root, "Level", "Ур. 1 / 31", 28, CubeSmasher.UI.UITheme.TextSecondary);
         level.alignment = TextAlignmentOptions.Left;
         Place(level.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(0, 1),
-            new Vector2(168, -76), new Vector2(240, 34));
+            new Vector2(176, -76), new Vector2(240, 34));
 
-        TextMeshProUGUI stat = AddText(root, "Stat", "2.00 → 1.95 с", 28, CubeSmasher.UI.UITheme.Positive);
+        GameObject bar = BuildMiniBar();
+        bar.transform.SetParent(root.transform, false);
+        Place(bar.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(0, 1),
+            new Vector2(176, -116), new Vector2(340, 16));
+
+        // Характеристика: было → станет (изменение)
+        TextMeshProUGUI stat = AddText(root, "Stat", "2.00 → 1.95 с  (−0.05 с)", 30, CubeSmasher.UI.UITheme.NeonGreen);
         stat.alignment = TextAlignmentOptions.Left;
-        Place(stat.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(0, 1),
-            new Vector2(168, -114), new Vector2(480, 34));
+        SetFontStyle(stat, true);
+        Place(stat.GetComponent<RectTransform>(), new Vector2(0, 0), new Vector2(0, 0),
+            new Vector2(176, 24), new Vector2(520, 40));
 
-        GameObject buy = BuildButton("Buy", rounded, 200, 72, "Купить", CubeSmasher.UI.UITheme.Accent, 32);
+        // Цена рядом с монетой и кнопка «Купить» справа
+        GameObject coin = NewUI("Coin", root.transform);
+        var coinImg = coin.AddComponent<Image>();
+        coinImg.color = CubeSmasher.UI.UITheme.SoftCurrency;
+        coinImg.raycastTarget = false;
+        Place(coin.GetComponent<RectTransform>(), new Vector2(1, 0.5f), new Vector2(1, 0.5f),
+            new Vector2(-232, 22), new Vector2(40, 40));
+
+        TextMeshProUGUI price = AddText(root, "Price", "120", 40, CubeSmasher.UI.UITheme.TextPrimary);
+        price.alignment = TextAlignmentOptions.Left;
+        SetFontStyle(price, true);
+        Place(price.GetComponent<RectTransform>(), new Vector2(1, 0.5f), new Vector2(1, 0.5f),
+            new Vector2(-180, 22), new Vector2(140, 48));
+
+        GameObject buy = BuildButton("Buy", voxelButton, 180, 72, "Купить", CubeSmasher.UI.UITheme.Accent, 32);
         buy.transform.SetParent(root.transform, false);
         Place(buy.GetComponent<RectTransform>(), new Vector2(1, 0.5f), new Vector2(1, 0.5f),
-            new Vector2(-24, -18), new Vector2(200, 72));
-
-        TextMeshProUGUI price = AddText(root, "Price", "120", 26, CubeSmasher.UI.UITheme.TextSecondary);
-        price.alignment = TextAlignmentOptions.Right;
-        Place(price.GetComponent<RectTransform>(), new Vector2(1, 1), new Vector2(1, 1),
-            new Vector2(-24, -28), new Vector2(200, 30));
+            new Vector2(-24, -28), new Vector2(180, 72));
 
         SavePrefab(root, "UpgradeCard");
     }
 
-    // ------------------------------------------------------------------
-    // Приведение к известному состоянию и проверка
-    // ------------------------------------------------------------------
+    /// <summary>Мини-полоска уровня: фон и заливка, заливку двигать через Slider.value.</summary>
+    private static GameObject BuildMiniBar()
+    {
+        GameObject root = NewUI("LevelBar", null);
+        var rt = root.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(340, 16);
 
-    /// <summary>
-    /// Материал UI всегда по умолчанию (null), множитель PPU = 1, якорь по центру.
-    /// Не надеемся на значения, которые Unity подставляет сама.
-    /// </summary>
+        var track = root.AddComponent<Image>();
+        track.color = CubeSmasher.UI.UITheme.ProgressTrack;
+        track.raycastTarget = false;
+
+        GameObject fill = NewUI("Fill", root.transform);
+        var fillImg = fill.AddComponent<Image>();
+        fillImg.color = CubeSmasher.UI.UITheme.NeonGreen;
+        fillImg.raycastTarget = false;
+        var fillRt = fill.GetComponent<RectTransform>();
+        fillRt.anchorMin = Vector2.zero;
+        fillRt.anchorMax = new Vector2(0.3f, 1f); // 30% — пример, реально задаётся скриптом
+        fillRt.offsetMin = Vector2.zero;
+        fillRt.offsetMax = Vector2.zero;
+
+        return root;
+    }
+
     private static void ApplyDefaults(GameObject root)
     {
         var rt = root.GetComponent<RectTransform>();
