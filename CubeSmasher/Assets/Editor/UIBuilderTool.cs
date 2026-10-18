@@ -269,7 +269,9 @@ public static class UIBuilderTool
         var img = go.AddComponent<Image>();
         img.sprite = sprite;
         img.color = color;
-        img.type = sprite != null && sprite.border != Vector4.zero ? Image.Type.Sliced : type;
+        // У спрайта без границ Type.Sliced ломает отрисовку: Sliced только при наличии border
+        bool hasBorder = sprite != null && sprite.border != Vector4.zero;
+        img.type = hasBorder ? Image.Type.Sliced : Image.Type.Simple;
         img.raycastTarget = false;
         return img;
     }
@@ -301,6 +303,7 @@ public static class UIBuilderTool
     private static void SavePrefab(GameObject root, string name)
     {
         string path = PrefabFolder + "/" + name + ".prefab";
+        ApplyDefaults(root);
         PrefabUtility.SaveAsPrefabAsset(root, path);
         Object.DestroyImmediate(root);
         Debug.Log("[UIBuilder] префаб: " + path);
@@ -545,5 +548,94 @@ public static class UIBuilderTool
             new Vector2(-24, -28), new Vector2(200, 30));
 
         SavePrefab(root, "UpgradeCard");
+    }
+
+    // ------------------------------------------------------------------
+    // Приведение к известному состоянию и проверка
+    // ------------------------------------------------------------------
+
+    /// <summary>
+    /// Материал UI всегда по умолчанию (null), множитель PPU = 1, якорь по центру.
+    /// Не надеемся на значения, которые Unity подставляет сама.
+    /// </summary>
+    private static void ApplyDefaults(GameObject root)
+    {
+        var rt = root.GetComponent<RectTransform>();
+        if (rt != null)
+        {
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+        }
+
+        foreach (Image img in root.GetComponentsInChildren<Image>(true))
+        {
+            img.material = null;
+            img.pixelsPerUnitMultiplier = 1f;
+        }
+    }
+
+    /// <summary>Удаляет Art/UI и Prefabs/UI и собирает заново. Префабы, уже вставленные в сцены, станут Missing.</summary>
+    [MenuItem("Tools/CubeSmasher/Reset UI Assets (delete and rebuild)")]
+    public static void ResetAll()
+    {
+        if (AssetDatabase.IsValidFolder(PrefabFolder)) AssetDatabase.DeleteAsset(PrefabFolder);
+        if (AssetDatabase.IsValidFolder(ArtFolder)) AssetDatabase.DeleteAsset(ArtFolder);
+        AssetDatabase.Refresh();
+        BuildAll();
+    }
+
+    /// <summary>Проверяет 7 префабов: спрайты, материалы, шрифты. Результат в Console.</summary>
+    [MenuItem("Tools/CubeSmasher/Verify UI Prefabs")]
+    public static void VerifyPrefabs()
+    {
+        string[] names = { "Button_Primary", "Button_Secondary", "Button_Icon", "Panel_Window",
+                           "ProgressBar", "CurrencyBadge", "UpgradeCard" };
+        int problems = 0;
+
+        foreach (string n in names)
+        {
+            string path = PrefabFolder + "/" + n + ".prefab";
+            if (!AssetDatabase.LoadAssetAtPath<GameObject>(path))
+            {
+                Debug.LogError("[Verify] нет префаба: " + path);
+                problems++;
+                continue;
+            }
+
+            GameObject go = PrefabUtility.LoadPrefabContents(path);
+
+            foreach (Image img in go.GetComponentsInChildren<Image>(true))
+            {
+                if (img.sprite == null && img.name != "Icon" && img.name != "Image")
+                {
+                    Debug.LogError("[Verify] " + n + "/" + img.name + ": нет Sprite");
+                    problems++;
+                }
+                if (img.material != null)
+                {
+                    Debug.LogError("[Verify] " + n + "/" + img.name + ": материал " + img.material.name + " вместо UI/Default");
+                    problems++;
+                }
+                if (!Mathf.Approximately(img.pixelsPerUnitMultiplier, 1f))
+                {
+                    Debug.LogError("[Verify] " + n + "/" + img.name + ": PPU multiplier = " + img.pixelsPerUnitMultiplier);
+                    problems++;
+                }
+            }
+
+            foreach (TextMeshProUGUI tmp in go.GetComponentsInChildren<TextMeshProUGUI>(true))
+            {
+                if (tmp.font == null)
+                {
+                    Debug.LogError("[Verify] " + n + "/" + tmp.name + ": нет Font Asset");
+                    problems++;
+                }
+            }
+
+            PrefabUtility.UnloadPrefabContents(go);
+        }
+
+        Debug.Log(problems == 0 ? "[Verify] Все 7 префабов в порядке" : "[Verify] Проблем: " + problems);
     }
 }

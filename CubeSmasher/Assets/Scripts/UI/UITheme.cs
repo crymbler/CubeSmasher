@@ -14,8 +14,8 @@ namespace CubeSmasher.UI
         public static readonly Color SkyBottom = C(0xE8F6FF);
 
         // --- Панели ---
-        public static readonly Color Panel = C(0xFFFFFF, 240);
-        public static readonly Color PanelBorder = C(0xBFDCF0);
+        public static readonly Color Panel = C(0xFFFFFF, 255);
+        public static readonly Color PanelBorder = C(0x7FA8C9); // темнее: белая панель на светлом фоне иначе не читается
         public static readonly Color PanelShadow = C(0x8FB4D0, 46);
 
         // --- Акценты ---
