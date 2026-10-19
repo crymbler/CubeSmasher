@@ -3,58 +3,71 @@ using UnityEngine;
 namespace CubeSmasher.UI
 {
     /// <summary>
-    /// Палитра интерфейса. Две группы:
-    ///  - Гараж (из скриншотов владельца): металл и неон. Используется для кнопок и заголовков.
-    ///  - Светлая база: панели и текст, чтобы UI читался на небе арены.
-    /// Значения — из docs/PLAN_V2.md. Менять здесь, а не в префабах.
+    /// Палитра интерфейса. Основа — цвета гаража со скриншотов владельца:
+    /// тёмный металл (2E3350, 3D4470, 1A2438), светлый металл (7B8FE0, 8FA8E8),
+    /// неон (9CFF3D, F451F6).
+    ///
+    /// Правило текста: на тёмном металле — белый, на неоне и светлом металле — тёмный.
+    /// Менять значения здесь, а не в префабах.
     /// </summary>
     public static class UITheme
     {
-        // --- Гараж: металл ---
-        public static readonly Color MetalDark = C(0x1A2438);     // глубокий фон панелей гаража
-        public static readonly Color MetalMid = C(0x3D4470);      // металлические рамки
-        public static readonly Color MetalLight = C(0x7B8FE0);    // светлый металл, подсветка граней
-        public static readonly Color MetalSheen = C(0x8FA8E8);    // блик
-        public static readonly Color MetalBlue = C(0x2E3350);     // отражающий металл, тень
+        // --- Металл ---
+        public static readonly Color MetalDarkest = C(0x1A2438);
+        public static readonly Color MetalDark = C(0x2E3350);
+        public static readonly Color MetalMid = C(0x3D4470);
+        public static readonly Color MetalBlue = C(0x4A5080);
+        public static readonly Color MetalLight = C(0x7B8FE0);
+        public static readonly Color MetalSheen = C(0x8FA8E8);
 
-        // --- Гараж: неон ---
-        public static readonly Color NeonGreen = C(0x9CFF3D);     // кнопки-акценты, «Купить»
-        public static readonly Color NeonPink = C(0xF451F6);      // подсветка, активное состояние
-        public static readonly Color NeonDeep = C(0x4A5080);      // промежуточный тон
+        // --- Неон ---
+        public static readonly Color NeonGreen = C(0x9CFF3D);
+        public static readonly Color NeonGreenLight = C(0xC4FF8A);
+        public static readonly Color NeonGreenDark = C(0x5E9E22);
+        public static readonly Color NeonPink = C(0xF451F6);
+        public static readonly Color NeonPinkLight = C(0xFF9BFA);
+        public static readonly Color NeonPinkDark = C(0xA832A8);
 
-        // --- Светлая база (панели и текст) ---
+        // --- Фон сцены ---
         public static readonly Color SkyTop = C(0x8FD3FF);
         public static readonly Color SkyBottom = C(0xE8F6FF);
-        public static readonly Color Panel = C(0xFFFFFF, 255);
-        public static readonly Color PanelBorder = C(0x7FA8C9);
-        public static readonly Color PanelShadow = C(0x2E3350, 60);
 
-        // --- Кнопки: фаска voxel-стиля (верх светлее, низ темнее) ---
-        public static readonly Color ButtonLight = C(0xB8FF7A);   // верхняя полоса неона
-        public static readonly Color ButtonMain = NeonGreen;      // основная поверхность
-        public static readonly Color ButtonDark = C(0x5E9E22);    // нижний край
-        public static readonly Color ButtonOutline = MetalBlue;   // контур 4 px
+        // --- Панели: тёмный металл ---
+        public static readonly Color Panel = MetalDark;
+        public static readonly Color PanelHeader = MetalMid;
+        public static readonly Color PanelContent = MetalDarkest;
+        public static readonly Color PanelBorder = MetalLight;
+        public static readonly Color PanelShadow = C(0x0B1020, 150);
 
-        public static readonly Color ButtonSecondaryLight = C(0xA8B8FF);
+        // --- Кнопки ---
+        public static readonly Color ButtonLight = NeonGreenLight;
+        public static readonly Color ButtonMain = NeonGreen;
+        public static readonly Color ButtonDark = NeonGreenDark;
+        public static readonly Color ButtonOutline = MetalDarkest;
+
+        public static readonly Color ButtonSecondaryLight = MetalSheen;
         public static readonly Color ButtonSecondaryMain = MetalLight;
-        public static readonly Color ButtonSecondaryDark = C(0x4A5080);
+        public static readonly Color ButtonSecondaryDark = MetalBlue;
+
+        public static readonly Color ButtonDangerLight = NeonPinkLight;
+        public static readonly Color ButtonDangerMain = NeonPink;
+        public static readonly Color ButtonDangerDark = NeonPinkDark;
 
         public static readonly Color Accent = NeonGreen;
-        public static readonly Color AccentPressed = C(0x7ACC2A);
-        public static readonly Color AccentLight = C(0xB8FF7A);
-        public static readonly Color AccentSecond = MetalLight;
+        public static readonly Color AccentPressed = NeonGreenDark;
+        public static readonly Color AccentLight = NeonGreenLight;
+        public static readonly Color AccentSecond = NeonPink;
 
         // --- Текст ---
-        public static readonly Color TextPrimary = C(0x1A2438);
-        public static readonly Color TextSecondary = C(0x4A5080);
-        public static readonly Color TextOnAccent = C(0x1A2438);
-        public static readonly Color TextOnMetal = C(0xFFFFFF);
+        public static readonly Color TextPrimary = C(0xFFFFFF);
+        public static readonly Color TextSecondary = MetalSheen;
+        public static readonly Color TextMuted = C(0x8A93B8);
+        public static readonly Color TextOnAccent = MetalDarkest;
 
         // --- Состояния ---
         public static readonly Color Positive = NeonGreen;
         public static readonly Color Negative = NeonPink;
-        public static readonly Color Muted = C(0x8A93B8);
-        public static readonly Color Disabled = C(0xC9D0E6);
+        public static readonly Color Disabled = MetalBlue;
 
         // --- Валюты ---
         public static readonly Color SoftCurrency = C(0xFFE040);
@@ -62,15 +75,16 @@ namespace CubeSmasher.UI
         public static readonly Color HardCurrency = NeonPink;
 
         // --- Прогресс ---
-        public static readonly Color ProgressTrack = C(0x2E3350, 200);
-        public static readonly Color ProgressFillFrom = MetalLight;
-        public static readonly Color ProgressFillTo = NeonGreen;
+        public static readonly Color ProgressTrack = MetalDarkest;
+        public static readonly Color ProgressShadow = C(0x0B1020);
+        public static readonly Color ProgressFill = NeonGreen;
+        public static readonly Color ProgressFillTop = NeonGreenLight;
 
-        // --- Метрики (voxel: квадратные углы, толстая фаска) ---
-        public const int PanelRadius = 0;      // без скруглений
+        // --- Метрики ---
+        public const int PanelRadius = 0;
         public const int ButtonRadius = 0;
         public const int BorderWidth = 4;
-        public const int BevelHeight = 8;      // высота фаски
+        public const int BevelHeight = 8;
         public const int SafeMargin = 24;
 
         public static Color C(uint rgb, byte alpha = 255)
