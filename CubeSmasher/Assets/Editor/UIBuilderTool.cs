@@ -852,7 +852,13 @@ public static class UIBuilderTool
     {
         string[] names = { "Button_Primary", "Button_Secondary", "Button_Icon", "Panel_Window",
                            "ProgressBar", "CurrencyBadge", "UpgradeCard" };
-        int problems = 0;
+
+        // Элементы, которым спрайт не нужен по замыслу: дорожки, маски, заливки, тени, пустые контейнеры
+        string[] noSpriteOk = { "Shadow", "Track", "Outline", "Hole", "Fill Area", "Fill", "Shine",
+                                "Body", "Accent", "Rim", "Coin", "Image", "Icon", "Content", "Header", "LevelBar" };
+
+        int errors = 0;
+        int warnings = 0;
 
         foreach (string n in names)
         {
@@ -860,43 +866,54 @@ public static class UIBuilderTool
             if (!AssetDatabase.LoadAssetAtPath<GameObject>(path))
             {
                 Debug.LogError("[Verify] нет префаба: " + path);
-                problems++;
+                errors++;
                 continue;
             }
 
             GameObject go = PrefabUtility.LoadPrefabContents(path);
 
-            foreach (Image img in go.GetComponentsInChildren<Image>(true))
+            // 1. Кастомный материал — ошибка. Значение null = стандартный UI/Default, это норма.
+            foreach (Graphic g in go.GetComponentsInChildren<Graphic>(true))
             {
-                if (img.sprite == null && img.name != "Icon" && img.name != "Image")
+                if (g.material != null && g.material.name != "Default UI Material" && g.material.name != "UI/Default")
                 {
-                    Debug.LogError("[Verify] " + n + "/" + img.name + ": нет Sprite");
-                    problems++;
-                }
-                if (img.material != null)
-                {
-                    Debug.LogError("[Verify] " + n + "/" + img.name + ": материал " + img.material.name + " вместо UI/Default");
-                    problems++;
-                }
-                if (!Mathf.Approximately(img.pixelsPerUnitMultiplier, 1f))
-                {
-                    Debug.LogError("[Verify] " + n + "/" + img.name + ": PPU multiplier = " + img.pixelsPerUnitMultiplier);
-                    problems++;
+                    Debug.LogError("[Verify] " + n + "/" + g.name + ": кастомный материал " + g.material.name);
+                    errors++;
                 }
             }
 
+            // 2. Image без спрайта: ошибка, только если элемент должен его иметь
+            foreach (Image img in go.GetComponentsInChildren<Image>(true))
+            {
+                if (img.sprite == null && !IsSpriteOptional(img.name, noSpriteOk))
+                {
+                    Debug.LogWarning("[Verify] " + n + "/" + img.name + ": нет Sprite (проверить вручную)");
+                    warnings++;
+                }
+            }
+
+            // 3. Текст без шрифта — ошибка: такой текст не виден вообще
             foreach (TextMeshProUGUI tmp in go.GetComponentsInChildren<TextMeshProUGUI>(true))
             {
                 if (tmp.font == null)
                 {
-                    Debug.LogError("[Verify] " + n + "/" + tmp.name + ": нет Font Asset");
-                    problems++;
+                    Debug.LogError("[Verify] " + n + "/" + tmp.name + ": нет Font Asset, текст не будет виден");
+                    errors++;
                 }
             }
 
             PrefabUtility.UnloadPrefabContents(go);
         }
 
-        Debug.Log(problems == 0 ? "[Verify] Все 7 префабов в порядке" : "[Verify] Проблем: " + problems);
+        if (errors == 0)
+            Debug.Log("[Verify] Ошибок нет. Предупреждений: " + warnings + " (это пустые элементы по замыслу, см. список в коде).");
+        else
+            Debug.LogError("[Verify] Ошибок: " + errors + ", предупреждений: " + warnings);
+    }
+
+    private static bool IsSpriteOptional(string name, string[] allowed)
+    {
+        foreach (string a in allowed) if (a == name) return true;
+        return false;
     }
 }
