@@ -790,6 +790,25 @@ public static class UIBuilderTool
         Place(buy.GetComponent<RectTransform>(), new Vector2(1, 0), new Vector2(1, 0),
             new Vector2(-24, 20), new Vector2(180, 72));
 
+        // ShopView создаёт карточки из этого префаба и ждёт на нём UpgradeItemView
+        var item = root.AddComponent<UpgradeItemView>();
+
+        var so = new SerializedObject(item);
+        void Ref(string field, Object value)
+        {
+            SerializedProperty prop = so.FindProperty(field);
+            if (prop == null) { Debug.LogError("[UIBuilder] У UpgradeItemView нет поля " + field); return; }
+            prop.objectReferenceValue = value;
+        }
+
+        Ref("_iconImage", iconImg.GetComponent<Image>());
+        Ref("_nameText", name);
+        Ref("_levelText", level);
+        Ref("_priceText", price);
+        Ref("_buyButton", buy.GetComponent<Button>());
+        Ref("_buttonBackground", buy.GetComponent<Image>());
+        so.ApplyModifiedPropertiesWithoutUndo();
+
         SavePrefab(root, "UpgradeCard");
     }
 

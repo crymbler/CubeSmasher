@@ -4,31 +4,35 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Собирает готовый экран меню в префаб Assets/Prefabs/UI/HUD_Screen.prefab.
+/// Собирает экран меню в префаб Assets/Prefabs/UI/HUD_Screen.prefab.
 /// Запуск: Tools → CubeSmasher → Build HUD Screen.
 ///
-/// Что создаётся:
+/// Структура повторяет рабочий гараж из CubeScene: гараж это НЕ полноэкранная панель,
+/// а узкая полоса с текстами внизу — 3D-витрина (showcase) остаётся видимой.
+///
 ///   Canvas (Scale With Screen Size, 1080x1920, Match 0.5)
 ///     SafeArea
-///       TopHud  — баланс, доход, стадия, полоса прогресса
-///       BottomNav — четыре кнопки: гараж, магазин, скины, настройки
-///       ShopWindow — окно магазина со списком карточек (скрыто)
-///       GarageWindow — окно гаража (скрыто)
-///
-/// Все позиции задаются якорями и отступами, не абсолютными координатами,
-/// поэтому экран не разъезжается на разных разрешениях.
+///       TopHud      — баланс, доход, стадия, полоса прогресса
+///       BottomNav   — четыре кнопки с подписями
+///       ShopWindow  — полноэкранное окно магазина (скрыто)
+///       GarageStrip — нижняя полоса гаража (скрыта)
 /// </summary>
 public static class HudBuilderTool
 {
     private const string UIPrefabFolder = "Assets/Prefabs/UI";
     private const string OutPath = UIPrefabFolder + "/HUD_Screen.prefab";
 
-    // Размеры посчитаны для 1080x1920
+    // Шрифт с кириллицей. LiberationSans её не содержит: Ж превращается в квадрат.
+    private const string FontPath = "Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset";
+
     private const float Margin = 24f;
     private const float TopBarHeight = 184f;
     private const float BottomBarHeight = 230f;
     private const float NavButtonSize = 128f;
-    private const float NavGap = 24f;
+    private const float NavGap = 28f;
+    private const float GarageStripHeight = 380f;
+
+    private static TMP_FontAsset _font;
 
     [MenuItem("Tools/CubeSmasher/Build HUD Screen")]
     public static void BuildHud()
@@ -36,6 +40,14 @@ public static class HudBuilderTool
         if (!AssetDatabase.IsValidFolder(UIPrefabFolder))
         {
             Debug.LogError("[HUD] Нет папки " + UIPrefabFolder + ". Сначала Build UI Prefabs.");
+            return;
+        }
+
+        _font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
+        if (_font == null)
+        {
+            Debug.LogError("[HUD] Не найден шрифт " + FontPath +
+                           ". Текст с кириллицей не отрисуется. Проверьте путь.");
             return;
         }
 
@@ -52,6 +64,13 @@ public static class HudBuilderTool
             return;
         }
 
+        if (cardPrefab.GetComponent<UpgradeItemView>() == null)
+        {
+            Debug.LogError("[HUD] На префабе UpgradeCard нет UpgradeItemView. Пересоберите UI: " +
+                           "Tools → CubeSmasher → Reset UI Assets.");
+            return;
+        }
+
         GameObject root = BuildCanvas();
 
         GameObject safe = NewUI("SafeArea", root.transform);
@@ -60,16 +79,14 @@ public static class HudBuilderTool
         BuildTopHud(safe.transform, badgePrefab, progressPrefab);
         BuildBottomNav(safe.transform, iconButtonPrefab);
         GameObject shop = BuildShopWindow(safe.transform, windowPrefab, cardPrefab);
-        GameObject garage = BuildGarageWindow(safe.transform, windowPrefab);
+        GameObject garage = BuildGarageStrip(safe.transform, badgePrefab);
 
-        // Окна закрыты на старте
         shop.SetActive(false);
         garage.SetActive(false);
 
-        // Компоненты окон и назначение их полей — здесь, а не руками в инспекторе
         BindTopHud(root);
-        BindShop(root, shop);
-        BindGarage(root, garage);
+        BindShop(shop, cardPrefab);
+        BindGarage(garage);
 
         PrefabUtility.SaveAsPrefabAsset(root, OutPath);
         Object.DestroyImmediate(root);
@@ -77,12 +94,16 @@ public static class HudBuilderTool
         AssetDatabase.Refresh();
 
         Debug.Log("[HUD] Готово: " + OutPath);
-        Debug.Log("[HUD] Дальше: перетащите префаб в сцену CubeScene, " +
-                  "удалите старые объекты TopHud и BottomHud из старого Canvas.");
+        Debug.Log("[HUD] ЧТО СДЕЛАТЬ В СЦЕНЕ после перетаскивания префаба:");
+        Debug.Log("[HUD] 1. Bootstrapper: _topHudView → TopHud, _shopView → ShopWindow, " +
+                  "_garageView → GarageStrip");
+        Debug.Log("[HUD] 2. Bootstrapper: _openShopButton и _openGarageButton → кнопки в BottomNav");
+        Debug.Log("[HUD] 3. GarageStrip: _garageCamera → GarageCamera, _showcase → showcase " +
+                  "(эти два объекта живут в сцене, префаб на них ссылаться не может)");
     }
 
     // ------------------------------------------------------------------
-    // Хелперы
+    // Каркас
     // ------------------------------------------------------------------
 
     private static GameObject Load(string name)
@@ -95,8 +116,7 @@ public static class HudBuilderTool
         var root = new GameObject("HUD_Screen", typeof(RectTransform), typeof(Canvas),
                                   typeof(CanvasScaler), typeof(GraphicRaycaster));
 
-        Canvas canvas = root.GetComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        root.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
 
         CanvasScaler scaler = root.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -113,31 +133,8 @@ public static class HudBuilderTool
         int uiLayer = LayerMask.NameToLayer("UI");
         go.layer = uiLayer >= 0 ? uiLayer : 0;
         go.transform.SetParent(parent, false);
+        go.transform.localScale = Vector3.one;
         return go;
-    }
-
-    private static Image Flat(GameObject go, Color color)
-    {
-        var img = go.AddComponent<Image>();
-        img.color = color;
-        img.raycastTarget = false;
-        return img;
-    }
-
-    private static TextMeshProUGUI Text(GameObject parent, string name, string text, float size,
-                                        Color color, TextAlignmentOptions align, bool bold = true)
-    {
-        GameObject go = NewUI(name, parent.transform);
-        var tmp = go.AddComponent<TextMeshProUGUI>();
-        tmp.text = text;
-        tmp.fontSize = size;
-        tmp.color = color;
-        tmp.alignment = align;
-        tmp.raycastTarget = false;
-        if (bold) tmp.fontStyle = FontStyles.Bold;
-        if (TMP_Settings.defaultFontAsset != null) tmp.font = TMP_Settings.defaultFontAsset;
-        Stretch(go.GetComponent<RectTransform>());
-        return tmp;
     }
 
     private static void Stretch(RectTransform rt, float left = 0, float bottom = 0, float right = 0, float top = 0)
@@ -149,48 +146,29 @@ public static class HudBuilderTool
         rt.localScale = Vector3.one;
     }
 
-    /// <summary>Пояс, прижатый к верху: растянут по ширине, высота фиксирована.</summary>
-    private static void AnchorTop(RectTransform rt, float height)
+    /// <summary>Полоса на всю ширину: растянута по X, высота фиксирована, прижата к верху или низу.</summary>
+    private static void Band(RectTransform rt, bool top, float height)
     {
-        rt.anchorMin = new Vector2(0f, 1f);
-        rt.anchorMax = new Vector2(1f, 1f);
-        rt.pivot = new Vector2(0.5f, 1f);
-        rt.offsetMin = new Vector2(0f, -height);
-        rt.offsetMax = Vector2.zero;
+        rt.anchorMin = new Vector2(0f, top ? 1f : 0f);
+        rt.anchorMax = new Vector2(1f, top ? 1f : 0f);
+        rt.pivot = new Vector2(0.5f, top ? 1f : 0f);
+        rt.offsetMin = new Vector2(0f, top ? -height : 0f);
+        rt.offsetMax = new Vector2(0f, top ? 0f : height);
         rt.localScale = Vector3.one;
     }
 
-    /// <summary>Пояс, прижатый к низу.</summary>
-    private static void AnchorBottom(RectTransform rt, float height)
+    /// <summary>Точка в углу родителя: anchor задаёт угол, pivot — куда растёт элемент.</summary>
+    private static RectTransform Point(GameObject go, Vector2 anchor, Vector2 pivot,
+                                       Vector2 offset, Vector2 size)
     {
-        rt.anchorMin = new Vector2(0f, 0f);
-        rt.anchorMax = new Vector2(1f, 0f);
-        rt.pivot = new Vector2(0.5f, 0f);
-        rt.offsetMin = Vector2.zero;
-        rt.offsetMax = new Vector2(0f, height);
-        rt.localScale = Vector3.one;
-    }
-
-    /// <summary>Элемент с фиксированным размером в заданной точке якоря.</summary>
-    private static void PlaceAt(RectTransform rt, Vector2 anchor, Vector2 pivot, Vector2 pos, Vector2 size)
-    {
+        RectTransform rt = go.GetComponent<RectTransform>();
         rt.anchorMin = anchor;
         rt.anchorMax = anchor;
         rt.pivot = pivot;
-        rt.anchoredPosition = pos;
+        rt.anchoredPosition = offset;
         rt.sizeDelta = size;
         rt.localScale = Vector3.one;
-    }
-
-    /// <summary>Горизонтальная растяжка внутри родителя с отступами по краям.</summary>
-    private static void WideRow(RectTransform rt, float y, float height, float left, float right)
-    {
-        rt.anchorMin = new Vector2(0f, 1f);
-        rt.anchorMax = new Vector2(1f, 1f);
-        rt.pivot = new Vector2(0.5f, 1f);
-        rt.offsetMin = new Vector2(left, -y - height);
-        rt.offsetMax = new Vector2(-right, -y);
-        rt.localScale = Vector3.one;
+        return rt;
     }
 
     private static GameObject PlacePrefab(GameObject prefab, Transform parent, string name)
@@ -202,6 +180,24 @@ public static class HudBuilderTool
         return go;
     }
 
+    private static TextMeshProUGUI Label(GameObject parent, string name, string text, float size,
+                                         Color color, TextAlignmentOptions align)
+    {
+        GameObject go = NewUI(name, parent.transform);
+        var tmp = go.AddComponent<TextMeshProUGUI>();
+        tmp.text = text;
+        tmp.fontSize = size;
+        tmp.color = color;
+        tmp.alignment = align;
+        tmp.raycastTarget = false;
+        tmp.fontStyle = FontStyles.Bold;
+        tmp.font = _font;
+        tmp.enableWordWrapping = true;
+        tmp.overflowMode = TextOverflowModes.Overflow;
+        Stretch(go.GetComponent<RectTransform>());
+        return tmp;
+    }
+
     // ------------------------------------------------------------------
     // Верхняя панель
     // ------------------------------------------------------------------
@@ -209,32 +205,28 @@ public static class HudBuilderTool
     private static void BuildTopHud(Transform parent, GameObject badgePrefab, GameObject progressPrefab)
     {
         GameObject top = NewUI("TopHud", parent);
-        AnchorTop(top.GetComponent<RectTransform>(), TopBarHeight);
+        Band(top.GetComponent<RectTransform>(), top: true, TopBarHeight);
 
-        // --- Строка 1: баланс слева, доход справа ---
+        // Баланс слева
         GameObject badge = PlacePrefab(badgePrefab, top.transform, "BalanceBadge");
-        PlaceAt(badge.GetComponent<RectTransform>(), new Vector2(0f, 1f), new Vector2(0f, 1f),
+        Point(badge, new Vector2(0f, 1f), new Vector2(0f, 1f),
             new Vector2(Margin, -Margin), new Vector2(300f, 80f));
 
+        // Доход справа
         GameObject incomeBox = NewUI("Income", top.transform);
-        PlaceAt(incomeBox.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f),
-            new Vector2(-Margin, -Margin), new Vector2(300f, 80f));
-
-        TextMeshProUGUI income = Text(incomeBox, "Value", "+0/сек", 36f,
+        Point(incomeBox, new Vector2(1f, 1f), new Vector2(1f, 1f),
+            new Vector2(-Margin, -Margin), new Vector2(320f, 80f));
+        Label(incomeBox, "IncomeValue", "+0/сек", 36f,
             CubeSmasher.UI.UITheme.NeonGreen, TextAlignmentOptions.Right);
-        income.name = "IncomeValue";
 
-        // --- Строка 2: подпись стадии слева, полоса справа ---
-        float row2 = Margin + 80f + 16f;
+        // Вторая строка: подпись стадии слева, полоса справа
+        const float row2 = Margin + 80f + 16f;
 
         GameObject stageBox = NewUI("Stage", top.transform);
-        PlaceAt(stageBox.GetComponent<RectTransform>(), new Vector2(0f, 1f), new Vector2(0f, 1f),
+        Point(stageBox, new Vector2(0f, 1f), new Vector2(0f, 1f),
             new Vector2(Margin, -row2), new Vector2(300f, 44f));
-
-        TextMeshProUGUI stage = Text(stageBox, "Label", "Машина 1", 34f,
+        Label(stageBox, "StageLabel", "Машина 1", 34f,
             CubeSmasher.UI.UITheme.TextPrimary, TextAlignmentOptions.Left);
-        stage.name = "StageLabel";
-        stage.raycastTarget = false;
 
         GameObject bar = PlacePrefab(progressPrefab, top.transform, "StageProgress");
         RectTransform barRt = bar.GetComponent<RectTransform>();
@@ -243,7 +235,17 @@ public static class HudBuilderTool
         barRt.pivot = new Vector2(0.5f, 1f);
         barRt.offsetMin = new Vector2(Margin + 316f, -row2 - 44f);
         barRt.offsetMax = new Vector2(-Margin, -row2);
-        barRt.sizeDelta = new Vector2(barRt.sizeDelta.x, 44f);
+        barRt.localScale = Vector3.one;
+
+        Slider slider = bar.GetComponent<Slider>();
+        if (slider != null)
+        {
+            slider.minValue = 0f;
+            slider.maxValue = 1f;
+            slider.value = 0f;
+            slider.interactable = false;
+            slider.transition = Selectable.Transition.None;
+        }
     }
 
     // ------------------------------------------------------------------
@@ -253,58 +255,57 @@ public static class HudBuilderTool
     private static void BuildBottomNav(Transform parent, GameObject iconButtonPrefab)
     {
         GameObject nav = NewUI("BottomNav", parent);
-        AnchorBottom(nav.GetComponent<RectTransform>(), BottomBarHeight);
+        Band(nav.GetComponent<RectTransform>(), top: false, BottomBarHeight);
 
-        // Тёмная подложка, чтобы кнопки читались на любом фоне
         GameObject plate = NewUI("Plate", nav.transform);
-        AnchorBottom(plate.GetComponent<RectTransform>(), BottomBarHeight);
-        Flat(plate, new Color(0.10f, 0.14f, 0.22f, 0.85f));  // raycastTarget = false, клики проходят к кнопкам
+        Band(plate.GetComponent<RectTransform>(), top: false, BottomBarHeight);
+        var plateImg = plate.AddComponent<Image>();
+        plateImg.color = new Color(0.10f, 0.14f, 0.22f, 0.82f);
+        plateImg.raycastTarget = false;
 
         string[] names = { "BtnGarage", "BtnShop", "BtnSkins", "BtnSettings" };
         string[] labels = { "Гараж", "Магазин", "Скины", "Настройки" };
 
-        float totalWidth = names.Length * NavButtonSize + (names.Length - 1) * NavGap;
-        float startX = -totalWidth * 0.5f + NavButtonSize * 0.5f;
+        float total = names.Length * NavButtonSize + (names.Length - 1) * NavGap;
+        float startX = -total * 0.5f + NavButtonSize * 0.5f;
 
         for (int i = 0; i < names.Length; i++)
         {
+            float x = startX + i * (NavButtonSize + NavGap);
+
             GameObject btn = PlacePrefab(iconButtonPrefab, nav.transform, names[i]);
-            PlaceAt(btn.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
-                new Vector2(startX + i * (NavButtonSize + NavGap), Margin),
-                new Vector2(NavButtonSize, NavButtonSize));
+            Point(btn, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
+                new Vector2(x, 72f), new Vector2(NavButtonSize, NavButtonSize));
 
-            // Подпись под иконкой, чтобы кнопки были понятны без картинок
-            // Подпись сидит под кнопкой: pivot внизу, позиция ниже нижнего края кнопки
+            // Подпись под кнопкой, внутри панели: 72 (низ кнопки) минус высота подписи
             GameObject caption = NewUI("Caption", nav.transform);
-            PlaceAt(caption.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 1f),
-                new Vector2(startX + i * (NavButtonSize + NavGap), Margin - 4f),
-                new Vector2(NavButtonSize + 20f, 28f));
-
-            TextMeshProUGUI captionText = Text(caption, "Text", labels[i], 24f,
+            Point(caption, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
+                new Vector2(x, 28f), new Vector2(NavButtonSize + 24f, 32f));
+            Label(caption, "CaptionText", labels[i], 26f,
                 CubeSmasher.UI.UITheme.TextPrimary, TextAlignmentOptions.Center);
-            captionText.name = "CaptionText";
         }
     }
 
     // ------------------------------------------------------------------
-    // Окно магазина
+    // Окно магазина: полноэкранное, со списком карточек
     // ------------------------------------------------------------------
 
     private static GameObject BuildShopWindow(Transform parent, GameObject windowPrefab, GameObject cardPrefab)
     {
         GameObject win = PlacePrefab(windowPrefab, parent, "ShopWindow");
-        RectTransform winRt = win.GetComponent<RectTransform>();
-        Stretch(winRt, Margin, Margin + BottomBarHeight, Margin, TopBarHeight);
+        RectTransform rt = win.GetComponent<RectTransform>();
+        Stretch(rt, Margin, Margin + BottomBarHeight, Margin, TopBarHeight);
 
-        SetTitle(win, "МАГАЗИН УЛУЧШЕНИЙ");
+        SetTitle(win, "МАГАЗИН");
 
         Transform content = win.transform.Find("Content");
         if (content == null)
         {
-            Debug.LogError("[HUD] В Panel_Window нет дочернего объекта Content");
+            Debug.LogError("[HUD] В Panel_Window нет объекта Content");
             return win;
         }
 
+        // Прокрутка
         GameObject scroll = NewUI("Scroll", content);
         Stretch(scroll.GetComponent<RectTransform>());
 
@@ -314,12 +315,12 @@ public static class HudBuilderTool
         scrollRect.movementType = ScrollRect.MovementType.Clamped;
         scrollRect.scrollSensitivity = 40f;
 
-        // Viewport обрезает содержимое. RectMask2D не требует материала и спрайта.
+        // Viewport обрезает список. RectMask2D не требует спрайта и материала.
         GameObject viewport = NewUI("Viewport", scroll.transform);
         Stretch(viewport.GetComponent<RectTransform>());
         viewport.AddComponent<RectMask2D>();
 
-        // Список: карточки выстраиваются сверху вниз и сами задают высоту
+        // Список: карточки идут сверху вниз, высота считается сама
         GameObject list = NewUI("List", viewport.transform);
         RectTransform listRt = list.GetComponent<RectTransform>();
         listRt.anchorMin = new Vector2(0f, 1f);
@@ -327,6 +328,7 @@ public static class HudBuilderTool
         listRt.pivot = new Vector2(0.5f, 1f);
         listRt.offsetMin = Vector2.zero;
         listRt.offsetMax = Vector2.zero;
+        listRt.localScale = Vector3.one;
 
         var layout = list.AddComponent<VerticalLayoutGroup>();
         layout.spacing = 16f;
@@ -343,173 +345,178 @@ public static class HudBuilderTool
         scrollRect.viewport = viewport.GetComponent<RectTransform>();
         scrollRect.content = listRt;
 
-        // Две карточки-образца, чтобы увидеть вид. Реальные создаёт ShopPresenter.
-        for (int i = 0; i < 2; i++)
-        {
-            GameObject card = PlacePrefab(cardPrefab, list.transform, "UpgradeCard" + (i + 1));
-            var le = card.AddComponent<LayoutElement>();
-            le.preferredHeight = 250f;
-            le.flexibleWidth = 1f;
-        }
+        // Одна карточка-образец для наглядности. Реальные создаёт ShopPresenter в _itemsContainer.
+        GameObject sample = PlacePrefab(cardPrefab, list.transform, "UpgradeCard_Sample");
+        var le = sample.AddComponent<LayoutElement>();
+        le.preferredHeight = 250f;
+        le.flexibleWidth = 1f;
 
         return win;
     }
 
     // ------------------------------------------------------------------
-    // Окно гаража
+    // Гараж: узкая полоса внизу. НЕ перекрывает 3D-витрину с машиной.
     // ------------------------------------------------------------------
 
-    private static GameObject BuildGarageWindow(Transform parent, GameObject windowPrefab)
+    private static GameObject BuildGarageStrip(Transform parent, GameObject badgePrefab)
     {
-        GameObject win = PlacePrefab(windowPrefab, parent, "GarageWindow");
-        RectTransform winRt = win.GetComponent<RectTransform>();
-        Stretch(winRt, Margin, Margin + BottomBarHeight, Margin, TopBarHeight);
+        GameObject strip = NewUI("GarageStrip", parent);
+        RectTransform stripRt = strip.GetComponent<RectTransform>();
+        // Прижата к низу, над нижней панелью с кнопками
+        stripRt.anchorMin = new Vector2(0f, 0f);
+        stripRt.anchorMax = new Vector2(1f, 0f);
+        stripRt.pivot = new Vector2(0.5f, 0f);
+        stripRt.offsetMin = new Vector2(Margin, BottomBarHeight);
+        stripRt.offsetMax = new Vector2(-Margin, BottomBarHeight + GarageStripHeight);
+        stripRt.localScale = Vector3.one;
 
-        SetTitle(win, "ГАРАЖ");
+        // Тёмная подложка, чтобы текст читался на любом фоне
+        var bg = strip.AddComponent<Image>();
+        bg.color = new Color(0.10f, 0.14f, 0.22f, 0.88f);
+        bg.raycastTarget = true;
 
-        Transform content = win.transform.Find("Content");
-        if (content == null) return win;
+        // Кнопка закрытия справа сверху
+        GameObject close = NewUI("CloseButton", strip.transform);
+        Point(close, new Vector2(1f, 1f), new Vector2(1f, 1f),
+            new Vector2(-16f, -16f), new Vector2(64f, 64f));
+        var closeImg = close.AddComponent<Image>();
+        closeImg.color = CubeSmasher.UI.UITheme.NeonPink;
+        var closeBtn = close.AddComponent<Button>();
+        closeBtn.targetGraphic = closeImg;
+        Label(close, "Text", "×", 40f, CubeSmasher.UI.UITheme.TextOnAccent, TextAlignmentOptions.Center);
 
-        // Площадка, куда GarageView ставит модель машины
-        GameObject showcase = NewUI("Showcase", content);
-        RectTransform showRt = showcase.GetComponent<RectTransform>();
-        showRt.anchorMin = new Vector2(0f, 0.35f);
-        showRt.anchorMax = new Vector2(1f, 1f);
-        showRt.offsetMin = Vector2.zero;
-        showRt.offsetMax = Vector2.zero;
+        // Название машины
+        GameObject name = NewUI("Name", strip.transform);
+        Point(name, new Vector2(0f, 1f), new Vector2(0f, 1f),
+            new Vector2(24f, -20f), new Vector2(700f, 56f));
+        Label(name, "Text", "Название машины", 42f,
+            CubeSmasher.UI.UITheme.TextPrimary, TextAlignmentOptions.Left);
 
-        // Тексты: название, описание, доход, статус
-        string[] fields = { "NameText", "DescriptionText", "IncomeText", "StatusText" };
-        string[] defaults = { "Название машины", "Описание", "Доход: —", "Открыто" };
-        float[] sizes = { 44f, 30f, 32f, 32f };
+        // Описание
+        GameObject desc = NewUI("description", strip.transform);
+        Point(desc, new Vector2(0f, 1f), new Vector2(0f, 1f),
+            new Vector2(24f, -84f), new Vector2(880f, 92f));
+        Label(desc, "Text", "Описание машины", 28f,
+            CubeSmasher.UI.UITheme.TextSecondary, TextAlignmentOptions.TopLeft);
 
-        for (int i = 0; i < fields.Length; i++)
-        {
-            GameObject box = NewUI(fields[i], content);
-            RectTransform rt = box.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0f, 0f);
-            rt.anchorMax = new Vector2(1f, 0f);
-            rt.pivot = new Vector2(0.5f, 0f);
-            rt.sizeDelta = new Vector2(0f, sizes[i] + 8f);
-            rt.anchoredPosition = new Vector2(0f, 120f + (fields.Length - 1 - i) * (sizes[i] + 16f));
+        // Доход
+        GameObject income = NewUI("income", strip.transform);
+        Point(income, new Vector2(0f, 0f), new Vector2(0f, 0f),
+            new Vector2(24f, 84f), new Vector2(420f, 44f));
+        Label(income, "Text", "Доход: —", 32f,
+            CubeSmasher.UI.UITheme.NeonGreen, TextAlignmentOptions.Left);
 
-            Text(box, "Text", defaults[i], sizes[i],
-                i == 0 ? CubeSmasher.UI.UITheme.TextPrimary : CubeSmasher.UI.UITheme.TextSecondary,
-                TextAlignmentOptions.Left).name = "Text";
-        }
+        // Статус: открыта машина или нет
+        GameObject status = NewUI("StageText", strip.transform);
+        Point(status, new Vector2(0f, 0f), new Vector2(0f, 0f),
+            new Vector2(24f, 32f), new Vector2(420f, 44f));
+        Label(status, "Text", "Открыто", 30f,
+            CubeSmasher.UI.UITheme.TextSecondary, TextAlignmentOptions.Left);
 
-        // Кнопки переключения машин
-        GameObject prev = NewUI("PrevButton", content);
-        PlaceAt(prev.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0f, 0f),
-            new Vector2(0f, 0f), new Vector2(96f, 96f));
-        prev.AddComponent<Image>().color = CubeSmasher.UI.UITheme.MetalLight;
-        prev.AddComponent<Button>().targetGraphic = prev.GetComponent<Image>();
-        Text(prev, "Arrow", "‹", 56f, CubeSmasher.UI.UITheme.TextOnAccent, TextAlignmentOptions.Center);
+        // Стрелки переключения машин
+        GameObject prev = NewUI("_prevButton", strip.transform);
+        Point(prev, new Vector2(1f, 0f), new Vector2(1f, 0f),
+            new Vector2(-176f, 24f), new Vector2(88f, 88f));
+        var prevImg = prev.AddComponent<Image>();
+        prevImg.color = CubeSmasher.UI.UITheme.MetalLight;
+        prev.AddComponent<Button>().targetGraphic = prevImg;
+        Label(prev, "Text", "‹", 52f, CubeSmasher.UI.UITheme.TextOnAccent, TextAlignmentOptions.Center);
 
-        GameObject next = NewUI("NextButton", content);
-        PlaceAt(next.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 0f),
-            new Vector2(0f, 0f), new Vector2(96f, 96f));
-        next.AddComponent<Image>().color = CubeSmasher.UI.UITheme.MetalLight;
-        next.AddComponent<Button>().targetGraphic = next.GetComponent<Image>();
-        Text(next, "Arrow", "›", 56f, CubeSmasher.UI.UITheme.TextOnAccent, TextAlignmentOptions.Center);
+        GameObject next = NewUI("_nextButton", strip.transform);
+        Point(next, new Vector2(1f, 0f), new Vector2(1f, 0f),
+            new Vector2(-72f, 24f), new Vector2(88f, 88f));
+        var nextImg = next.AddComponent<Image>();
+        nextImg.color = CubeSmasher.UI.UITheme.MetalLight;
+        next.AddComponent<Button>().targetGraphic = nextImg;
+        Label(next, "Text", "›", 52f, CubeSmasher.UI.UITheme.TextOnAccent, TextAlignmentOptions.Center);
 
-        return win;
+        return strip;
     }
 
     private static void SetTitle(GameObject window, string title)
     {
-        Transform header = window.transform.Find("Title");
-        if (header == null) return;
-
-        var tmp = header.GetComponent<TextMeshProUGUI>();
-        if (tmp != null) tmp.text = title;
-    }
-
-    // ------------------------------------------------------------------
-    // Привязка компонентов: скрипты вешаются на нужные объекты, поля назначаются по имени
-    // ------------------------------------------------------------------
-
-    private static T Child<T>(GameObject root, string path) where T : Component
-    {
-        Transform tr = root.transform.Find(path);
-        if (tr == null)
+        Transform tr = window.transform.Find("Title");
+        if (tr == null) return;
+        var tmp = tr.GetComponent<TextMeshProUGUI>();
+        if (tmp != null)
         {
-            Debug.LogError("[HUD] Не найден объект: " + path);
-            return null;
+            tmp.text = title;
+            tmp.font = _font;
         }
-        return tr.GetComponent<T>() ?? tr.gameObject.AddComponent<T>();
     }
+
+    // ------------------------------------------------------------------
+    // Привязка: компоненты вешаются здесь, поля назначаются по имени
+    // ------------------------------------------------------------------
 
     private static void SetRef(Object target, string field, Object value)
     {
+        if (target == null) return;
+
         var so = new SerializedObject(target);
         SerializedProperty prop = so.FindProperty(field);
         if (prop == null)
         {
-            Debug.LogError("[HUD] Нет поля " + field + " в " + target.GetType().Name);
+            Debug.LogError("[HUD] У " + target.GetType().Name + " нет поля " + field + ". Проверьте имя в скрипте.");
             return;
         }
+
+        if (value == null)
+            Debug.LogWarning("[HUD] " + target.GetType().Name + "." + field + " осталось пустым: объект не найден.");
+
         prop.objectReferenceValue = value;
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
+    private static Component Child(GameObject root, string path, System.Type type)
+    {
+        Transform tr = root.transform.Find(path);
+        if (tr == null)
+        {
+            Debug.LogError("[HUD] Не найден путь " + path + " в " + root.name);
+            return null;
+        }
+        return tr.GetComponent(type);
+    }
+
     private static void BindTopHud(GameObject root)
     {
-        // TopHud держит TopHudView
         Transform top = root.transform.Find("SafeArea/TopHud");
         if (top == null) { Debug.LogError("[HUD] Нет SafeArea/TopHud"); return; }
 
         var view = top.gameObject.AddComponent<TopHudView>();
 
-        Transform badge = top.Find("BalanceBadge");
-        TextMeshProUGUI balance = badge != null ? badge.Find("Value")?.GetComponent<TextMeshProUGUI>() : null;
-        Transform income = top.Find("Income/IncomeValue");
-        TextMeshProUGUI incomeText = income != null ? income.GetComponent<TextMeshProUGUI>() : null;
-        Transform stage = top.Find("Stage/StageLabel");
-        TextMeshProUGUI stageText = stage != null ? stage.GetComponent<TextMeshProUGUI>() : null;
-        Transform bar = top.Find("StageProgress");
-        Slider slider = bar != null ? bar.GetComponent<Slider>() : null;
-
-        SetRef(view, "_balanceText", balance);
-        SetRef(view, "_incomeText", incomeText);
-        SetRef(view, "_progressText", stageText);
-        SetRef(view, "_progressBar", slider);
+        SetRef(view, "_balanceText", Child(top.gameObject, "BalanceBadge/Value", typeof(TextMeshProUGUI)));
+        SetRef(view, "_incomeText",  Child(top.gameObject, "Income/IncomeValue", typeof(TextMeshProUGUI)));
+        SetRef(view, "_progressText", Child(top.gameObject, "Stage/StageLabel", typeof(TextMeshProUGUI)));
+        SetRef(view, "_progressBar", Child(top.gameObject, "StageProgress", typeof(Slider)));
     }
 
-    private static void BindShop(GameObject root, GameObject shop)
+    private static void BindShop(GameObject shop, GameObject cardPrefab)
     {
         var view = shop.AddComponent<ShopView>();
 
-        Transform close = shop.transform.Find("Content/Close");
-        if (close == null) close = shop.transform.Find("Close");
-        Button closeBtn = close != null ? close.GetComponent<Button>() : null;
-
-        Transform container = shop.transform.Find("Content/Scroll/Viewport/List");
-        Transform sample = shop.transform.Find("Content/Scroll/Viewport/List/UpgradeCard1");
-        UpgradeItemView prefabItem = sample != null ? sample.GetComponent<UpgradeItemView>() : null;
-
-        SetRef(view, "_closeButton", closeBtn);
-        SetRef(view, "_itemsContainer", container);
-        SetRef(view, "_itemPrefab", prefabItem);
+        SetRef(view, "_closeButton", Child(shop, "Close", typeof(Button)));
+        SetRef(view, "_itemsContainer", Child(shop, "Content/Scroll/Viewport/List", typeof(Transform)));
+        SetRef(view, "_itemPrefab", cardPrefab.GetComponent<UpgradeItemView>());
     }
 
-    private static void BindGarage(GameObject root, GameObject garage)
+    private static void BindGarage(GameObject strip)
     {
-        var view = garage.AddComponent<GarageView>();
+        var view = strip.AddComponent<GarageView>();
 
-        Transform content = garage.transform.Find("Content");
-        if (content == null) return;
+        // _window — сам объект-полоса: Open() включает его, Close() выключает
+        SetRef(view, "_window", strip);
+        SetRef(view, "_closeButton", Child(strip, "CloseButton", typeof(Button)));
+        SetRef(view, "_nameText", Child(strip, "Name/Text", typeof(TextMeshProUGUI)));
+        SetRef(view, "_descriptionText", Child(strip, "description/Text", typeof(TextMeshProUGUI)));
+        SetRef(view, "_incomeText", Child(strip, "income/Text", typeof(TextMeshProUGUI)));
+        SetRef(view, "_statusText", Child(strip, "StageText/Text", typeof(TextMeshProUGUI)));
+        SetRef(view, "_prevButton", Child(strip, "_prevButton", typeof(Button)));
+        SetRef(view, "_nextButton", Child(strip, "_nextButton", typeof(Button)));
 
-        SetRef(view, "_window", garage);
-        SetRef(view, "_showcase", content.Find("Showcase"));
-        SetRef(view, "_nameText", content.Find("NameText/Text")?.GetComponent<TextMeshProUGUI>());
-        SetRef(view, "_descriptionText", content.Find("DescriptionText/Text")?.GetComponent<TextMeshProUGUI>());
-        SetRef(view, "_incomeText", content.Find("IncomeText/Text")?.GetComponent<TextMeshProUGUI>());
-        SetRef(view, "_statusText", content.Find("StatusText/Text")?.GetComponent<TextMeshProUGUI>());
-        SetRef(view, "_prevButton", content.Find("PrevButton")?.GetComponent<Button>());
-        SetRef(view, "_nextButton", content.Find("NextButton")?.GetComponent<Button>());
-
-        Transform close = garage.transform.Find("Close");
-        SetRef(view, "_closeButton", close != null ? close.GetComponent<Button>() : null);
+        // Эти три объекта живут в сцене, а не в префабе: назначить вручную после перетаскивания
+        Debug.LogWarning("[HUD] GarageStrip: вручную назначить _arenaCamera, _garageCamera, _showcase " +
+                         "из сцены CubeScene.");
     }
 }
