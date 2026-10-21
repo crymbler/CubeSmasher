@@ -28,8 +28,9 @@ public static class HudBuilderTool
     private const float Margin = 24f;
     private const float TopBarHeight = 184f;
     private const float BottomBarHeight = 230f;
-    private const float NavButtonSize = 128f;
-    private const float NavGap = 28f;
+    private const float NavCell = 120f;   // размер ячейки кнопки в reference-пикселях 1080x1920
+    private const float NavGap = 24f;     // расстояние между кнопками
+    private const int NavCount = 4;
     private const float GarageStripHeight = 380f;
 
     private static TMP_FontAsset _font;
@@ -224,7 +225,7 @@ public static class HudBuilderTool
 
         GameObject stageBox = NewUI("Stage", top.transform);
         Point(stageBox, new Vector2(0f, 1f), new Vector2(0f, 1f),
-            new Vector2(Margin, -row2), new Vector2(300f, 44f));
+            new Vector2(Margin, -row2), new Vector2(460f, 44f));
         Label(stageBox, "StageLabel", "Машина 1", 34f,
             CubeSmasher.UI.UITheme.TextPrimary, TextAlignmentOptions.Left);
 
@@ -233,7 +234,7 @@ public static class HudBuilderTool
         barRt.anchorMin = new Vector2(0f, 1f);
         barRt.anchorMax = new Vector2(1f, 1f);
         barRt.pivot = new Vector2(0.5f, 1f);
-        barRt.offsetMin = new Vector2(Margin + 316f, -row2 - 44f);
+        barRt.offsetMin = new Vector2(Margin + 484f, -row2 - 44f);
         barRt.offsetMax = new Vector2(-Margin, -row2);
         barRt.localScale = Vector3.one;
 
@@ -263,25 +264,41 @@ public static class HudBuilderTool
         plateImg.color = new Color(0.10f, 0.14f, 0.22f, 0.82f);
         plateImg.raycastTarget = false;
 
+        // Ряд кнопок: центрированный блок. Сетка даёт каждой кнопке одинаковую ячейку,
+        // ContentSizeFitter подгоняет ширину ряда под кнопки, поэтому они не растягиваются
+        // на всю панель. Одинаково на ПК и на телефоне: ряд всегда по центру.
+        GameObject row = NewUI("Row", nav.transform);
+        RectTransform rowRt = row.GetComponent<RectTransform>();
+        rowRt.anchorMin = new Vector2(0.5f, 0f);
+        rowRt.anchorMax = new Vector2(0.5f, 0f);
+        rowRt.pivot = new Vector2(0.5f, 0f);
+        rowRt.anchoredPosition = new Vector2(0f, 24f);
+
+        var grid = row.AddComponent<GridLayoutGroup>();
+        grid.cellSize = new Vector2(NavCell, NavCell);
+        grid.spacing = new Vector2(NavGap, 0f);
+        grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+        grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+        grid.childAlignment = TextAnchor.UpperLeft;
+        grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        grid.constraintCount = NavCount;
+
+        var fitter = row.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
         string[] names = { "BtnGarage", "BtnShop", "BtnSkins", "BtnSettings" };
         string[] labels = { "Гараж", "Магазин", "Скины", "Настройки" };
 
-        float total = names.Length * NavButtonSize + (names.Length - 1) * NavGap;
-        float startX = -total * 0.5f + NavButtonSize * 0.5f;
-
-        for (int i = 0; i < names.Length; i++)
+        for (int i = 0; i < NavCount; i++)
         {
-            float x = startX + i * (NavButtonSize + NavGap);
+            GameObject btn = PlacePrefab(iconButtonPrefab, row.transform, names[i]);
 
-            GameObject btn = PlacePrefab(iconButtonPrefab, nav.transform, names[i]);
-            Point(btn, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
-                new Vector2(x, 72f), new Vector2(NavButtonSize, NavButtonSize));
-
-            // Подпись под кнопкой, внутри панели: 72 (низ кнопки) минус высота подписи
-            GameObject caption = NewUI("Caption", nav.transform);
-            Point(caption, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
-                new Vector2(x, 28f), new Vector2(NavButtonSize + 24f, 32f));
-            Label(caption, "CaptionText", labels[i], 26f,
+            // Подпись под кнопкой: pivot сверху, позиция чуть ниже нижнего края кнопки
+            GameObject caption = NewUI("Caption", btn.transform);
+            Point(caption, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f),
+                new Vector2(0f, -8f), new Vector2(NavCell + 40f, 30f));
+            Label(caption, "CaptionText", labels[i], 24f,
                 CubeSmasher.UI.UITheme.TextPrimary, TextAlignmentOptions.Center);
         }
     }
