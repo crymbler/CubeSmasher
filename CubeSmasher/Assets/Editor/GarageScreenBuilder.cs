@@ -377,7 +377,7 @@ public static class GarageScreenBuilder
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
-    private static Component Child(GameObject root, string path, System.Type type)
+    private static Object Child(GameObject root, string path, System.Type type)
     {
         Transform tr = root.transform.Find(path);
         if (tr == null)
@@ -385,6 +385,7 @@ public static class GarageScreenBuilder
             Debug.LogError("[Garage] Не найден путь " + path);
             return null;
         }
-        return type == typeof(GameObject) ? tr.gameObject : tr.GetComponent(type);
+        // GameObject не является Component, общего типа у ветвей нет: приводим обе к UnityEngine.Object
+        return type == typeof(GameObject) ? (Object)tr.gameObject : (Object)tr.GetComponent(type);
     }
 }
