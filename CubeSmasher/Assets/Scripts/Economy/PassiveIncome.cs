@@ -45,7 +45,8 @@ public class PassiveIncome : IPassiveIncomeService
         // Суммируем доход открытых машин; открытость берём из GarageService
         for (int i = 0; i < _config.GarageCars.Length; i++)
         {
-            if (_garage != null ? _garage.IsUnlocked(i) : currentStage >= _config.GarageCars[i].UnlockStage)
+            // Доход даёт только открытая игроком машина. Доступная, но не открытая — ещё нет.
+            if (_garage != null ? _garage.IsOpened(i) : currentStage >= _config.GarageCars[i].UnlockStage)
             {
                 CurrentIncomePerSecond += _config.GarageCars[i].IncomePerSecond;
             }

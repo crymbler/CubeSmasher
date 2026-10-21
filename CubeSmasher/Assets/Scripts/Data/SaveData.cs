@@ -29,6 +29,13 @@ namespace YG
 
         public int lastGarageCarIndex = 0;
 
+        /// <summary>Индексы машин, которые игрок открыл сам (нажал "Открыть").</summary>
+        public List<int> openedGarageCars = new List<int>();
+
+        /// <summary>Однократный перенос: у старых сохранений открытые по стадии машины
+        /// считались открытыми. Флаг не даёт потерять доход при обновлении.</summary>
+        public bool garageOpenMigrated = false;
+
         public double balance = 1;
         public double clickPerSecond = 1;
         public double tapPower = 1;

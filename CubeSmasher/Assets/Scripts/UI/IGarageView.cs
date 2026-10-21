@@ -1,4 +1,5 @@
 ﻿using System;
+using CubeSmasher.Core.Interfaces;
 using UnityEngine;
 
 /// <summary>
@@ -12,7 +13,14 @@ public interface IGarageView
     /// <summary>Сколько машин всего, чтобы кнопки знали границы.</summary>
     void SetCarCount(int count);
 
-    /// <summary>Показать выбранную машину: её модель, название, доход, статус.</summary>
-    void ShowCar(int index, string name, string description, double incomePerSecond,
-                 bool isUnlocked, int unlockStage, GameObject modelPrefab);
+    /// <summary>Игрок нажал "Открыть" у доступной машины.</summary>
+    event Action<int> CarOpenRequested;
+
+    /// <summary>Показать машину в одном из трёх состояний. См. GarageCarState.</summary>
+    void ShowCar(int index, string name, string description, string characteristics,
+                 double incomePerSecond, GarageCarState state, int unlockStage,
+                 GameObject modelPrefab);
+
+    /// <summary>Отыграть эффект открытия: партиклы и звук. Вызывается после CarOpenRequested.</summary>
+    void PlayUnlockEffect();
 }

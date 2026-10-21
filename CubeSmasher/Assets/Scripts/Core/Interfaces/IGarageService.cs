@@ -11,8 +11,17 @@ namespace CubeSmasher.Core.Interfaces
         /// <summary>Все машины из конфига, в порядке конфига.</summary>
         GarageCarData[] AllCars { get; }
 
-        /// <summary>Открыта ли машина с данным индексом.</summary>
-        bool IsUnlocked(int index);
+        /// <summary>Стадия пройдена: машину можно открыть. Ещё не значит "открыта".</summary>
+        bool IsAvailable(int index);
+
+        /// <summary>Открыл ли игрок машину сам. Только такие машины дают доход.</summary>
+        bool IsOpened(int index);
+
+        /// <summary>Состояние машины для интерфейса.</summary>
+        GarageCarState GetState(int index);
+
+        /// <summary>Открыть доступную машину. Возвращает false, если она закрыта или уже открыта.</summary>
+        bool Open(int index);
 
         /// <summary>Индекс выбранной машины (то, что показано в гараже).</summary>
         int SelectedIndex { get; }
@@ -23,8 +32,11 @@ namespace CubeSmasher.Core.Interfaces
         /// <summary>Пересчитать открытые машины по текущей стадии.</summary>
         void RefreshForStage(int stage);
 
-        /// <summary>Вызывается, когда открылась новая машина.</summary>
-        event Action<int> CarUnlocked;
+        /// <summary>Стадия пройдена: машина стала доступна для открытия (но ещё не открыта).</summary>
+        event Action<int> CarAvailable;
+
+        /// <summary>Игрок открыл машину. С этого момента она даёт доход.</summary>
+        event Action<int> CarOpened;
 
         /// <summary>Вызывается при смене выбранной машины.</summary>
         event Action<int> SelectionChanged;

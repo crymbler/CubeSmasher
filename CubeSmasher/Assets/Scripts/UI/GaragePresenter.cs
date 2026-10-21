@@ -3,7 +3,7 @@ using CubeSmasher.Core.Interfaces;
 using CubeSmasher.Data.Configs;
 
 /// <summary>
-/// Связывает окно гаража с сервисом гаража. Правил открытия здесь нет: решает GarageService.
+/// Связывает экран гаража с сервисом. Правил открытия здесь нет: решает GarageService.
 /// </summary>
 public class GaragePresenter : IDisposable
 {
@@ -16,8 +16,10 @@ public class GaragePresenter : IDisposable
         _view = view ?? throw new ArgumentNullException(nameof(view));
 
         _view.CarSelected += HandleCarSelected;
+        _view.CarOpenRequested += HandleCarOpenRequested;
         _garage.SelectionChanged += HandleSelectionChanged;
-        _garage.CarUnlocked += HandleCarUnlocked;
+        _garage.CarAvailable += HandleCarStateChanged;
+        _garage.CarOpened += HandleCarOpened;
 
         view.SetCarCount(garage.AllCars.Length);
         ShowSelected();
@@ -28,12 +30,22 @@ public class GaragePresenter : IDisposable
         _garage.TrySelect(index);
     }
 
-    private void HandleSelectionChanged(int index)
+    private void HandleCarOpenRequested(int index)
     {
-        ShowSelected();
+        if (!_garage.Open(index)) return;
+
+        // Эффект только при успешном открытии
+        _view.PlayUnlockEffect();
     }
 
-    private void HandleCarUnlocked(int index)
+    private void HandleSelectionChanged(int index) => ShowSelected();
+
+    private void HandleCarStateChanged(int index)
+    {
+        if (index == _garage.SelectedIndex) ShowSelected();
+    }
+
+    private void HandleCarOpened(int index)
     {
         if (index == _garage.SelectedIndex) ShowSelected();
     }
@@ -45,14 +57,17 @@ public class GaragePresenter : IDisposable
 
         int i = _garage.SelectedIndex;
         GarageCarData car = cars[i];
-        _view.ShowCar(i, car.CarName, car.Description, car.IncomePerSecond,
-                      _garage.IsUnlocked(i), car.UnlockStage, car.ModelPrefab);
+
+        _view.ShowCar(i, car.CarName, car.Description, car.Characteristics,
+                      car.IncomePerSecond, _garage.GetState(i), car.UnlockStage, car.ModelPrefab);
     }
 
     public void Dispose()
     {
         _view.CarSelected -= HandleCarSelected;
+        _view.CarOpenRequested -= HandleCarOpenRequested;
         _garage.SelectionChanged -= HandleSelectionChanged;
-        _garage.CarUnlocked -= HandleCarUnlocked;
+        _garage.CarAvailable -= HandleCarStateChanged;
+        _garage.CarOpened -= HandleCarOpened;
     }
 }

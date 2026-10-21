@@ -62,6 +62,19 @@ namespace CubeSmasher.Infrastructure.Initializers
             garage.RefreshForStage(stageModel.CurrentStage);
             passiveIncome.RecalculateIncome(stageModel.CurrentStage);
 
+            // Игрок открыл машину -> она начинает приносить доход, пересчитываем сразу.
+            // Делегат в переменной: отписка лямбдой создаёт новый делегат и не работает.
+            Action<int> onCarOpened = _ =>
+            {
+                passiveIncome.RecalculateIncome(stageModel.CurrentStage);
+            };
+
+            if (subs != null)
+            {
+                subs.Track(() => garage.CarOpened += onCarOpened,
+                           () => garage.CarOpened -= onCarOpened);
+            }
+
             // Все подписки — через Subscriptions, чтобы снимались при уничтожении Bootstrapper.
             // Делегаты хранятся в переменных: отписка работает только с тем же объектом.
             Action<int> onStageSaved = newStage =>
