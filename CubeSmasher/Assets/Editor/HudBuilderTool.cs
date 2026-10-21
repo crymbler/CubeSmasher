@@ -26,8 +26,8 @@ public static class HudBuilderTool
     // Размеры посчитаны для 1080x1920
     private const float Margin = 24f;
     private const float TopBarHeight = 184f;
-    private const float BottomBarHeight = 190f;
-    private const float NavButtonSize = 140f;
+    private const float BottomBarHeight = 230f;
+    private const float NavButtonSize = 128f;
     private const float NavGap = 24f;
 
     [MenuItem("Tools/CubeSmasher/Build HUD Screen")]
@@ -65,6 +65,11 @@ public static class HudBuilderTool
         // Окна закрыты на старте
         shop.SetActive(false);
         garage.SetActive(false);
+
+        // Компоненты окон и назначение их полей — здесь, а не руками в инспекторе
+        BindTopHud(root);
+        BindShop(root, shop);
+        BindGarage(root, garage);
 
         PrefabUtility.SaveAsPrefabAsset(root, OutPath);
         Object.DestroyImmediate(root);
@@ -232,7 +237,13 @@ public static class HudBuilderTool
         stage.raycastTarget = false;
 
         GameObject bar = PlacePrefab(progressPrefab, top.transform, "StageProgress");
-        WideRow(bar.GetComponent<RectTransform>(), row2, 44f, Margin + 316f, Margin);
+        RectTransform barRt = bar.GetComponent<RectTransform>();
+        barRt.anchorMin = new Vector2(0f, 1f);
+        barRt.anchorMax = new Vector2(1f, 1f);
+        barRt.pivot = new Vector2(0.5f, 1f);
+        barRt.offsetMin = new Vector2(Margin + 316f, -row2 - 44f);
+        barRt.offsetMax = new Vector2(-Margin, -row2);
+        barRt.sizeDelta = new Vector2(barRt.sizeDelta.x, 44f);
     }
 
     // ------------------------------------------------------------------
@@ -263,9 +274,11 @@ public static class HudBuilderTool
                 new Vector2(NavButtonSize, NavButtonSize));
 
             // Подпись под иконкой, чтобы кнопки были понятны без картинок
-            GameObject caption = NewUI("Caption", btn.transform);
+            // Подпись сидит под кнопкой: pivot внизу, позиция ниже нижнего края кнопки
+            GameObject caption = NewUI("Caption", nav.transform);
             PlaceAt(caption.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 1f),
-                new Vector2(0f, -6f), new Vector2(NavButtonSize + 20f, 30f));
+                new Vector2(startX + i * (NavButtonSize + NavGap), Margin - 4f),
+                new Vector2(NavButtonSize + 20f, 28f));
 
             TextMeshProUGUI captionText = Text(caption, "Text", labels[i], 24f,
                 CubeSmasher.UI.UITheme.TextPrimary, TextAlignmentOptions.Center);
@@ -410,5 +423,93 @@ public static class HudBuilderTool
 
         var tmp = header.GetComponent<TextMeshProUGUI>();
         if (tmp != null) tmp.text = title;
+    }
+
+    // ------------------------------------------------------------------
+    // Привязка компонентов: скрипты вешаются на нужные объекты, поля назначаются по имени
+    // ------------------------------------------------------------------
+
+    private static T Child<T>(GameObject root, string path) where T : Component
+    {
+        Transform tr = root.transform.Find(path);
+        if (tr == null)
+        {
+            Debug.LogError("[HUD] Не найден объект: " + path);
+            return null;
+        }
+        return tr.GetComponent<T>() ?? tr.gameObject.AddComponent<T>();
+    }
+
+    private static void SetRef(Object target, string field, Object value)
+    {
+        var so = new SerializedObject(target);
+        SerializedProperty prop = so.FindProperty(field);
+        if (prop == null)
+        {
+            Debug.LogError("[HUD] Нет поля " + field + " в " + target.GetType().Name);
+            return;
+        }
+        prop.objectReferenceValue = value;
+        so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    private static void BindTopHud(GameObject root)
+    {
+        // TopHud держит TopHudView
+        Transform top = root.transform.Find("SafeArea/TopHud");
+        if (top == null) { Debug.LogError("[HUD] Нет SafeArea/TopHud"); return; }
+
+        var view = top.gameObject.AddComponent<TopHudView>();
+
+        Transform badge = top.Find("BalanceBadge");
+        TextMeshProUGUI balance = badge != null ? badge.Find("Value")?.GetComponent<TextMeshProUGUI>() : null;
+        Transform income = top.Find("Income/IncomeValue");
+        TextMeshProUGUI incomeText = income != null ? income.GetComponent<TextMeshProUGUI>() : null;
+        Transform stage = top.Find("Stage/StageLabel");
+        TextMeshProUGUI stageText = stage != null ? stage.GetComponent<TextMeshProUGUI>() : null;
+        Transform bar = top.Find("StageProgress");
+        Slider slider = bar != null ? bar.GetComponent<Slider>() : null;
+
+        SetRef(view, "_balanceText", balance);
+        SetRef(view, "_incomeText", incomeText);
+        SetRef(view, "_progressText", stageText);
+        SetRef(view, "_progressBar", slider);
+    }
+
+    private static void BindShop(GameObject root, GameObject shop)
+    {
+        var view = shop.AddComponent<ShopView>();
+
+        Transform close = shop.transform.Find("Content/Close");
+        if (close == null) close = shop.transform.Find("Close");
+        Button closeBtn = close != null ? close.GetComponent<Button>() : null;
+
+        Transform container = shop.transform.Find("Content/Scroll/Viewport/List");
+        Transform sample = shop.transform.Find("Content/Scroll/Viewport/List/UpgradeCard1");
+        UpgradeItemView prefabItem = sample != null ? sample.GetComponent<UpgradeItemView>() : null;
+
+        SetRef(view, "_closeButton", closeBtn);
+        SetRef(view, "_itemsContainer", container);
+        SetRef(view, "_itemPrefab", prefabItem);
+    }
+
+    private static void BindGarage(GameObject root, GameObject garage)
+    {
+        var view = garage.AddComponent<GarageView>();
+
+        Transform content = garage.transform.Find("Content");
+        if (content == null) return;
+
+        SetRef(view, "_window", garage);
+        SetRef(view, "_showcase", content.Find("Showcase"));
+        SetRef(view, "_nameText", content.Find("NameText/Text")?.GetComponent<TextMeshProUGUI>());
+        SetRef(view, "_descriptionText", content.Find("DescriptionText/Text")?.GetComponent<TextMeshProUGUI>());
+        SetRef(view, "_incomeText", content.Find("IncomeText/Text")?.GetComponent<TextMeshProUGUI>());
+        SetRef(view, "_statusText", content.Find("StatusText/Text")?.GetComponent<TextMeshProUGUI>());
+        SetRef(view, "_prevButton", content.Find("PrevButton")?.GetComponent<Button>());
+        SetRef(view, "_nextButton", content.Find("NextButton")?.GetComponent<Button>());
+
+        Transform close = garage.transform.Find("Close");
+        SetRef(view, "_closeButton", close != null ? close.GetComponent<Button>() : null);
     }
 }
