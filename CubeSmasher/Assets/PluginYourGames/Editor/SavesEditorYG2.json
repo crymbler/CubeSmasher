@@ -1,17 +1,15 @@
 {
-    "idSave": 224,
-    "lastSaveTime": 1792649348,
+    "idSave": 331,
+    "lastSaveTime": 1792704580,
     "bestScore": 0,
     "isAdsRemoved": false,
-    "level": 7,
-    "stageDetails": 122,
-    "hasPendingLocalSave": false,
-    "lastGarageCarIndex": 0,
-    "openedGarageCars": [
-        0
-    ],
+    "level": 0,
+    "stageDetails": 0,
+    "hasPendingLocalSave": true,
+    "lastGarageCarIndex": 6,
+    "openedGarageCars": [],
     "garageOpenMigrated": true,
-    "balance": 315676.9547069073,
+    "balance": 1.0,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 0.5,
@@ -20,23 +18,16 @@
     "tapUpgrades": [
         {
             "id": "hammer_damage",
-            "level": 12,
-            "price": 1357.1928024291992,
-            "value": 74.30087280273438,
+            "level": 1,
+            "price": 50.0,
+            "value": 10.0,
             "isLocked": false
         },
         {
             "id": "hammer_radius",
-            "level": 15,
-            "price": 6678.406524658203,
-            "value": 128.39190673828126,
-            "isLocked": false
-        },
-        {
-            "id": "debug molot",
-            "level": 50,
-            "price": 0.0,
-            "value": 100.0,
+            "level": 1,
+            "price": 100.0,
+            "value": 10.0,
             "isLocked": false
         }
     ]

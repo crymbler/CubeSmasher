@@ -415,10 +415,6 @@ public static class GarageScreenBuilder
             Debug.LogError("[Garage] Не найден путь " + path);
             return null;
         }
-<<<<<<< Updated upstream
-        // GameObject не является Component, общего типа у ветвей нет: приводим обе к UnityEngine.Object
-=======
->>>>>>> Stashed changes
         return type == typeof(GameObject) ? (Object)tr.gameObject : (Object)tr.GetComponent(type);
     }
 }
