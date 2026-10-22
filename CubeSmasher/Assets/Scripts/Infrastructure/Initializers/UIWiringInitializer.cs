@@ -19,10 +19,13 @@ namespace CubeSmasher.Infrastructure.Initializers
         private readonly Button _openShopButton;
         private readonly Button _openGarageButton;
         private readonly List<UpgradeConfig> _upgradeConfigs;
+        private readonly GameObject _garageDot;
+        private readonly GameObject _shopDot;
 
         public UIWiringInitializer(TopHudView topHudView, ShopView shopView, GarageView garageView,
                                    Button openShopButton, Button openGarageButton,
-                                   List<UpgradeConfig> upgradeConfigs)
+                                   List<UpgradeConfig> upgradeConfigs,
+                                   GameObject garageDot = null, GameObject shopDot = null)
         {
             _topHudView = topHudView;
             _shopView = shopView;
@@ -30,6 +33,8 @@ namespace CubeSmasher.Infrastructure.Initializers
             _openShopButton = openShopButton;
             _openGarageButton = openGarageButton;
             _upgradeConfigs = upgradeConfigs;
+            _garageDot = garageDot;
+            _shopDot = shopDot;
         }
 
         public void Initialize()
@@ -86,6 +91,19 @@ namespace CubeSmasher.Infrastructure.Initializers
             if (_openGarageButton != null && _garageView != null)
             {
                 _openGarageButton.onClick.AddListener(_garageView.Open);
+            }
+
+            // Красные кружки: гараж ждёт открытия машины, магазин — доступной покупки
+            if (services.TryGet(out IGarageService garageService)
+                && services.TryGet(out IShopService shopService))
+            {
+                var dots = new NotificationDots(
+                    _garageDot, _shopDot, garageService, shopService, wallet, stageModel,
+                    _upgradeConfigs, subs);
+
+                if (_garageView != null) dots.BindGarageView(_garageView, subs);
+
+                services.Register(dots);
             }
 
             // На время открытых окон ставим паузу и показываем курсор

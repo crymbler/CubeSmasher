@@ -83,6 +83,13 @@ public class GarageView : MonoBehaviour, IGarageView
 
     private GameObject _currentModel;
     private readonly System.Collections.Generic.List<Button> _thumbnails = new System.Collections.Generic.List<Button>();
+
+    // Иконка и кружок каждой миниатюры: приглушаем закрытые, зажигаем доступные.
+    private readonly System.Collections.Generic.List<Image> _thumbnailIcons = new System.Collections.Generic.List<Image>();
+    private readonly System.Collections.Generic.List<GameObject> _thumbnailDots = new System.Collections.Generic.List<GameObject>();
+    private readonly System.Collections.Generic.List<GarageCarState> _thumbnailStates = new System.Collections.Generic.List<GarageCarState>();
+
+    private const float LockedIconAlpha = 0.35f;
     private int _index;
     private int _count;
 
@@ -223,19 +230,49 @@ public class GarageView : MonoBehaviour, IGarageView
 
     private void RequestOpen() => CarOpenRequested?.Invoke(_index);
 
-    public void SetCarCount(Sprite[] icons)
+    public void SetCarCount(Sprite[] icons, GarageCarState[] states)
     {
         _count = icons != null ? icons.Length : 0;
-        BuildThumbnails(icons);
+        BuildThumbnails(icons, states);
+    }
+
+    /// <summary>Закрытая иконка приглушается, у доступной горит кружок.</summary>
+    public void SetCarState(int index, GarageCarState state)
+    {
+        if (index < 0 || index >= _thumbnailStates.Count) return;
+
+        _thumbnailStates[index] = state;
+        ApplyThumbnailVisual(index);
+    }
+
+    private void ApplyThumbnailVisual(int index)
+    {
+        if (index < 0 || index >= _thumbnailStates.Count) return;
+
+        bool locked = _thumbnailStates[index] == GarageCarState.Locked;
+
+        if (index < _thumbnailIcons.Count && _thumbnailIcons[index] != null)
+        {
+            Color c = _thumbnailIcons[index].color;
+            c.a = locked ? LockedIconAlpha : 1f;
+            _thumbnailIcons[index].color = c;
+        }
+
+        // Кружок только у доступной: открытая уже не требует внимания
+        if (index < _thumbnailDots.Count && _thumbnailDots[index] != null)
+            _thumbnailDots[index].SetActive(_thumbnailStates[index] == GarageCarState.Available);
     }
 
     /// <summary>Иконки внизу: по кнопке на машину. Нажатие выбирает машину.</summary>
-    private void BuildThumbnails(Sprite[] icons)
+    private void BuildThumbnails(Sprite[] icons, GarageCarState[] states)
     {
         if (_thumbnailsContainer == null || _thumbnailPrefab == null || icons == null) return;
 
         foreach (Button old in _thumbnails) if (old != null) Destroy(old.gameObject);
         _thumbnails.Clear();
+        _thumbnailIcons.Clear();
+        _thumbnailDots.Clear();
+        _thumbnailStates.Clear();
 
         for (int i = 0; i < icons.Length; i++)
         {
@@ -246,9 +283,18 @@ public class GarageView : MonoBehaviour, IGarageView
             Image icon = btn.transform.Find("Icon")?.GetComponent<Image>();
             if (icon != null) icon.sprite = icons[i];
 
+            // Кружок "машина ждёт открытия" из префаба миниатюры
+            GameObject dot = btn.transform.Find("Dot")?.gameObject;
+
             int index = i; // копия для замыкания
             btn.onClick.AddListener(() => CarSelected?.Invoke(index));
+
             _thumbnails.Add(btn);
+            _thumbnailIcons.Add(icon);
+            _thumbnailDots.Add(dot);
+            _thumbnailStates.Add(states != null && i < states.Length ? states[i] : GarageCarState.Locked);
+
+            ApplyThumbnailVisual(i);
         }
 
         ApplyResponsiveLayout();
