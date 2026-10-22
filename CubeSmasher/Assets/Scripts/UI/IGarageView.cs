@@ -11,7 +11,7 @@ public interface IGarageView
     event Action<int> CarSelected;
 
     /// <summary>Сколько машин всего, чтобы кнопки знали границы.</summary>
-    void SetCarCount(int count);
+    void SetCarCount(UnityEngine.Sprite[] icons);
 
     /// <summary>Игрок нажал "Открыть" у доступной машины.</summary>
     event Action<int> CarOpenRequested;

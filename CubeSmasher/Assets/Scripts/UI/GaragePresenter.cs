@@ -21,7 +21,7 @@ public class GaragePresenter : IDisposable
         _garage.CarAvailable += HandleCarStateChanged;
         _garage.CarOpened += HandleCarOpened;
 
-        view.SetCarCount(garage.AllCars.Length);
+        view.SetCarCount(System.Array.ConvertAll(garage.AllCars, c => c.MiniIcon));
         ShowSelected();
     }
 

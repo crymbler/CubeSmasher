@@ -116,24 +116,28 @@ public class GarageView : MonoBehaviour, IGarageView
 
     private void RequestOpen() => CarOpenRequested?.Invoke(_index);
 
-    public void SetCarCount(int count)
+    public void SetCarCount(Sprite[] icons)
     {
-        _count = count;
-        BuildThumbnails(count);
+        _count = icons != null ? icons.Length : 0;
+        BuildThumbnails(icons);
     }
 
     /// <summary>Иконки внизу: по кнопке на машину. Нажатие выбирает машину.</summary>
-    private void BuildThumbnails(int count)
+    private void BuildThumbnails(Sprite[] icons)
     {
-        if (_thumbnailsContainer == null || _thumbnailPrefab == null) return;
+        if (_thumbnailsContainer == null || _thumbnailPrefab == null || icons == null) return;
 
         foreach (Button old in _thumbnails) if (old != null) Destroy(old.gameObject);
         _thumbnails.Clear();
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < icons.Length; i++)
         {
             Button btn = Instantiate(_thumbnailPrefab, _thumbnailsContainer);
             btn.gameObject.SetActive(true);
+
+            // MiniIcon из GarageCarData. Без иконки миниатюра остаётся пустой кнопкой.
+            Image icon = btn.transform.Find("Icon")?.GetComponent<Image>();
+            if (icon != null) icon.sprite = icons[i];
 
             int index = i; // копия для замыкания
             btn.onClick.AddListener(() => CarSelected?.Invoke(index));
