@@ -10,8 +10,11 @@ public interface IGarageView
     /// <summary>Игрок выбрал машину в списке.</summary>
     event Action<int> CarSelected;
 
-    /// <summary>Сколько машин всего, чтобы кнопки знали границы.</summary>
-    void SetCarCount(UnityEngine.Sprite[] icons);
+    /// <summary>Построить ленту: иконки и стартовые состояния каждой машины.</summary>
+    void SetCarCount(UnityEngine.Sprite[] icons, GarageCarState[] states);
+
+    /// <summary>Обновить состояние одной иконки: закрытая приглушается, доступная получает кружок.</summary>
+    void SetCarState(int index, GarageCarState state);
 
     /// <summary>Игрок нажал "Открыть" у доступной машины.</summary>
     event Action<int> CarOpenRequested;

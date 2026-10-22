@@ -73,6 +73,8 @@ public static class GarageScreenBuilder
         Debug.Log("[Garage] Готово: " + OutPath);
         Debug.Log("[Garage] В сцене назначить вручную: _arenaCamera, _garageCamera, _showcase, " +
                   "_hideWhileOpen (HUD_Screen/TopHud и BottomNav)");
+        Debug.Log("[Garage] Bootstrapper: _garageDot → HUD_Screen/SafeArea/BottomNav/Row/BtnGarage/DotGarage, " +
+                  "_shopDot → .../BtnShop/DotShop");
     }
 
     // ------------------------------------------------------------------
@@ -241,6 +243,25 @@ public static class GarageScreenBuilder
 
         var tmplBtn = template.GetComponent<Button>();
         if (tmplBtn != null) tmplBtn.onClick.RemoveAllListeners();
+
+        // Кружок "машина ждёт открытия" в углу иконки. GarageView ищет его по имени Dot
+        // и показывает только у состояния Available.
+        if (template.transform.Find("Dot") == null)
+        {
+            GameObject dot = NewUI("Dot", template.transform);
+            Point(dot, new Vector2(1f, 1f), new Vector2(0.5f, 0.5f),
+                new Vector2(-4f, -4f), new Vector2(30f, 30f));
+
+            var dotImg = dot.AddComponent<Image>();
+            dotImg.color = CubeSmasher.UI.UITheme.Notification;
+            dotImg.raycastTarget = false;
+
+            var rim = dot.AddComponent<Outline>();
+            rim.effectColor = CubeSmasher.UI.UITheme.NotificationRim;
+            rim.effectDistance = new Vector2(3f, -3f);
+
+            dot.SetActive(false);
+        }
     }
 
     private static void BuildArrow(Transform parent, string name, string glyph, Vector2 anchor, Vector2 offset)

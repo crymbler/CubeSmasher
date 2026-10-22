@@ -66,6 +66,10 @@ namespace CubeSmasher.UI
 
         // --- Состояния ---
         public static readonly Color Positive = NeonGreen;
+
+        /// <summary>Красный кружок-уведомление: доступна машина или прокачка.</summary>
+        public static readonly Color Notification = C(0xFF3B3B);
+        public static readonly Color NotificationRim = C(0x8C1414);
         public static readonly Color Negative = NeonPink;
         public static readonly Color Disabled = MetalBlue;
 

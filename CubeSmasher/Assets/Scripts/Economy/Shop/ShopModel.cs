@@ -28,7 +28,9 @@ public class ShopModel : IShopService
         bool isDataChanged = false;
 
         // Получаем текущую стадию игрока (если 0, считаем как 1)
-        int currentStage = YG2.saves.level < 1 ? 1 : YG2.saves.level;
+        // Стадии начинаются с 0: подменять её на 1 нельзя, иначе улучшения
+        // со стадией 1 окажутся купленными раньше времени.
+        int currentStage = YG2.saves.level < 0 ? 0 : YG2.saves.level;
 
         foreach (var config in _availableUpgrades)
         {
@@ -88,6 +90,10 @@ public class ShopModel : IShopService
         UpgradeConfig config = GetConfig(id);
 
         if (data == null || config == null) return false;
+
+        // Флаг в сохранении мог быть записан старым кодом, поэтому стадию проверяем заново
+        int currentStage = YG2.saves.level < 0 ? 0 : YG2.saves.level;
+        if (currentStage < config.UnlockStageLevel) return false;
         if (data.isLocked) return false;
         if (data.level >= config.MaxLevel) return false; // Достигнут лимит
 

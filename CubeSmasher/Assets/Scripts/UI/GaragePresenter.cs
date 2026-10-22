@@ -21,7 +21,11 @@ public class GaragePresenter : IDisposable
         _garage.CarAvailable += HandleCarStateChanged;
         _garage.CarOpened += HandleCarOpened;
 
-        view.SetCarCount(System.Array.ConvertAll(garage.AllCars, c => c.MiniIcon));
+        GarageCarData[] all = garage.AllCars;
+        var states = new GarageCarState[all.Length];
+        for (int i = 0; i < all.Length; i++) states[i] = garage.GetState(i);
+
+        view.SetCarCount(System.Array.ConvertAll(all, c => c.MiniIcon), states);
         ShowSelected();
     }
 
@@ -42,11 +46,14 @@ public class GaragePresenter : IDisposable
 
     private void HandleCarStateChanged(int index)
     {
+        // Иконка в ленте обновляется всегда, даже если машина не выбрана
+        _view.SetCarState(index, _garage.GetState(index));
         if (index == _garage.SelectedIndex) ShowSelected();
     }
 
     private void HandleCarOpened(int index)
     {
+        _view.SetCarState(index, _garage.GetState(index));
         if (index == _garage.SelectedIndex) ShowSelected();
     }
 
