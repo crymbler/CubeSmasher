@@ -99,8 +99,7 @@ public static class HudBuilderTool
         Debug.Log("[HUD] 1. Bootstrapper: _topHudView → TopHud, _shopView → ShopWindow, " +
                   "_garageView → GarageStrip");
         Debug.Log("[HUD] 2. Bootstrapper: _openShopButton и _openGarageButton → кнопки в BottomNav");
-        Debug.Log("[HUD] 2б. Bootstrapper: _garageDot → BottomNav/Row/BtnGarage/DotGarage, " +
-                  "_shopDot → BottomNav/Row/BtnShop/DotShop");
+        Debug.Log("[HUD] 2б. Кружки-уведомления создаются кодом у BtnGarage и BtnShop, назначать нечего.");
         Debug.Log("[HUD] 3. GarageStrip: _garageCamera → GarageCamera, _showcase → showcase " +
                   "(эти два объекта живут в сцене, префаб на них ссылаться не может)");
     }
@@ -303,34 +302,9 @@ public static class HudBuilderTool
             Label(caption, "CaptionText", labels[i], 24f,
                 CubeSmasher.UI.UITheme.TextPrimary, TextAlignmentOptions.Center);
 
-            // Кружок-уведомление в правом верхнем углу кнопки.
-            // Гараж горит, когда есть машина к открытию; магазин — когда есть доступная покупка.
-            if (names[i] == "BtnGarage" || names[i] == "BtnShop")
-            {
-                BuildNotificationDot(btn.transform, names[i] == "BtnGarage" ? "DotGarage" : "DotShop");
-            }
         }
     }
 
-    /// <summary>Маленький красный кружок в углу кнопки. Выключен: включает его NotificationDots.</summary>
-    private static GameObject BuildNotificationDot(Transform parent, string name)
-    {
-        GameObject dot = NewUI(name, parent);
-        Point(dot, new Vector2(1f, 1f), new Vector2(0.5f, 0.5f),
-            new Vector2(-6f, -6f), new Vector2(34f, 34f));
-
-        var img = dot.AddComponent<Image>();
-        img.color = CubeSmasher.UI.UITheme.Notification;
-        img.raycastTarget = false; // клик должен проходить в кнопку под кружком
-
-        // Тёмная окантовка, чтобы кружок читался на любом фоне
-        var outline = dot.AddComponent<Outline>();
-        outline.effectColor = CubeSmasher.UI.UITheme.NotificationRim;
-        outline.effectDistance = new Vector2(3f, -3f);
-
-        dot.SetActive(false);
-        return dot;
-    }
 
     // ------------------------------------------------------------------
     // Окно магазина: полноэкранное, со списком карточек

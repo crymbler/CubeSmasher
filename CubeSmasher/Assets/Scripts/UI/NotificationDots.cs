@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
 using CubeSmasher.Infrastructure;
 using UnityEngine;
+using UnityEngine.UI;
 using YG;
 
 /// <summary>
@@ -33,12 +34,16 @@ public class NotificationDots : IDisposable
     private readonly Action<int> _onCarOpened;
     private readonly Action _onGarageOpened;
 
-    public NotificationDots(GameObject garageDot, GameObject shopDot, IGarageService garage,
+    /// <summary>
+    /// Кружки создаются кодом у переданных кнопок (NotificationDot.Ensure),
+    /// поэтому ни префаб HUD, ни сцена не требуют назначений.
+    /// </summary>
+    public NotificationDots(Button garageButton, Button shopButton, IGarageService garage,
                             IShopService shop, IWallet wallet, StageModel stage,
                             List<UpgradeConfig> configs, Subscriptions subs)
     {
-        _garageDot = garageDot;
-        _shopDot = shopDot;
+        _garageDot = NotificationDot.Ensure(garageButton != null ? garageButton.transform : null, "DotGarage");
+        _shopDot = NotificationDot.Ensure(shopButton != null ? shopButton.transform : null, "DotShop");
         _garage = garage;
         _shop = shop;
         _wallet = wallet;

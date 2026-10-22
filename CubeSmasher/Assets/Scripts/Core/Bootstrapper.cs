@@ -37,10 +37,6 @@ public class Bootstrapper : MonoBehaviour
     [Header("UI - Гараж")]
     [SerializeField] private GarageView _garageView;
     [SerializeField] private Button _openGarageButton;
-    [Tooltip("Красный кружок на кнопке гаража: есть машина, ждущая открытия")]
-    [SerializeField] private GameObject _garageDot;
-    [Tooltip("Красный кружок на кнопке магазина: есть прокачка, которую можно купить")]
-    [SerializeField] private GameObject _shopDot;
 
     private ServiceLocator _services;
     private PartLifecycleService _partLifecycle;
@@ -83,8 +79,7 @@ public class Bootstrapper : MonoBehaviour
             new GameplayInitializer(_gameSettings, _carPartPrefab, _poolContainer),
             new WeaponInitializer(_hammerCaster),
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
-                                    _openShopButton, _openGarageButton, _upgradeConfigs,
-                                    _garageDot, _shopDot)
+                                    _openShopButton, _openGarageButton, _upgradeConfigs)
         };
 
         foreach (IGameInitializer initializer in initializers)

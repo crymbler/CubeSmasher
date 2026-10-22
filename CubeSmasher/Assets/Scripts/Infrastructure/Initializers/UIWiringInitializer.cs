@@ -19,13 +19,10 @@ namespace CubeSmasher.Infrastructure.Initializers
         private readonly Button _openShopButton;
         private readonly Button _openGarageButton;
         private readonly List<UpgradeConfig> _upgradeConfigs;
-        private readonly GameObject _garageDot;
-        private readonly GameObject _shopDot;
 
         public UIWiringInitializer(TopHudView topHudView, ShopView shopView, GarageView garageView,
                                    Button openShopButton, Button openGarageButton,
-                                   List<UpgradeConfig> upgradeConfigs,
-                                   GameObject garageDot = null, GameObject shopDot = null)
+                                   List<UpgradeConfig> upgradeConfigs)
         {
             _topHudView = topHudView;
             _shopView = shopView;
@@ -33,8 +30,6 @@ namespace CubeSmasher.Infrastructure.Initializers
             _openShopButton = openShopButton;
             _openGarageButton = openGarageButton;
             _upgradeConfigs = upgradeConfigs;
-            _garageDot = garageDot;
-            _shopDot = shopDot;
         }
 
         public void Initialize()
@@ -97,9 +92,10 @@ namespace CubeSmasher.Infrastructure.Initializers
             if (services.TryGet(out IGarageService garageService)
                 && services.TryGet(out IShopService shopService))
             {
+                // Кружки создаются кодом у самих кнопок — в сцене ничего не назначаем
                 var dots = new NotificationDots(
-                    _garageDot, _shopDot, garageService, shopService, wallet, stageModel,
-                    _upgradeConfigs, subs);
+                    _openGarageButton, _openShopButton, garageService, shopService, wallet,
+                    stageModel, _upgradeConfigs, subs);
 
                 if (_garageView != null) dots.BindGarageView(_garageView, subs);
 

@@ -283,8 +283,9 @@ public class GarageView : MonoBehaviour, IGarageView
             Image icon = btn.transform.Find("Icon")?.GetComponent<Image>();
             if (icon != null) icon.sprite = icons[i];
 
-            // Кружок "машина ждёт открытия" из префаба миниатюры
-            GameObject dot = btn.transform.Find("Dot")?.gameObject;
+            // Кружок "машина ждёт открытия". Создаётся кодом: префаб миниатюры
+            // верстается руками, заводить в нём объект заранее не нужно.
+            GameObject dot = NotificationDot.Ensure(btn.transform, "Dot", new Vector2(-2f, -2f), 24f);
 
             int index = i; // копия для замыкания
             btn.onClick.AddListener(() => CarSelected?.Invoke(index));
