@@ -182,27 +182,55 @@ public static class GarageScreenBuilder
         rt.offsetMax = new Vector2(0f, BottomBarHeight);
         rt.localScale = Vector3.one;
 
-        // Стрелки по краям
+        // Стрелки по краям. Размер и отступы правит GarageView под ориентацию экрана.
         BuildArrow(bar.transform, "PrevButton", "‹", new Vector2(0f, 0.5f), new Vector2(Margin, 0f));
         BuildArrow(bar.transform, "NextButton", "›", new Vector2(1f, 0.5f), new Vector2(-Margin, 0f));
 
-        // Лента иконок по центру, между стрелками
-        GameObject strip = NewUI("Thumbnails", bar.transform);
+        // Лента миниатюр в прокрутке: машин может быть много, сжимать их нельзя.
+        // Viewport обрезает, Content растягивается под число иконок.
+        GameObject viewport = NewUI("ThumbViewport", bar.transform);
+        RectTransform vrt = viewport.GetComponent<RectTransform>();
+        vrt.anchorMin = new Vector2(0f, 0.5f);
+        vrt.anchorMax = new Vector2(1f, 0.5f);
+        vrt.pivot = new Vector2(0.5f, 0.5f);
+        vrt.offsetMin = new Vector2(Margin + ArrowSize + 24f, -ThumbSize * 0.5f);
+        vrt.offsetMax = new Vector2(-Margin - ArrowSize - 24f, ThumbSize * 0.5f);
+        vrt.localScale = Vector3.one;
+        viewport.AddComponent<RectMask2D>();
+
+        var scroll = viewport.AddComponent<ScrollRect>();
+        scroll.horizontal = true;
+        scroll.vertical = false;
+        scroll.movementType = ScrollRect.MovementType.Elastic;
+        scroll.elasticity = 0.1f;
+        scroll.inertia = true;
+        scroll.decelerationRate = 0.135f;
+        scroll.scrollSensitivity = 30f;
+
+        GameObject strip = NewUI("Thumbnails", viewport.transform);
         RectTransform srt = strip.GetComponent<RectTransform>();
-        srt.anchorMin = new Vector2(0f, 0.5f);
-        srt.anchorMax = new Vector2(1f, 0.5f);
-        srt.pivot = new Vector2(0.5f, 0.5f);
-        srt.offsetMin = new Vector2(Margin + ArrowSize + 24f, -ThumbSize * 0.5f);
-        srt.offsetMax = new Vector2(-Margin - ArrowSize - 24f, ThumbSize * 0.5f);
+        srt.anchorMin = new Vector2(0f, 0f);
+        srt.anchorMax = new Vector2(0f, 1f);
+        srt.pivot = new Vector2(0f, 0.5f);
+        srt.offsetMin = Vector2.zero;
+        srt.offsetMax = Vector2.zero;
         srt.localScale = Vector3.one;
 
         var layout = strip.AddComponent<HorizontalLayoutGroup>();
         layout.spacing = ThumbGap;
+        layout.padding = new RectOffset(8, 8, 0, 0);
         layout.childAlignment = TextAnchor.MiddleCenter;
         layout.childControlWidth = false;
         layout.childControlHeight = false;
         layout.childForceExpandWidth = false;
         layout.childForceExpandHeight = false;
+
+        var fitter = strip.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+        scroll.viewport = vrt;
+        scroll.content = srt;
 
         // Шаблон иконки. GarageView клонирует его по числу машин и выключает сам шаблон
         GameObject template = PlacePrefab(thumbPrefab, strip.transform, "ThumbnailTemplate");
@@ -268,8 +296,10 @@ public static class GarageScreenBuilder
         SetRef(view, "_incomeText", Child(root, "Window/SafeArea/Info/income/Text", typeof(TextMeshProUGUI)));
         SetRef(view, "_prevButton", Child(root, "Window/SafeArea/BottomBar/PrevButton", typeof(Button)));
         SetRef(view, "_nextButton", Child(root, "Window/SafeArea/BottomBar/NextButton", typeof(Button)));
-        SetRef(view, "_thumbnailsContainer", Child(root, "Window/SafeArea/BottomBar/Thumbnails", typeof(Transform)));
-        SetRef(view, "_thumbnailPrefab", Child(root, "Window/SafeArea/BottomBar/Thumbnails/ThumbnailTemplate", typeof(Button)));
+        SetRef(view, "_bottomBar", Child(root, "Window/SafeArea/BottomBar", typeof(RectTransform)));
+        SetRef(view, "_thumbnailsScroll", Child(root, "Window/SafeArea/BottomBar/ThumbViewport", typeof(ScrollRect)));
+        SetRef(view, "_thumbnailsContainer", Child(root, "Window/SafeArea/BottomBar/ThumbViewport/Thumbnails", typeof(Transform)));
+        SetRef(view, "_thumbnailPrefab", Child(root, "Window/SafeArea/BottomBar/ThumbViewport/Thumbnails/ThumbnailTemplate", typeof(Button)));
 
         Debug.LogWarning("[Garage] Назначить в сцене вручную: _arenaCamera, _garageCamera, _showcase, " +
                          "_hideWhileOpen, _unlockParticles, _audioSource, _unlockSound");
