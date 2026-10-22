@@ -34,8 +34,8 @@ namespace CubeSmasher.Infrastructure.Initializers
             var wallet = new Wallet(YG2.saves.balance);
             services.Register<IWallet>(wallet);
 
-            // Если игра запущена впервые, в сейве level = 0, а стадии начинаются с 1
-            int savedStage = YG2.saves.level < 1 ? 1 : YG2.saves.level;
+            // Новый игрок начинает со стадии 0 (10 деталей до первой машины)
+            int savedStage = YG2.saves.level < 0 ? 0 : YG2.saves.level;
             var stageModel = new StageModel(savedStage, YG2.saves.stageDetails);
             services.Register(stageModel);
 

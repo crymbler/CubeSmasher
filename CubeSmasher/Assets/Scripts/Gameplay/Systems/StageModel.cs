@@ -25,7 +25,8 @@ public class StageModel
 
     public StageModel(int initialStage, int initialDetails = 0)
     {
-        _currentStage = initialStage < 1 ? 1 : initialStage;
+        // —тади€ 0 Ч стартова€: до первой машины нужно собрать 10 деталей
+        _currentStage = initialStage < 0 ? 0 : initialStage;
         CalculateRequiredDetails();
 
         // ЌезавершЄнный прогресс стадии из сохранени€, но не больше требуемого
@@ -68,6 +69,6 @@ public class StageModel
     {
         // ѕроста€ математика: 1 уровень = 50 осколков, каждый следующий на 25 больше
         // ћожно вынести эту формулу в EconomyConfig, если захочешь
-        _requiredDetails = 50 + (_currentStage - 1) * 25;
+        _requiredDetails = _currentStage == 0 ? 10 : 50 + (_currentStage - 1) * 25;
     }
 }
