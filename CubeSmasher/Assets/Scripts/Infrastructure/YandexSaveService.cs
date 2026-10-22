@@ -22,6 +22,15 @@ namespace CubeSmasher.Infrastructure
             // Локальная копия всегда, даже если облако не ответит
             LocalSaveService.Write();
 
+            // Плагин ещё не инициализирован (например, сохранение из конструктора сервиса
+            // на Awake). YG2.SaveProgress() в этом состоянии пишет LogError и выходит,
+            // поэтому облако пропускаем: данные уже в PlayerPrefs.
+            if (!YG2.isSDKEnabled)
+            {
+                YG2.saves.hasPendingLocalSave = true;
+                return;
+            }
+
             try
             {
                 YG2.SaveProgress();

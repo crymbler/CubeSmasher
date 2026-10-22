@@ -15,7 +15,6 @@ public static class UIBuilderTool
     private const string PrefabFolder = "Assets/Prefabs/UI";
 
     [MenuItem("Tools/CubeSmasher/Build UI Prefabs")]
-    [MenuItem("Tools/CubeSmasher/Build UI Prefabs")]
     public static void BuildAll()
     {
         EnsureFolders();
@@ -56,7 +55,6 @@ public static class UIBuilderTool
 
 
 
-    [MenuItem("Tools/CubeSmasher/Rebuild UI Sprites Only")]
     [MenuItem("Tools/CubeSmasher/Rebuild UI Sprites Only")]
     public static void BuildSpritesOnly()
     {
