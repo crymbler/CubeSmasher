@@ -55,10 +55,31 @@ public class GarageView : MonoBehaviour, IGarageView
     [SerializeField] private Transform _thumbnailsContainer;
     [SerializeField] private Button _thumbnailPrefab;
 
+    [Header("Раскладка")]
+    [Tooltip("Нижняя полоса. Вью сам подгоняет размеры иконок и стрелок под ориентацию экрана")]
+    [SerializeField] private RectTransform _bottomBar;
+    [Tooltip("Прокрутка ленты: при большом числе машин лента едет, а не сжимается в кучу")]
+    [SerializeField] private ScrollRect _thumbnailsScroll;
+
     [Header("Эффект открытия")]
     [SerializeField] private ParticleSystem _unlockParticles;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _unlockSound;
+
+    // Размеры подобраны так, чтобы на телефоне иконки не липли друг к другу,
+    // а на ПК лента не растягивалась на пол страницы.
+    private const float ThumbLandscape = 132f;
+    private const float ThumbPortrait = 104f;
+    private const float GapLandscape = 20f;
+    private const float GapPortrait = 14f;
+    private const float ArrowLandscape = 110f;
+    private const float ArrowPortrait = 84f;
+    private const float ArrowGap = 24f;
+
+    private float _thumbSize = ThumbLandscape;
+
+    private int _lastWidth = -1;
+    private int _lastHeight = -1;
 
     private GameObject _currentModel;
     private readonly System.Collections.Generic.List<Button> _thumbnails = new System.Collections.Generic.List<Button>();
@@ -74,6 +95,92 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_prevButton != null) _prevButton.onClick.AddListener(Prev);
         if (_nextButton != null) _nextButton.onClick.AddListener(Next);
         if (_openButton != null) _openButton.onClick.AddListener(RequestOpen);
+
+        ApplyResponsiveLayout();
+    }
+
+    /// <summary>Экран повернули или изменили размер окна — пересчитываем размеры.</summary>
+    private void OnRectTransformDimensionsChange()
+    {
+        if (Screen.width == _lastWidth && Screen.height == _lastHeight) return;
+        ApplyResponsiveLayout();
+    }
+
+    /// <summary>
+    /// Портрет (телефон) — иконки и стрелки мельче, лента прокручивается по центру.
+    /// Альбом (ПК) — крупнее. Логика одна, меняются только числа.
+    /// </summary>
+    private void ApplyResponsiveLayout()
+    {
+        if (_thumbnailsContainer == null) return;
+
+        _lastWidth = Screen.width;
+        _lastHeight = Screen.height;
+        bool portrait = Screen.height > Screen.width;
+
+        _thumbSize = portrait ? ThumbPortrait : ThumbLandscape;
+        float gap = portrait ? GapPortrait : GapLandscape;
+        float arrow = portrait ? ArrowPortrait : ArrowLandscape;
+
+        if (_thumbnailsScroll != null && _thumbnailsScroll.content != null)
+        {
+            var layout = _thumbnailsScroll.content.GetComponent<HorizontalLayoutGroup>();
+            if (layout != null) layout.spacing = gap;
+        }
+
+        SetArrowSize(_prevButton, arrow);
+        SetArrowSize(_nextButton, arrow);
+
+        // Лента занимает всё между стрелками, поэтому отступ зависит от их размера
+        if (_thumbnailsScroll != null && _thumbnailsScroll.viewport != null)
+        {
+            RectTransform vp = _thumbnailsScroll.viewport;
+            float side = 32f + arrow + ArrowGap;
+            vp.offsetMin = new Vector2(side, vp.offsetMin.y);
+            vp.offsetMax = new Vector2(-side, vp.offsetMax.y);
+        }
+
+        for (int i = 0; i < _thumbnails.Count; i++)
+        {
+            if (_thumbnails[i] == null) continue;
+            var le = _thumbnails[i].GetComponent<LayoutElement>();
+            if (le != null)
+            {
+                le.preferredWidth = _thumbSize;
+                le.preferredHeight = _thumbSize;
+            }
+        }
+
+        ScrollToSelected();
+    }
+
+    private static void SetArrowSize(Button button, float size)
+    {
+        if (button == null) return;
+        var rt = button.GetComponent<RectTransform>();
+        if (rt != null) rt.sizeDelta = new Vector2(size, size);
+    }
+
+    /// <summary>Подвести ленту к выбранной машине, чтобы она всегда была на виду.</summary>
+    private void ScrollToSelected()
+    {
+        if (_thumbnailsScroll == null || _thumbnailsScroll.content == null) return;
+        if (_thumbnailsScroll.viewport == null) return;
+
+        Canvas.ForceUpdateCanvases();
+
+        float viewportWidth = _thumbnailsScroll.viewport.rect.width;
+        float contentWidth = _thumbnailsScroll.content.rect.width;
+        if (contentWidth <= viewportWidth + 1f)
+        {
+            _thumbnailsScroll.horizontalNormalizedPosition = 0f;
+            return;
+        }
+
+        float cell = _thumbSize + 20f; // иконка + отступ сетки
+        float target = _index * cell + _thumbSize * 0.5f - viewportWidth * 0.5f;
+        _thumbnailsScroll.horizontalNormalizedPosition =
+            Mathf.Clamp01(target / (contentWidth - viewportWidth));
     }
 
     public void Open()
@@ -143,6 +250,8 @@ public class GarageView : MonoBehaviour, IGarageView
             btn.onClick.AddListener(() => CarSelected?.Invoke(index));
             _thumbnails.Add(btn);
         }
+
+        ApplyResponsiveLayout();
     }
 
     public void ShowCar(int index, string name, string description, string characteristics,
@@ -180,6 +289,7 @@ public class GarageView : MonoBehaviour, IGarageView
         // Модель видна у доступной и открытой, у закрытой её нет
         ReplaceModel(opened || available ? modelPrefab : null);
         HighlightThumbnail(index);
+        ScrollToSelected();
     }
 
     private void HighlightThumbnail(int index)
