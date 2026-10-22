@@ -123,30 +123,37 @@ public class GarageService : IGarageService
     }
 
     /// <summary>
-    /// Перенос старых сохранений: раньше машина открывалась сама по стадии и сразу давала доход.
-    /// Чтобы игроки не потеряли доход после обновления, все машины, чья стадия пройдена,
-    /// считаются открытыми. Выполняется один раз.
+    /// Перенос старых сохранений. Раньше машина открывалась сама по стадии и сразу давала доход.
+    /// Чтобы игроки с уже пройденным прогрессом не потеряли доход, их открытые по стадии машины
+    /// переносятся как открытые. Выполняется один раз.
+    ///
+    /// Новый игрок (и сброс через SetDefaultSaves) НЕ переносится: прогресса нет, машины
+    /// с UnlockStage = 1 просто становятся доступными, а открывает их игрок кнопкой.
     /// </summary>
     private void MigrateOldSaves()
     {
         if (YG2.saves.garageOpenMigrated) return;
 
-        int stage = YG2.saves.level < 1 ? 1 : YG2.saves.level;
-        var opened = new List<int>();
-        var available = new List<int>();
+        bool hasLegacyProgress = YG2.saves.level > 1 || YG2.saves.stageDetails > 0 || YG2.saves.balance > 1;
 
-        for (int i = 0; i < _cars.Length; i++)
+        if (hasLegacyProgress)
         {
-            if (stage < _cars[i].UnlockStage) continue;
-            opened.Add(i);
-            available.Add(i);
+            int stage = YG2.saves.level < 1 ? 1 : YG2.saves.level;
+            var opened = new List<int>();
+
+            for (int i = 0; i < _cars.Length; i++)
+            {
+                if (stage < _cars[i].UnlockStage) continue;
+                opened.Add(i);
+                _available.Add(i);
+            }
+
+            YG2.saves.openedGarageCars = opened;
+            foreach (int i in opened) _opened.Add(i);
         }
 
-        YG2.saves.openedGarageCars = opened;
+        // Флаг ставим всегда: миграция для этого сохранения сделана
         YG2.saves.garageOpenMigrated = true;
         _saveService.Save();
-
-        foreach (int i in available) _available.Add(i);
-        foreach (int i in opened) _opened.Add(i);
     }
 }
