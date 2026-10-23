@@ -355,8 +355,25 @@ public class GarageView : MonoBehaviour, IGarageView
     /// <summary>Партиклы и торжественный звук в момент открытия машины.</summary>
     public void PlayUnlockEffect()
     {
-        if (_unlockParticles != null) _unlockParticles.Play();
-        if (_audioSource != null && _unlockSound != null) _audioSource.PlayOneShot(_unlockSound);
+        // Если в инспекторе назначено свое — используем его; иначе создаём кодом один раз
+        if (_unlockParticles == null)
+        {
+            Transform anchor = _showcase != null ? _showcase : transform;
+            _unlockParticles = UnlockEffect.CreateBurst(anchor);
+        }
+        if (_unlockSound == null)
+        {
+            _unlockSound = UnlockEffect.CreateUnlockClip();
+        }
+        if (_audioSource == null)
+        {
+            _audioSource = gameObject.AddComponent<AudioSource>();
+            _audioSource.playOnAwake = false;
+            _audioSource.spatialBlend = 0f;
+        }
+
+        _unlockParticles.Play();
+        _audioSource.PlayOneShot(_unlockSound);
     }
 
     private void ReplaceModel(GameObject prefab)
