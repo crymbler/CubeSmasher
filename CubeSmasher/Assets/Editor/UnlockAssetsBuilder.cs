@@ -65,24 +65,24 @@ public static class UnlockAssetsBuilder
         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
         var main = ps.main;
-        main.duration = 0.6f;
+        main.duration = 3f;
         main.loop = false;
         main.playOnAwake = false;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(0.5f, 0.9f);
-        main.startSpeed = new ParticleSystem.MinMaxCurve(2f, 4.5f);
-        main.startSize = new ParticleSystem.MinMaxCurve(0.08f, 0.16f);
+        main.startLifetime = new ParticleSystem.MinMaxCurve(2.5f, 3.5f);
+        main.startSpeed = new ParticleSystem.MinMaxCurve(6f, 12f);
+        main.startSize = new ParticleSystem.MinMaxCurve(2.5f, 4f);
         main.startColor = new Color(0.612f, 1f, 0.239f);
-        main.gravityModifier = 0.6f;
+        main.gravityModifier = 0.2f;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
-        main.maxParticles = 80;
+        main.maxParticles = 1000;
 
         var emission = ps.emission;
         emission.rateOverTime = 0f;
-        emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 40) });
+        emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 400) });
 
         var shape = ps.shape;
         shape.shapeType = ParticleSystemShapeType.Sphere;
-        shape.radius = 0.2f;
+        shape.radius = 1.5f;
 
         var r = go.GetComponent<ParticleSystemRenderer>();
         r.sharedMaterial = mat;
