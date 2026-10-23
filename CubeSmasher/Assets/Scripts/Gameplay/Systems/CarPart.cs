@@ -30,6 +30,12 @@ public class CarPart : MonoBehaviour, IDestructible, IPoolable
         _boxCollider = GetComponent<BoxCollider>();
         _rigidbody = GetComponent<Rigidbody>();
         _colorChanger = GetComponent<ColorChanger>();
+
+        // Детали летят быстро (удар молота, взрыв осколков). При дискретной проверке
+        // столкновений они могут за один кадр перескочить тонкую стенку миски.
+        // Continuous Dynamic ловит такие пролёты; Interpolate сглаживает картинку.
+        _rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     // --- Реализация IPoolable ---
