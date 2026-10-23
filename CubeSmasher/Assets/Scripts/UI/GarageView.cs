@@ -355,6 +355,17 @@ public class GarageView : MonoBehaviour, IGarageView
     /// <summary>Партиклы и торжественный звук в момент открытия машины.</summary>
     public void PlayUnlockEffect()
     {
+        // Если поле указывает на ассет префаба (из Project), Play() у него ничего не покажет
+        // в сцене. Создаём экземпляр под витриной один раз; дальше поле уже ссылается на него.
+        if (_unlockParticles != null && !_unlockParticles.gameObject.scene.IsValid())
+        {
+            Transform anchor = _showcase != null ? _showcase : transform;
+            ParticleSystem instance = Instantiate(_unlockParticles, anchor);
+            instance.transform.localPosition = Vector3.zero;
+            instance.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            _unlockParticles = instance;
+        }
+
         // Если в инспекторе назначено свое — используем его; иначе создаём кодом один раз
         if (_unlockParticles == null)
         {
