@@ -1486,6 +1486,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 309072077287251489, guid: afa0454c260746f469fc9ce64ae41065, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637048167123477317, guid: afa0454c260746f469fc9ce64ae41065, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -365115745017570447, guid: 08ea2f593054c89498728bf239c77d56, type: 3}
     - target: {fileID: 2122227916383651965, guid: afa0454c260746f469fc9ce64ae41065, type: 3}
       propertyPath: m_Name
       value: Dish
@@ -1530,8 +1538,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7832310323816746351, guid: afa0454c260746f469fc9ce64ae41065, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

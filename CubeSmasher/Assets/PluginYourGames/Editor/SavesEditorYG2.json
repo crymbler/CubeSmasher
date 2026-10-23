@@ -1,15 +1,18 @@
 {
-    "idSave": 331,
-    "lastSaveTime": 1792704580,
+    "idSave": 388,
+    "lastSaveTime": 1792764069,
     "bestScore": 0,
     "isAdsRemoved": false,
-    "level": 0,
-    "stageDetails": 0,
+    "level": 1,
+    "stageDetails": 37,
     "hasPendingLocalSave": true,
-    "lastGarageCarIndex": 6,
-    "openedGarageCars": [],
+    "lastGarageCarIndex": 4,
+    "openedGarageCars": [
+        0,
+        4
+    ],
     "garageOpenMigrated": true,
-    "balance": 1.0,
+    "balance": 120.48756837844849,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 0.5,
@@ -18,9 +21,9 @@
     "tapUpgrades": [
         {
             "id": "hammer_damage",
-            "level": 1,
-            "price": 50.0,
-            "value": 10.0,
+            "level": 5,
+            "price": 110.7667326927185,
+            "value": 19.387775421142579,
             "isLocked": false
         },
         {
