@@ -20,6 +20,10 @@ public class UpgradeItemView : MonoBehaviour
     [Tooltip("Заливка шкалы (растягивается по anchorMax.x). Пусто — LevelBar/Track/Fill")]
     [SerializeField] private RectTransform _levelFill;
 
+    [Header("Строка 'было -> станет'")]
+    [Tooltip("Текст со значением до и после улучшения. Пусто - строка не выводится")]
+    [SerializeField] private TextMeshProUGUI _deltaText;
+
     private AnimatedProgressBar _levelProgress;
 
     [Header("Цвета по GDD")]
@@ -75,6 +79,14 @@ public class UpgradeItemView : MonoBehaviour
         }
 
         _levelProgress.SetValue(value);
+    }
+
+    /// <summary>Строка 'было -> станет'. Пустая строка скрывает поле.</summary>
+    public void SetDelta(string delta)
+    {
+        if (_deltaText == null) return;
+        _deltaText.text = delta ?? string.Empty;
+        _deltaText.gameObject.SetActive(!string.IsNullOrEmpty(delta));
     }
 
     private void OnDestroy()

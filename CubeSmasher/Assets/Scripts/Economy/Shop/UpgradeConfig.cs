@@ -31,6 +31,31 @@ public class UpgradeConfig : ScriptableObject
     public float ValueStep = 0.15f;       // Для линейного роста
     public float ValueMultiplier = 1.20f; // Для экспоненциального
 
+    [Header("Отображение")]
+    [Tooltip("Ключ локализации названия характеристики (используется в K5)")]
+    public string StatNameKey;
+    [Tooltip("Единица измерения, например с, %, м. Пусто - без единицы")]
+    public string UnitKey;
+    [Tooltip("Знаков после запятой в строке 'было -> станет'")]
+    [Range(0, 3)] public int Decimals = 1;
+    [Tooltip("Характеристика уменьшается при улучшении. Пока только хранится, для K5")]
+    public bool ValueDecreases;
+
+    /// <summary>
+    /// Строка 'было -> станет' для карточки. Пусто на максимальном уровне.
+    /// Принято: уровень 0 даёт значение 0, уровень N даёт CalculateValue(N).
+    /// </summary>
+    public string FormatDelta(int currentLevel)
+    {
+        if (currentLevel >= MaxLevel) return string.Empty;
+
+        float from = currentLevel <= 0 ? 0f : CalculateValue(currentLevel);
+        float to = CalculateValue(currentLevel + 1);
+        string fmt = "F" + Mathf.Clamp(Decimals, 0, 3);
+        string unit = string.IsNullOrEmpty(UnitKey) ? string.Empty : " " + UnitKey;
+        return from.ToString(fmt) + unit + " \u2192 " + to.ToString(fmt) + unit;
+    }
+
     // Математика для расчета СЛЕДУЮЩЕГО уровня
     public double CalculatePrice(int nextLevel)
     {

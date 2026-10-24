@@ -15,7 +15,7 @@ using UnityEngine;
 public class PartLifecycleService
 {
     /// <summary>Задержка перед появлением нового корневого куба после потери предыдущего.</summary>
-    private const float RespawnDelay = 2f;
+    private float RespawnDelay => _physics.RespawnDelay > 0f ? _physics.RespawnDelay : 2f;
 
     /// <summary>Сколько объектов создаётся заранее в новом пуле. Держим малым ради быстрой загрузки.</summary>
     private const int PoolWarmup = 4;

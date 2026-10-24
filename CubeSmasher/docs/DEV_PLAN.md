@@ -16,7 +16,7 @@
 | K1 | Палитра + генератор префабов | **готово** | `UI/UITheme.cs`, `Assets/Editor/UIBuilderTool.cs` |
 | K2 | HUD: верх, низ, окна | **готово** (сделано владельцем вручную, рабочий и адаптивный) | `my hud.prefab`, `UI/BottomNavView.cs` |
 | K3 | Окна скрывают HUD | **частично** (код готов, нужно назначить `_hideWhileOpen` в инспекторе и проверить в Play Mode) | `UI/GarageView.cs`, `UI/Shop/ShopView.cs` |
-| K4 | Прокачка кубов и спавна | не начато | `Data/Configs/PhysicsConfig.cs`, `Gameplay/Systems/PartLifecycleService.cs`, `Economy/Shop/UpgradeConfig.cs`, `UI/Shop/UpgradeItemView.cs` |
+| K4 | Прокачка кубов и спавна | **частично** (RespawnDelay и строка «было → станет» в коде, MaxPartsPerWave ждёт решения) | `Data/Configs/PhysicsConfig.cs`, `Gameplay/Systems/PartLifecycleService.cs`, `Economy/Shop/UpgradeConfig.cs`, `UI/Shop/UpgradeItemView.cs` |
 | K5 | Локализация с аргументами | не начато | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | не начато | `UI/SafeAreaFitter.cs` (нет) |
 | K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
@@ -112,6 +112,15 @@
   - Гараж: `_hideWhileOpen` и `SetHidden` были в коде, но в `GarageScreenBuilder` поле не назначается. Назначить в инспекторе `GarageView`.
   - Магазин: раньше HUD не скрывался. Добавлен `_hideWhileOpen` в `ShopView` с тем же механизмом. Назначить в инспекторе `ShopView`: верхний HUD и нижнюю панель.
   - Осталось: назначить поля в инспекторе, проверить в Play Mode, что при открытии магазина и гаража HUD исчезает, а при закрытии возвращается. Пока не подтверждено.
+
+### 24.10.2026, K4 (частично)
+
+- **RespawnDelay: сделано в коде.** Константа `2f` вынесена в `PhysicsConfig.RespawnDelay`. Если в ассете стоит 0 (старый ассет без значения), используется 2 с. Проверить в Inspector.
+- **Строка «было → станет»: сделано в коде.** Нужно назначить `_deltaText` в префабе карточки `UpgradeCard`. Без назначения строка не выводится. Формат задаёт `UpgradeConfig.FormatDelta`, на него влияют `UnitKey` и `Decimals` в ассетах апгрейдов.
+- **Допущение:** уровень 0 даёт значение 0, уровень N даёт `CalculateValue(N)`. Если в геймплее уровень 0 должен давать базовое значение, поправить в `FormatDelta`.
+- **StatNameKey, ValueDecreases: добавлены, пока не используются.** Нужны для K5.
+- **MaxPartsPerWave: не сделано, нужно решение владельца.** Сейчас `StartPartsPerWave` задаёт число кубов на столе и предел респавна, поэтому пункт «MaxPartsPerWave = 4» из плана не даёт эффекта. Варианты: (а) завести отдельный предел респавна, (б) убрать пункт из плана.
+- Не проверено в Unity.
 
 ### Следующие шаги
 

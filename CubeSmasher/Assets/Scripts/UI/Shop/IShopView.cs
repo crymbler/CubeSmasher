@@ -15,6 +15,7 @@ public struct UpgradeRowData
     public bool IsLocked;
     public bool IsMaxLevel;
     public bool CanAfford;
+    public string Delta;
 }
 
 /// <summary>

@@ -20,6 +20,9 @@ namespace CubeSmasher.Data.Configs
         [Tooltip("Сколько деталей появляется на столе одновременно")]
         public int StartPartsPerWave = 1;
 
+        [Tooltip("Задержка перед появлением нового корневого куба после потери предыдущего, в секундах")]
+        public float RespawnDelay = 2f;
+
         [Tooltip("Размер детали поколения 0 (Gen 0)")]
         public float InitialPartScale = 1f;
 

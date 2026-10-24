@@ -76,7 +76,8 @@ public class ShopPresenter : IDisposable
             UnlockStage = config.UnlockStageLevel,
             IsLocked = isLocked,
             IsMaxLevel = isMaxLevel,
-            CanAfford = canAfford
+            CanAfford = canAfford,
+            Delta = config.FormatDelta(data.level)
         });
     }
 

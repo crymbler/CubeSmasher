@@ -67,6 +67,7 @@ public class ShopView : MonoBehaviour, IShopView
         item.UpdateData(row.Icon, row.Name, row.Level, row.Price,
                         row.CanAfford, row.IsMaxLevel, row.IsLocked, row.UnlockStage);
         item.SetLevelProgress(row.MaxLevel > 0 ? (float)row.Level / row.MaxLevel : 0f);
+        item.SetDelta(row.Delta);
     }
 
     private UpgradeItemView GetOrCreateItem(string id)
