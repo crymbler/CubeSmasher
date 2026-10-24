@@ -15,6 +15,10 @@ public class ShopView : MonoBehaviour, IShopView
     [Header("Кнопки управления")]
     [SerializeField] private Button _closeButton; // Крестик внутри окна магазина
 
+    [Header("Скрывать на время магазина")]
+    [Tooltip("HUD и нижнюю панель: назначить в инспекторе. Они прячутся при открытии и возвращаются при закрытии.")]
+    [SerializeField] private GameObject[] _hideWhileOpen;
+
     // События открытия/закрытия окна: на них подписывается UIWiringInitializer (пауза, курсор)
     public event Action OnOpened;
     public event Action OnClosed;
@@ -35,13 +39,26 @@ public class ShopView : MonoBehaviour, IShopView
     public void Open()
     {
         gameObject.SetActive(true);
+        SetHidden(true);
         OnOpened?.Invoke();
     }
 
     public void Close()
     {
         gameObject.SetActive(false);
+        SetHidden(false);
         OnClosed?.Invoke();
+    }
+
+    /// <summary>Прячет HUD и нижнюю панель, пока открыт магазин, и возвращает как было.</summary>
+    private void SetHidden(bool hide)
+    {
+        if (_hideWhileOpen == null) return;
+
+        foreach (GameObject go in _hideWhileOpen)
+        {
+            if (go != null) go.SetActive(!hide);
+        }
     }
 
     public void Render(string id, UpgradeRowData row)
