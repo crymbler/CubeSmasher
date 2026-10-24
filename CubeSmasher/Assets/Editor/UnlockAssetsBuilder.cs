@@ -45,7 +45,9 @@ public static class UnlockAssetsBuilder
 
     private static Material MakeMaterial()
     {
-        Shader shader = Shader.Find("Particles/Standard Unlit") ?? Shader.Find("Sprites/Default");
+        // В URP встроенные шейдеры не рисуются: нужен шейдер из пакета URP
+        Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit")
+            ?? Shader.Find("Particles/Standard Unlit") ?? Shader.Find("Sprites/Default");
         Material mat = AssetDatabase.LoadAssetAtPath<Material>(MatPath);
         if (mat == null)
         {
@@ -53,7 +55,9 @@ public static class UnlockAssetsBuilder
             AssetDatabase.CreateAsset(mat, MatPath);
         }
         mat.shader = shader;
-        mat.color = new Color(0.612f, 1f, 0.239f); // неоновый зелёный, как UITheme.NeonGreen
+        Color neon = new Color(0.612f, 1f, 0.239f); // неоновый зелёный, как UITheme.NeonGreen
+        mat.color = neon;
+        if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", neon); // URP-шейдер читает _BaseColor
         EditorUtility.SetDirty(mat);
         return mat;
     }
@@ -83,6 +87,7 @@ public static class UnlockAssetsBuilder
         var shape = ps.shape;
         shape.shapeType = ParticleSystemShapeType.Sphere;
         shape.radius = 1.5f;
+        shape.position = new Vector3(0f, 1.5f, 0f); // над кузовом, а не в центре модели
 
         var r = go.GetComponent<ParticleSystemRenderer>();
         r.sharedMaterial = mat;

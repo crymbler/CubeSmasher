@@ -355,36 +355,35 @@ public class GarageView : MonoBehaviour, IGarageView
     /// <summary>Партиклы и торжественный звук в момент открытия машины.</summary>
     public void PlayUnlockEffect()
     {
-        // Если поле указывает на ассет префаба (из Project), Play() у него ничего не покажет
-        // в сцене. Создаём экземпляр под витриной один раз; дальше поле уже ссылается на него.
-        if (_unlockParticles != null && !_unlockParticles.gameObject.scene.IsValid())
-        {
-            Transform anchor = _showcase != null ? _showcase : transform;
-            ParticleSystem instance = Instantiate(_unlockParticles, anchor);
-            instance.transform.localPosition = Vector3.zero;
-            instance.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            _unlockParticles = instance;
-        }
-
-        // Если в инспекторе назначено свое — используем его; иначе создаём кодом один раз
-        if (_unlockParticles == null)
-        {
-            Transform anchor = _showcase != null ? _showcase : transform;
-            _unlockParticles = UnlockEffect.CreateBurst(anchor);
-        }
-        if (_unlockSound == null)
-        {
-            _unlockSound = UnlockEffect.CreateUnlockClip();
-        }
+        if (_unlockSound == null) _unlockSound = UnlockEffect.CreateUnlockClip();
         if (_audioSource == null)
         {
             _audioSource = gameObject.AddComponent<AudioSource>();
             _audioSource.playOnAwake = false;
             _audioSource.spatialBlend = 0f;
         }
-
-        _unlockParticles.Play();
         _audioSource.PlayOneShot(_unlockSound);
+
+        Transform anchor = _showcase != null ? _showcase : transform;
+
+        // Шаблон: ассет префаба из Project или объект сцены. Если не назначен, строим кодом.
+        ParticleSystem source = _unlockParticles;
+        if (source == null)
+        {
+            source = UnlockEffect.CreateBurst(anchor);
+            source.gameObject.SetActive(false);
+            _unlockParticles = source;
+        }
+
+        // Каждое открытие — свой экземпляр, который удаляется после проигрывания,
+        // чтобы не оставаться в сцене до перезагрузки
+        ParticleSystem instance = Instantiate(source, anchor);
+        instance.transform.localPosition = Vector3.zero;
+        instance.gameObject.SetActive(true);
+        instance.Play(true);
+
+        float life = instance.main.duration + instance.main.startLifetime.constantMax + 0.5f;
+        Destroy(instance.gameObject, life);
     }
 
     private void ReplaceModel(GameObject prefab)
