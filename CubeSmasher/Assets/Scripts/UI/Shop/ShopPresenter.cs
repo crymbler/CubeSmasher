@@ -68,7 +68,7 @@ public class ShopPresenter : IDisposable
 
         _view.Render(id, new UpgradeRowData
         {
-            Name = config.UpgradeName,
+            Name = config.DisplayName,
             Icon = config.Icon,
             Level = data.level,
             MaxLevel = config.MaxLevel,

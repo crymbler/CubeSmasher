@@ -12,6 +12,14 @@ public class UpgradeConfig : ScriptableObject
 
     [Header("Визуал UI")]
     public string UpgradeName;
+
+    [Header("Название по языкам (K5). Пусто — берётся UpgradeName")]
+    public string NameRu;
+    public string NameEn;
+    public string NameTr;
+
+    /// <summary>Название на текущем языке. Используется в магазине.</summary>
+    public string DisplayName => CubeSmasher.Settings.Localization.Pick(NameRu, NameEn, NameTr, UpgradeName);
     public Sprite Icon;
 
     [Header("Лимиты")]

@@ -17,7 +17,7 @@
 | K2 | HUD: верх, низ, окна | **готово** (сделано владельцем вручную, рабочий и адаптивный) | `my hud.prefab`, `UI/BottomNavView.cs` |
 | K3 | Окна скрывают HUD | **частично** (код готов, нужно назначить `_hideWhileOpen` в инспекторе и проверить в Play Mode) | `UI/GarageView.cs`, `UI/Shop/ShopView.cs` |
 | K4 | Прокачка кубов и спавна | **частично** (RespawnDelay и строка «было → станет» в коде; предел больших деталей — `StartPartsPerWave`, в ассете 2; связка с апгрейдом не сделана) | `Data/Configs/PhysicsConfig.cs`, `Gameplay/Systems/PartLifecycleService.cs`, `Economy/Shop/UpgradeConfig.cs`, `UI/Shop/UpgradeItemView.cs` |
-| K5 | Локализация с аргументами | не начато | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
+| K5 | Локализация с аргументами | **готово в коде** (не проверено в Unity; старые вызовы не переведены на SetArgs) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | не начато | `UI/SafeAreaFitter.cs` (нет) |
 | K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
 | K8 | Скины и донат-валюта | не начато | `Data/Configs/SkinConfig.cs` (нет) |
@@ -121,6 +121,17 @@
 - **StatNameKey, ValueDecreases: добавлены, пока не используются.** Нужны для K5.
 - **Предел больших деталей: решение владельца, отдельного поля не нужно.** Лимит — это `StartPartsPerWave` (в ассете `PhysicsConfig` сейчас 2). Владелец подтвердил, что при полной прокачке должно стать 4: апгрейд покупается дважды и удваивает лимит.
 - **Связка с апгрейдом: не сделано.** В коде ничто не меняет `StartPartsPerWave` при покупке, проверено grep по `origin/main`. Связка будет создана вместе с проектированием апгрейдов в `UpgradeConfig`, после K-задач.
+- Не проверено в Unity.
+
+### 24.10.2026, K5
+
+- **Localizer.SetArgs: сделано.** Компонент принимает аргументы `{0}`, `{1}` и перерисовывает текст. Пример: `SetArgs(12, "с")`.
+- **Localization.Pick(ru, en, tr, fallback): сделано.** Выбирает текст по языку, при пустом значении идёт по порядку en, ru, tr, затем fallback.
+- **Названия апгрейдов: сделано.** В `UpgradeConfig` поля `NameRu`, `NameEn`, `NameTr` и свойство `DisplayName`. Магазин берёт `DisplayName`. Если переводы пусты, остаётся старое `UpgradeName`.
+- **Описания машин: сделано.** В `GarageCarData` поля `DescriptionRu`, `DescriptionEn`, `DescriptionTr` и метод `GetDescription()`. Старое поле `Description` остаётся запасным.
+- **Не сделано: вызовы в коде пока не переведены на `SetArgs`.** Текущие `Localization.Get(key, args)` работают и с аргументами, поэтому переписывать их не нужно. Применять `SetArgs` стоит там, где текст лежит в `Localizer` в префабе.
+- **Не сделано: `StatNameKey` не подключён к тексту.** Поле есть, но название характеристики пока не берётся по ключу. Это нужно при проектировании апгрейдов.
+- **Не сделано: описание машины не выводится в гараже.** В коде нигде не читается `Description`, поэтому `GetDescription()` пока никто не вызывает. Чтобы вывести, добавить вызов в `GarageView`, когда будет готова вёрстка описания.
 - Не проверено в Unity.
 
 ### Следующие шаги

@@ -15,6 +15,7 @@ namespace CubeSmasher.Settings
         [SerializeField] private string _key;
 
         private TextMeshProUGUI _text;
+        private object[] _args;
 
         private void Awake()
         {
@@ -34,11 +35,18 @@ namespace CubeSmasher.Settings
 
         private void OnLanguageChanged(string _) => Refresh();
 
+        /// <summary>Задать аргументы {0}, {1}... и перерисовать текст. Пример: SetArgs(12, "с").</summary>
+        public void SetArgs(params object[] args)
+        {
+            _args = args;
+            Refresh();
+        }
+
         /// <summary>Перерисовать текст по текущему ключу и языку.</summary>
         public void Refresh()
         {
             if (_text == null || string.IsNullOrEmpty(_key)) return;
-            _text.text = Localization.Get(_key);
+            _text.text = Localization.Get(_key, _args);
         }
     }
 }

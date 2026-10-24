@@ -39,6 +39,20 @@ namespace CubeSmasher.Settings
             }
         }
 
+        /// <summary>
+        /// Текст для данных (названия, описания) по текущему языку.
+        /// Если на языке пусто, идёт по порядку en, ru, tr, потом fallback.
+        /// </summary>
+        public static string Pick(string ru, string en, string tr, string fallback = "")
+        {
+            string own = CurrentLang == "en" ? en : CurrentLang == "tr" ? tr : ru;
+            if (!string.IsNullOrEmpty(own)) return own;
+            if (!string.IsNullOrEmpty(en)) return en;
+            if (!string.IsNullOrEmpty(ru)) return ru;
+            if (!string.IsNullOrEmpty(tr)) return tr;
+            return fallback ?? string.Empty;
+        }
+
         /// <summary>Вернуть строку по ключу на текущем языке, с подстановкой {0}, {1}...</summary>
         public static string Get(string key, params object[] args)
         {
