@@ -63,6 +63,7 @@ public class GarageView : MonoBehaviour, IGarageView
 
     [Header("Эффект открытия")]
     [SerializeField] private ParticleSystem _unlockParticles;
+    [SerializeField] private ParticleSystem _unlockParticlesSecondary;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _unlockSound;
 
@@ -366,30 +367,23 @@ public class GarageView : MonoBehaviour, IGarageView
 
         Transform anchor = _showcase != null ? _showcase : transform;
 
-        // Шаблон: ассет префаба из Project или объект сцены. Если не назначен, строим кодом.
-        ParticleSystem source = _unlockParticles;
-        if (source == null)
-        {
-            source = UnlockEffect.CreateBurst(anchor);
-            source.gameObject.SetActive(false);
-            _unlockParticles = source;
-        }
+        // Два залпа: зелёный и розовый. Если поле пустое, шаблон строится кодом.
+        if (_unlockParticles == null)
+            _unlockParticles = UnlockEffect.CreateTemplate(anchor, "UnlockBurstGreen", UnlockEffect.NeonGreen);
+        if (_unlockParticlesSecondary == null)
+            _unlockParticlesSecondary = UnlockEffect.CreateTemplate(anchor, "UnlockBurstPink", UnlockEffect.NeonPink);
 
-        // Каждое открытие — свой экземпляр, который удаляется после проигрывания,
-        // чтобы не оставаться в сцене до перезагрузки
+        SpawnBurst(_unlockParticles, anchor);
+        SpawnBurst(_unlockParticlesSecondary, anchor);
+    }
+
+    private void SpawnBurst(ParticleSystem source, Transform anchor)
+    {
+        if (source == null) return;
         ParticleSystem instance = Instantiate(source, anchor);
         instance.transform.localPosition = Vector3.zero;
         instance.gameObject.SetActive(true);
-
-        // Во время открытого гаража Time.timeScale = 0 (GamePause). Частицы считаем
-        // на нереальном времени, иначе они стоят до закрытия окна.
-        var main = instance.main;
-        main.useUnscaledTime = true;
-        // Удаляем экземпляр, когда все частицы погасли. Таймер Destroy(obj, t) тоже
-        // идёт по масштабированному времени и при паузе не сработает.
-        main.stopAction = ParticleSystemStopAction.Destroy;
-
-        instance.Play(true);
+        instance.Play(true); // удаляется сам по stopAction = Destroy
     }
 
     private void ReplaceModel(GameObject prefab)

@@ -4,16 +4,19 @@ using UnityEngine;
 
 /// <summary>
 /// Tools > CubeSmasher > Create Unlock Effect Assets
-/// Создаёт префаб партикла открытия машины и материал, сохраняет их в проект
-/// и назначает клип и партикл на GarageView в открытой сцене.
-/// Можно запускать повторно: файлы перезаписываются.
+/// Создаёт два префаба залпа (зелёный и розовый неон) и их материалы, назначает их
+/// и клип на GarageView в открытой сцене. Можно запускать повторно.
 /// </summary>
 public static class UnlockAssetsBuilder
 {
     private const string EffectsFolder = "Assets/Prefabs/Effects";
     private const string ArtFolder = "Assets/Art/Effects";
-    private const string PrefabPath = EffectsFolder + "/UnlockBurst.prefab";
-    private const string MatPath = ArtFolder + "/UnlockBurst.mat";
+    private const string GreenPrefab = EffectsFolder + "/UnlockBurstGreen.prefab";
+    private const string PinkPrefab = EffectsFolder + "/UnlockBurstPink.prefab";
+    private const string GreenMat = ArtFolder + "/UnlockBurstGreen.mat";
+    private const string PinkMat = ArtFolder + "/UnlockBurstPink.mat";
+    private const string OldPrefab = EffectsFolder + "/UnlockBurst.prefab";
+    private const string OldMat = ArtFolder + "/UnlockBurst.mat";
     private const string ClipPath = "Assets/Audio/UnlockChime.wav";
 
     [MenuItem("Tools/CubeSmasher/Create Unlock Effect Assets")]
@@ -22,19 +25,21 @@ public static class UnlockAssetsBuilder
         EnsureFolder("Assets/Prefabs", "Effects");
         EnsureFolder("Assets/Art", "Effects");
 
-        Material mat = MakeMaterial();
-        GameObject prefab = MakePrefab(mat);
+        AssetDatabase.DeleteAsset(OldPrefab);
+        AssetDatabase.DeleteAsset(OldMat);
+
+        GameObject green = MakeBurst("UnlockBurstGreen", GreenPrefab, GreenMat, UnlockEffect.NeonGreen);
+        GameObject pink = MakeBurst("UnlockBurstPink", PinkPrefab, PinkMat, UnlockEffect.NeonPink);
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
         var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(ClipPath);
-        if (clip == null) Debug.LogWarning("[Unlock] Не найден " + ClipPath + ". Проверьте, что файл лежит в проекте.");
+        if (clip == null) Debug.LogWarning("[Unlock] Не найден " + ClipPath);
 
-        int assigned = AssignToGarageView(prefab.GetComponent<ParticleSystem>(), clip);
-
-        Debug.Log("[Unlock] Готово: " + PrefabPath + (assigned > 0 ? ". Назначено на GarageView в сцене." :
-            ". GarageView в открытой сцене не найден: перетащите префаб и клип в поля вручную."));
+        int assigned = AssignToGarageView(green.GetComponent<ParticleSystem>(), pink.GetComponent<ParticleSystem>(), clip);
+        Debug.Log("[Unlock] Готово: два залпа по " + UnlockEffect.BurstCount + " частиц. " +
+            (assigned > 0 ? "Назначено на GarageView в сцене." : "GarageView в открытой сцене не найден."));
     }
 
     private static void EnsureFolder(string parent, string name)
@@ -43,70 +48,32 @@ public static class UnlockAssetsBuilder
             AssetDatabase.CreateFolder(parent, name);
     }
 
-    private static Material MakeMaterial()
+    private static GameObject MakeBurst(string name, string prefabPath, string matPath, Color color)
     {
-        // В URP встроенные шейдеры не рисуются: нужен шейдер из пакета URP
-        Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit")
-            ?? Shader.Find("Particles/Standard Unlit") ?? Shader.Find("Sprites/Default");
-        Material mat = AssetDatabase.LoadAssetAtPath<Material>(MatPath);
-        if (mat == null)
-        {
-            mat = new Material(shader);
-            AssetDatabase.CreateAsset(mat, MatPath);
-        }
-        mat.shader = shader;
-        Color neon = new Color(0.612f, 1f, 0.239f); // неоновый зелёный, как UITheme.NeonGreen
-        mat.color = neon;
-        if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", neon); // URP-шейдер читает _BaseColor
-        EditorUtility.SetDirty(mat);
-        return mat;
-    }
+        AssetDatabase.DeleteAsset(matPath);
+        AssetDatabase.CreateAsset(UnlockEffect.MakeMaterial(color), matPath);
+        Material mat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
 
-    private static GameObject MakePrefab(Material mat)
-    {
-        var go = new GameObject("UnlockBurst");
+        var go = new GameObject(name);
         var ps = go.AddComponent<ParticleSystem>();
         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        UnlockEffect.ConfigureBurst(ps, color);
+        go.GetComponent<ParticleSystemRenderer>().sharedMaterial = mat;
 
-        var main = ps.main;
-        main.useUnscaledTime = true;                        // работает при Time.timeScale = 0 (открыт гараж)
-        main.stopAction = ParticleSystemStopAction.Destroy; // экземпляр удаляется сам
-        main.duration = 3f;
-        main.loop = false;
-        main.playOnAwake = false;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(2.5f, 3.5f);
-        main.startSpeed = new ParticleSystem.MinMaxCurve(6f, 12f);
-        main.startSize = new ParticleSystem.MinMaxCurve(2.5f, 4f);
-        main.startColor = new Color(0.612f, 1f, 0.239f);
-        main.gravityModifier = 0.2f;
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-        main.maxParticles = 1000;
-
-        var emission = ps.emission;
-        emission.rateOverTime = 0f;
-        emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 400) });
-
-        var shape = ps.shape;
-        shape.shapeType = ParticleSystemShapeType.Sphere;
-        shape.radius = 1.5f;
-        shape.position = new Vector3(0f, 1.5f, 0f); // над кузовом, а не в центре модели
-
-        var r = go.GetComponent<ParticleSystemRenderer>();
-        r.sharedMaterial = mat;
-
-        GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, PrefabPath);
+        GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, prefabPath);
         Object.DestroyImmediate(go);
         return prefab;
     }
 
-    private static int AssignToGarageView(ParticleSystem ps, AudioClip clip)
+    private static int AssignToGarageView(ParticleSystem green, ParticleSystem pink, AudioClip clip)
     {
         int count = 0;
         foreach (var view in Resources.FindObjectsOfTypeAll<GarageView>())
         {
-            if (view == null || !view.gameObject.scene.IsValid()) continue; // только объекты сцены, не ассеты
+            if (view == null || !view.gameObject.scene.IsValid()) continue; // только объекты сцены
             var so = new SerializedObject(view);
-            so.FindProperty("_unlockParticles").objectReferenceValue = ps;
+            so.FindProperty("_unlockParticles").objectReferenceValue = green;
+            so.FindProperty("_unlockParticlesSecondary").objectReferenceValue = pink;
             so.FindProperty("_unlockSound").objectReferenceValue = clip;
             so.ApplyModifiedProperties();
             EditorSceneManager.MarkSceneDirty(view.gameObject.scene);

@@ -1,56 +1,67 @@
 using UnityEngine;
 
 /// <summary>
-/// Эффект открытия машины: вспышка частиц и короткий звук.
-/// Создаётся кодом, если в инспекторе GarageView ничего не назначено,
-/// поэтому правка префаба не нужна. Назначенные клипы и партиклы имеют приоритет.
+/// Эффект открытия машины: два залпа частиц (зелёный и розовый неон) и короткий звук.
+/// Настройки частиц здесь, ими пользуются и рантайм, и сборщик префабов
+/// (Tools > CubeSmasher > Create Unlock Effect Assets), поэтому они не расходятся.
 /// </summary>
 public static class UnlockEffect
 {
+    public static readonly Color NeonGreen = new Color(0.612f, 1f, 0.239f);    // #9CFF3D
+    public static readonly Color NeonPink = new Color(0.957f, 0.318f, 0.965f);  // #F451F6
+
+    /// <summary>Частиц в одном залпе. Два залпа дают 1000 всего.</summary>
+    public const int BurstCount = 500;
+
     private const int SampleRate = 44100;
 
-    /// <summary>Партикл-вспышка в точке. Создаётся один раз и переиспользуется.</summary>
-    public static ParticleSystem CreateBurst(Transform anchor)
+    public static void ConfigureBurst(ParticleSystem ps, Color color)
     {
-        var go = new GameObject("UnlockBurst");
-        go.transform.SetParent(anchor, false);
-        go.transform.localPosition = Vector3.zero;
-
-        var ps = go.AddComponent<ParticleSystem>();
-        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
         var main = ps.main;
-        main.useUnscaledTime = true;                                // работает при Time.timeScale = 0
-        main.stopAction = ParticleSystemStopAction.Destroy;         // удаляется сам по окончании
-        main.duration = 0.6f;
+        main.useUnscaledTime = true;                        // работает при Time.timeScale = 0 (открыт гараж)
+        main.stopAction = ParticleSystemStopAction.Destroy; // экземпляр удаляется сам
         main.loop = false;
         main.playOnAwake = false;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(0.5f, 0.9f);
-        main.startSpeed = new ParticleSystem.MinMaxCurve(2f, 4.5f);
-        main.startSize = new ParticleSystem.MinMaxCurve(0.08f, 0.16f);
-        main.startColor = CubeSmasher.UI.UITheme.NeonGreen;
-        main.gravityModifier = 0.6f;
+        main.duration = 3f;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(2.5f, 3.5f);
+        main.startSpeed = new ParticleSystem.MinMaxCurve(6f, 12f);
+        main.startSize = new ParticleSystem.MinMaxCurve(3.5f, 5.5f);
+        main.startColor = color;
+        main.gravityModifier = 0.2f;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
-        main.maxParticles = 80;
+        main.maxParticles = BurstCount + 50;
 
         var emission = ps.emission;
         emission.rateOverTime = 0f;
-        emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 40) });
+        emission.SetBursts(new[] { new ParticleSystem.Burst(0f, BurstCount) });
 
         var shape = ps.shape;
         shape.shapeType = ParticleSystemShapeType.Sphere;
-        shape.radius = 0.2f;
+        shape.radius = 2.5f;
+        shape.position = new Vector3(0f, 1.5f, 0f); // над кузовом
+    }
 
-        // Шейдер подбираем сами: если пусто, частицы выйдут розовыми
-        var renderer = go.GetComponent<ParticleSystemRenderer>();
-        Shader shader = Shader.Find("Particles/Standard Unlit") ?? Shader.Find("Sprites/Default");
-        if (shader != null)
-        {
-            var mat = new Material(shader) { color = CubeSmasher.UI.UITheme.NeonGreen };
-            renderer.sharedMaterial = mat;
-        }
-
+    /// <summary>Неактивный шаблон в сцене, если поля в инспекторе пустые.</summary>
+    public static ParticleSystem CreateTemplate(Transform anchor, string name, Color color)
+    {
+        var go = new GameObject(name);
+        go.transform.SetParent(anchor, false);
+        go.transform.localPosition = Vector3.zero;
+        var ps = go.AddComponent<ParticleSystem>();
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        ConfigureBurst(ps, color);
+        go.GetComponent<ParticleSystemRenderer>().sharedMaterial = MakeMaterial(color);
+        go.SetActive(false);
         return ps;
+    }
+
+    public static Material MakeMaterial(Color color)
+    {
+        Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit")
+            ?? Shader.Find("Particles/Standard Unlit") ?? Shader.Find("Sprites/Default");
+        var mat = new Material(shader) { color = color };
+        if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", color);
+        return mat;
     }
 
     /// <summary>Короткий восходящий «щелчок»: синус, частота растёт, громкость затухает.</summary>
