@@ -558,13 +558,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1954775007}
     - target: {fileID: 2539943790265252575, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
+      propertyPath: _unlockSound
+      value: 
+      objectReference: {fileID: 8300000, guid: ee1d8a1c332c44beb24d05547863698c, type: 3}
+    - target: {fileID: 2539943790265252575, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
       propertyPath: _garageCamera
       value: 
       objectReference: {fileID: 1445157208}
     - target: {fileID: 2539943790265252575, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
+      propertyPath: _unlockParticles
+      value: 
+      objectReference: {fileID: 7459554906323407949, guid: a8f8bb534572b674e93425a9d65a7b94, type: 3}
+    - target: {fileID: 2539943790265252575, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
       propertyPath: _hideWhileOpen.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2539943790265252575, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
+      propertyPath: _unlockParticlesSecondary
+      value: 
+      objectReference: {fileID: 3108786819210400076, guid: df1068aa7f1e1ec459b30271d1dc2be9, type: 3}
     - target: {fileID: 2539943790265252575, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
       propertyPath: _hideWhileOpen.Array.data[0]
       value: 
@@ -1552,7 +1564,7 @@ Transform:
   m_GameObject: {fileID: 919132148305253820}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -78, y: 2, z: -12}
+  m_LocalPosition: {x: -150, y: 2, z: -12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
