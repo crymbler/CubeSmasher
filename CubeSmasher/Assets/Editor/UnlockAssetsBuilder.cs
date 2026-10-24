@@ -69,6 +69,8 @@ public static class UnlockAssetsBuilder
         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
         var main = ps.main;
+        main.useUnscaledTime = true;                        // работает при Time.timeScale = 0 (открыт гараж)
+        main.stopAction = ParticleSystemStopAction.Destroy; // экземпляр удаляется сам
         main.duration = 3f;
         main.loop = false;
         main.playOnAwake = false;

@@ -20,6 +20,8 @@ public static class UnlockEffect
         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
         var main = ps.main;
+        main.useUnscaledTime = true;                                // работает при Time.timeScale = 0
+        main.stopAction = ParticleSystemStopAction.Destroy;         // удаляется сам по окончании
         main.duration = 0.6f;
         main.loop = false;
         main.playOnAwake = false;

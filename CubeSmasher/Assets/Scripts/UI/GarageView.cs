@@ -380,10 +380,16 @@ public class GarageView : MonoBehaviour, IGarageView
         ParticleSystem instance = Instantiate(source, anchor);
         instance.transform.localPosition = Vector3.zero;
         instance.gameObject.SetActive(true);
-        instance.Play(true);
 
-        float life = instance.main.duration + instance.main.startLifetime.constantMax + 0.5f;
-        Destroy(instance.gameObject, life);
+        // Во время открытого гаража Time.timeScale = 0 (GamePause). Частицы считаем
+        // на нереальном времени, иначе они стоят до закрытия окна.
+        var main = instance.main;
+        main.useUnscaledTime = true;
+        // Удаляем экземпляр, когда все частицы погасли. Таймер Destroy(obj, t) тоже
+        // идёт по масштабированному времени и при паузе не сработает.
+        main.stopAction = ParticleSystemStopAction.Destroy;
+
+        instance.Play(true);
     }
 
     private void ReplaceModel(GameObject prefab)
