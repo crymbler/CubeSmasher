@@ -16,7 +16,7 @@
 | K1 | Палитра + генератор префабов | **готово** | `UI/UITheme.cs`, `Assets/Editor/UIBuilderTool.cs` |
 | K2 | HUD: верх, низ, окна | **готово** (сделано владельцем вручную, рабочий и адаптивный) | `my hud.prefab`, `UI/BottomNavView.cs` |
 | K3 | Окна скрывают HUD | **частично** (код готов, нужно назначить `_hideWhileOpen` в инспекторе и проверить в Play Mode) | `UI/GarageView.cs`, `UI/Shop/ShopView.cs` |
-| K4 | Прокачка кубов и спавна | **частично** (RespawnDelay и строка «было → станет» в коде, MaxPartsPerWave ждёт решения) | `Data/Configs/PhysicsConfig.cs`, `Gameplay/Systems/PartLifecycleService.cs`, `Economy/Shop/UpgradeConfig.cs`, `UI/Shop/UpgradeItemView.cs` |
+| K4 | Прокачка кубов и спавна | **частично** (RespawnDelay и строка «было → станет» в коде; предел больших деталей — `StartPartsPerWave`, в ассете 2; связка с апгрейдом не сделана) | `Data/Configs/PhysicsConfig.cs`, `Gameplay/Systems/PartLifecycleService.cs`, `Economy/Shop/UpgradeConfig.cs`, `UI/Shop/UpgradeItemView.cs` |
 | K5 | Локализация с аргументами | не начато | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | не начато | `UI/SafeAreaFitter.cs` (нет) |
 | K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
@@ -119,7 +119,8 @@
 - **Строка «было → станет»: сделано в коде.** Нужно назначить `_deltaText` в префабе карточки `UpgradeCard`. Без назначения строка не выводится. Формат задаёт `UpgradeConfig.FormatDelta`, на него влияют `UnitKey` и `Decimals` в ассетах апгрейдов.
 - **Допущение:** уровень 0 даёт значение 0, уровень N даёт `CalculateValue(N)`. Если в геймплее уровень 0 должен давать базовое значение, поправить в `FormatDelta`.
 - **StatNameKey, ValueDecreases: добавлены, пока не используются.** Нужны для K5.
-- **MaxPartsPerWave: не сделано, нужно решение владельца.** Сейчас `StartPartsPerWave` задаёт число кубов на столе и предел респавна, поэтому пункт «MaxPartsPerWave = 4» из плана не даёт эффекта. Варианты: (а) завести отдельный предел респавна, (б) убрать пункт из плана.
+- **Предел больших деталей: решение владельца, отдельного поля не нужно.** Лимит — это `StartPartsPerWave` (в ассете `PhysicsConfig` сейчас 2). Владелец подтвердил, что при полной прокачке должно стать 4: апгрейд покупается дважды и удваивает лимит.
+- **Связка с апгрейдом: не сделано.** В коде ничто не меняет `StartPartsPerWave` при покупке, проверено grep по `origin/main`. Связка будет создана вместе с проектированием апгрейдов в `UpgradeConfig`, после K-задач.
 - Не проверено в Unity.
 
 ### Следующие шаги
