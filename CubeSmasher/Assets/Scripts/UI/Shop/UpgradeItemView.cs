@@ -14,6 +14,14 @@ public class UpgradeItemView : MonoBehaviour
     [SerializeField] private Button _buyButton;
     [SerializeField] private Image _buttonBackground;
 
+    [Header("Шкала уровня")]
+    [Tooltip("Корень шкалы. Пусто — ищется дочерний LevelBar")]
+    [SerializeField] private RectTransform _levelBar;
+    [Tooltip("Заливка шкалы (растягивается по anchorMax.x). Пусто — LevelBar/Track/Fill")]
+    [SerializeField] private RectTransform _levelFill;
+
+    private AnimatedProgressBar _levelProgress;
+
     [Header("Цвета по GDD")]
     [SerializeField] private Color _affordableColor = new Color(0.2f, 0.8f, 0.2f); // Зеленый
     [SerializeField] private Color _expensiveColor = new Color(0.5f, 0.5f, 0.5f);  // Серый
@@ -52,6 +60,21 @@ public class UpgradeItemView : MonoBehaviour
             _buttonBackground.color = canAfford ? _affordableColor : _expensiveColor;
             _buyButton.interactable = canAfford;
         }
+    }
+
+    /// <summary>Шкала уровня 0..1. Рост анимируется, покупка видна как "наполнение".</summary>
+    public void SetLevelProgress(float value)
+    {
+        if (_levelProgress == null)
+        {
+            if (_levelBar == null) _levelBar = transform.Find("LevelBar") as RectTransform;
+            if (_levelFill == null && _levelBar != null) _levelFill = _levelBar.Find("Track/Fill") as RectTransform;
+            if (_levelBar == null || _levelFill == null) return; // в этой карточке шкалы нет
+
+            _levelProgress = AnimatedProgressBar.For(_levelBar).WithFill(_levelFill);
+        }
+
+        _levelProgress.SetValue(value);
     }
 
     private void OnDestroy()

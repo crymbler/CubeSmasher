@@ -71,6 +71,7 @@ public class ShopPresenter : IDisposable
             Name = config.UpgradeName,
             Icon = config.Icon,
             Level = data.level,
+            MaxLevel = config.MaxLevel,
             Price = data.price,
             UnlockStage = config.UnlockStageLevel,
             IsLocked = isLocked,

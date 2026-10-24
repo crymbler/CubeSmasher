@@ -30,7 +30,8 @@ public class TopHudView : MonoBehaviour, ITopHudView
     {
         if (_progressBar != null && maxDetails > 0)
         {
-            _progressBar.value = (float)currentDetails / maxDetails;
+            // Плавное наполнение с подсветкой; новая стадия (сброс к 0) ставится сразу
+            AnimatedProgressBar.For(_progressBar).SetValue((float)currentDetails / maxDetails);
         }
 
         if (_progressText != null)

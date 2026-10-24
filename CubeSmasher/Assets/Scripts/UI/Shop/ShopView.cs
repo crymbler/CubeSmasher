@@ -49,6 +49,7 @@ public class ShopView : MonoBehaviour, IShopView
         UpgradeItemView item = GetOrCreateItem(id);
         item.UpdateData(row.Icon, row.Name, row.Level, row.Price,
                         row.CanAfford, row.IsMaxLevel, row.IsLocked, row.UnlockStage);
+        item.SetLevelProgress(row.MaxLevel > 0 ? (float)row.Level / row.MaxLevel : 0f);
     }
 
     private UpgradeItemView GetOrCreateItem(string id)

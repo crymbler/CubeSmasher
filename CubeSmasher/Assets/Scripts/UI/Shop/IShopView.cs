@@ -9,6 +9,7 @@ public struct UpgradeRowData
     public string Name;
     public Sprite Icon;
     public int Level;
+    public int MaxLevel;
     public double Price;
     public int UnlockStage;
     public bool IsLocked;
