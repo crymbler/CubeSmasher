@@ -1,4 +1,3 @@
-using CubeSmasher.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,7 +35,7 @@ public class TopHudView : MonoBehaviour, ITopHudView
 
         if (_progressText != null)
         {
-            _progressText.text = $"{Localization.Get("stage.machine", stage)}: {currentDetails} / {maxDetails}";
+            _progressText.text = $"{UiText.Get("stage.machine", stage)}: {currentDetails} / {maxDetails}";
         }
     }
 
@@ -45,7 +44,7 @@ public class TopHudView : MonoBehaviour, ITopHudView
     {
         if (_incomeText == null) return;
         _incomeText.text = incomePerSecond > 0
-            ? Localization.Get("hud.income", incomePerSecond.ToString("N0"))
+            ? UiText.Get("hud.income", incomePerSecond.ToString("N0"))
             : string.Empty;
     }
 }

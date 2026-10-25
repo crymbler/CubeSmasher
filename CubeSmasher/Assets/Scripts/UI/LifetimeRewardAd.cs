@@ -166,7 +166,7 @@ public class LifetimeRewardAd : MonoBehaviour
             // Досрочное закрытие: компенсация 5% от баланса и короткий КД
             double compensation = WalletRef.Balance * CompensationPercent;
             WalletRef.Add(compensation);
-            if (_rewardText != null) _rewardText.text = CubeSmasher.Settings.Localization.Get("reward.compensation");
+            if (_rewardText != null) _rewardText.text = UiText.Get("reward.compensation");
             if (_rewardButton != null) _rewardButton.interactable = false;
             _rewardPanel.SetActive(true);
 

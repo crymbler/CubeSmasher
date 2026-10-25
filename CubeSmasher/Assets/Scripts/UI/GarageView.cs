@@ -1,6 +1,5 @@
 using System;
 using CubeSmasher.Core.Interfaces;
-using CubeSmasher.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -319,7 +318,7 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_incomeText != null)
         {
             _incomeText.text = opened
-                ? Localization.Get("gar.income", incomePerSecond.ToString("N0"))
+                ? UiText.Get("gar.income", incomePerSecond.ToString("N0"))
                 : string.Empty;
         }
         if (_statsText != null) _statsText.text = opened ? characteristics : string.Empty;
@@ -327,12 +326,12 @@ public class GarageView : MonoBehaviour, IGarageView
         // Плашка закрытой машины
         if (_lockPlate != null) _lockPlate.SetActive(state == GarageCarState.Locked);
         if (_lockText != null && state == GarageCarState.Locked)
-            _lockText.text = Localization.Get("gar.status.locked", unlockStage);
+            _lockText.text = UiText.Get("gar.status.locked", unlockStage);
 
         // Кнопка "Открыть" только у доступной
         if (_openButtonRoot != null) _openButtonRoot.SetActive(available);
         if (_openButtonText != null && available)
-            _openButtonText.text = Localization.Get("gar.open");
+            _openButtonText.text = UiText.Get("gar.open");
 
         // Модель видна у доступной и открытой, у закрытой её нет
         ReplaceModel(opened || available ? modelPrefab : null);
