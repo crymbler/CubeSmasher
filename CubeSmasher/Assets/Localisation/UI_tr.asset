@@ -30,7 +30,7 @@ MonoBehaviour:
     m_Localized: 'Gelir: {0}/sn'
     m_Metadata:
       m_Items: []
-  - m_Id: 100561516933120
+  - m_Id: 110586230648832
     m_Localized: "Gelir: \u2014"
     m_Metadata:
       m_Items: []
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 100704660140032
-    m_Localized: "A\xE7\u0131lmaya"
+    m_Localized: "A\xE7\u0131lmaya haz\u0131r"
     m_Metadata:
       m_Items: []
   - m_Id: 100791394152448
@@ -51,7 +51,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 101032893788160
-    m_Localized: "{0} a\u015Fama kald\u0131"
+    m_Localized: Sv. {0}
     m_Metadata:
       m_Items: []
   - m_Id: 101161709252608

@@ -19,59 +19,61 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 100100919439360
-    m_Localized: Open
+    m_Localized: "\u041E\u0442\u043A\u0440\u044B\u0442\u043E"
     m_Metadata:
       m_Items: []
   - m_Id: 100288123809792
-    m_Localized: Unlocks at stage {0}
+    m_Localized: "\u041E\u0442\u043A\u0440\u043E\u0435\u0442\u0441\u044F \u043D\u0430
+      \u0441\u0442\u0430\u0434\u0438\u0438 {0}"
     m_Metadata:
       m_Items: []
   - m_Id: 100442520334336
-    m_Localized: 'Income: {0}/s'
+    m_Localized: "\u0414\u043E\u0445\u043E\u0434: {0}/\u0441\u0435\u043A"
     m_Metadata:
       m_Items: []
-  - m_Id: 100561516933120
-    m_Localized: "Income: \u2014"
+  - m_Id: 110586230648832
+    m_Localized: "\u0414\u043E\u0445\u043E\u0434: \u2014"
     m_Metadata:
       m_Items: []
   - m_Id: 100620836974592
-    m_Localized: OPEN
+    m_Localized: "\u041E\u0422\u041A\u0420\u042B\u0422\u042C"
     m_Metadata:
       m_Items: []
   - m_Id: 100704660140032
-    m_Localized: Ready to open
+    m_Localized: "\u041C\u0430\u0448\u0438\u043D\u0430 \u0436\u0434\u0451\u0442 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u044F"
     m_Metadata:
       m_Items: []
   - m_Id: 100791394152448
-    m_Localized: Available
+    m_Localized: "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u0430"
     m_Metadata:
       m_Items: []
   - m_Id: 100893630312448
-    m_Localized: '{0} stages to go'
+    m_Localized: "\u0415\u0449\u0451 {0} \u0441\u0442\u0430\u0434\u0438\u0439"
     m_Metadata:
       m_Items: []
   - m_Id: 101032893788160
-    m_Localized: '{0} stages to go'
+    m_Localized: "\u0423\u0440. {0}"
     m_Metadata:
       m_Items: []
   - m_Id: 101161709252608
-    m_Localized: MAX
+    m_Localized: "\u041C\u0410\u041A\u0421"
     m_Metadata:
       m_Items: []
   - m_Id: 101219036999680
-    m_Localized: Stage {0}
+    m_Localized: "\u0421\u0442\u0430\u0434\u0438\u044F {0}"
     m_Metadata:
       m_Items: []
   - m_Id: 101328470585344
-    m_Localized: Machine {0}
+    m_Localized: "\u041C\u0430\u0448\u0438\u043D\u0430 {0}"
     m_Metadata:
       m_Items: []
   - m_Id: 101393566183424
-    m_Localized: You received a compensation
+    m_Localized: "\u0412\u0430\u043C \u043D\u0430\u0447\u0438\u0441\u043B\u0435\u043D\u0430
+      \u043A\u043E\u043C\u043F\u0435\u043D\u0441\u0430\u0446\u0438\u044F"
     m_Metadata:
       m_Items: []
   - m_Id: 101509823901696
-    m_Localized: +{0}/s
+    m_Localized: "+{0}/\u0441\u0435\u043A"
     m_Metadata:
       m_Items: []
   references:

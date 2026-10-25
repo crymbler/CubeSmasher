@@ -27,10 +27,6 @@ MonoBehaviour:
     m_Key: gar.income
     m_Metadata:
       m_Items: []
-  - m_Id: 100561516933120
-    m_Key: .income.none
-    m_Metadata:
-      m_Items: []
   - m_Id: 100620836974592
     m_Key: gar.open
     m_Metadata:
@@ -69,6 +65,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 101509823901696
     m_Key: hud.income
+    m_Metadata:
+      m_Items: []
+  - m_Id: 110586230648832
+    m_Key: gar.income.none
     m_Metadata:
       m_Items: []
   m_Metadata:
