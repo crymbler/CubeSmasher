@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 public enum GrowthType { Linear, Exponential }
 public enum UpgradeCategory { Tap, Passive } // Чтобы знать, в какой List сохранять
@@ -13,13 +14,14 @@ public class UpgradeConfig : ScriptableObject
     [Header("Визуал UI")]
     public string UpgradeName;
 
-    [Header("Название по языкам (K5). Пусто — берётся UpgradeName")]
-    public string NameRu;
-    public string NameEn;
-    public string NameTr;
+    [Header("Название (локализация)")]
+    [Tooltip("Ключ из String Table UI. Если пусто, берётся UpgradeName")]
+    public LocalizedString LocalizedName;
 
     /// <summary>Название на текущем языке. Используется в магазине.</summary>
-    public string DisplayName => CubeSmasher.Settings.Localization.Pick(NameRu, NameEn, NameTr, UpgradeName);
+    public string DisplayName => LocalizedName != null && !LocalizedName.IsEmpty
+        ? LocalizedName.GetLocalizedString()
+        : UpgradeName;
     public Sprite Icon;
 
     [Header("Лимиты")]

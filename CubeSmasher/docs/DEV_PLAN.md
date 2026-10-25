@@ -17,7 +17,7 @@
 | K2 | HUD: верх, низ, окна | **готово** (сделано владельцем вручную, рабочий и адаптивный) | `my hud.prefab`, `UI/BottomNavView.cs` |
 | K3 | Окна скрывают HUD | **частично** (код готов, нужно назначить `_hideWhileOpen` в инспекторе и проверить в Play Mode) | `UI/GarageView.cs`, `UI/Shop/ShopView.cs` |
 | K4 | Прокачка кубов и спавна | **частично** (RespawnDelay и строка «было → станет» в коде; предел больших деталей — `StartPartsPerWave`, в ассете 2; связка с апгрейдом не сделана) | `Data/Configs/PhysicsConfig.cs`, `Gameplay/Systems/PartLifecycleService.cs`, `Economy/Shop/UpgradeConfig.cs`, `UI/Shop/UpgradeItemView.cs` |
-| K5 | Локализация с аргументами | **готово в коде** (не проверено в Unity; старые вызовы не переведены на SetArgs) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
+| K5 | Локализация с аргументами | **частично** (Unity Localization подключён, YG2 связан через YG2LocaleBridge; нужна String Table `UI` и переход на LocalizedString в оставшихся местах) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | не начато | `UI/SafeAreaFitter.cs` (нет) |
 | K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
 | K8 | Скины и донат-валюта | не начато | `Data/Configs/SkinConfig.cs` (нет) |
@@ -133,6 +133,14 @@
 - **Не сделано: `StatNameKey` не подключён к тексту.** Поле есть, но название характеристики пока не берётся по ключу. Это нужно при проектировании апгрейдов.
 - **Не сделано: описание машины не выводится в гараже.** В коде нигде не читается `Description`, поэтому `GetDescription()` пока никто не вызывает. Чтобы вывести, добавить вызов в `GarageView`, когда будет готова вёрстка описания.
 - Не проверено в Unity.
+
+### 24.10.2026, K5: связка с Unity Localization
+
+- **Переход с полей Ru/En/Tr на LocalizedString: сделано.** `UpgradeConfig.LocalizedName` и `GarageCarData.LocalizedDescription`. Тексты хранятся в таблице, а в ассете выбирается ключ. Старые поля `NameRu`/`NameEn`/`DescriptionRu` и т. д. удалены.
+- **YG2LocaleBridge: сделано, на сцену ставить не нужно.** Создаётся автоматически при старте игры и переключает язык Unity Localization при смене `YG2.lang`.
+- **Вручную, один раз: создать String Table Collection `UI`.** Localization Tables → New String Table Collection, имя `UI`, колонки ru, en, tr. Пока таблицы нет, `DisplayName` и `GetDescription()` возвращают старые `UpgradeName` и `Description`.
+- **Не сделано: `Localization.cs` и `LanguageSwitcher` ещё работают.** Их можно убрать по мере переноса текстов на `Localize String Event`. Метод `Localization.Pick` стал не нужен.
+- **Не проверено в Unity.** В частности, `LocalizedString.IsEmpty` и поведение `GetLocalizedString()` до загрузки таблицы.
 
 ### Следующие шаги
 

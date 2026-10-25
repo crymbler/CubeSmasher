@@ -1,5 +1,4 @@
-﻿using CubeSmasher.Settings;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Данные одной машины в гараже. Оставлены в глобальном пространстве имён,
@@ -13,13 +12,14 @@ public struct GarageCarData
     public double IncomePerSecond;
     [TextArea] public string Description;
 
-    [Header("Описание по языкам (K5). Пусто — берётся Description")]
-    [TextArea] public string DescriptionRu;
-    [TextArea] public string DescriptionEn;
-    [TextArea] public string DescriptionTr;
+    [Header("Описание (локализация)")]
+    [Tooltip("Ключ из String Table UI. Если пусто, берётся Description")]
+    public UnityEngine.Localization.LocalizedString LocalizedDescription;
 
     /// <summary>Описание на текущем языке.</summary>
-    public string GetDescription() => Localization.Pick(DescriptionRu, DescriptionEn, DescriptionTr, Description);
+    public string GetDescription() => LocalizedDescription != null && !LocalizedDescription.IsEmpty
+        ? LocalizedDescription.GetLocalizedString()
+        : Description;
 
     /// <summary>Баффы машины в свободной форме: "+5% к урону, +2 к радиусу".
     /// Показывается только у открытой машины. У старых ассетов пусто.</summary>
