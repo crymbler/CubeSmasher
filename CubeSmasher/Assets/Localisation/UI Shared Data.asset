@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UI Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: UI
+  m_TableCollectionNameGuidString: e46390d77ff4bb845aaf2091481f0ea3
+  m_Entries:
+  - m_Id: 100100919439360
+    m_Key: gar.status.open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100288123809792
+    m_Key: gar.status.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100442520334336
+    m_Key: gar.income
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100561516933120
+    m_Key: .income.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100620836974592
+    m_Key: gar.open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100704660140032
+    m_Key: gar.open.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100791394152448
+    m_Key: gar.status.available
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100893630312448
+    m_Key: gar.locked.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101032893788160
+    m_Key: shop.level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101161709252608
+    m_Key: shop.max
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101219036999680
+    m_Key: shop.unlock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101328470585344
+    m_Key: stage.machine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101393566183424
+    m_Key: reward.compensation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101509823901696
+    m_Key: hud.income
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 6820912223862652928
+  references:
+    version: 2
+    RefIds:
+    - rid: 6820912223862652928
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1792944605352

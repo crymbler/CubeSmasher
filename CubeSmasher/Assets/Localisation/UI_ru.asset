@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_ru
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: ru
+  m_SharedData: {fileID: 11400000, guid: e46390d77ff4bb845aaf2091481f0ea3, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 100100919439360
+    m_Localized: Open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100288123809792
+    m_Localized: Unlocks at stage {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100442520334336
+    m_Localized: 'Income: {0}/s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100561516933120
+    m_Localized: "Income: \u2014"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100620836974592
+    m_Localized: OPEN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100704660140032
+    m_Localized: Ready to open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100791394152448
+    m_Localized: Available
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100893630312448
+    m_Localized: '{0} stages to go'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101032893788160
+    m_Localized: '{0} stages to go'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101161709252608
+    m_Localized: MAX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101219036999680
+    m_Localized: Stage {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101328470585344
+    m_Localized: Machine {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101393566183424
+    m_Localized: You received a compensation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101509823901696
+    m_Localized: +{0}/s
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
