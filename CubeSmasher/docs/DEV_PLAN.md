@@ -17,7 +17,7 @@
 | K2 | HUD: верх, низ, окна | **готово** (сделано владельцем вручную, рабочий и адаптивный) | `my hud.prefab`, `UI/BottomNavView.cs` |
 | K3 | Окна скрывают HUD | **частично** (код готов, нужно назначить `_hideWhileOpen` в инспекторе и проверить в Play Mode) | `UI/GarageView.cs`, `UI/Shop/ShopView.cs` |
 | K4 | Прокачка кубов и спавна | **частично** (RespawnDelay и строка «было → станет» в коде; предел больших деталей — `StartPartsPerWave`, в ассете 2; связка с апгрейдом не сделана) | `Data/Configs/PhysicsConfig.cs`, `Gameplay/Systems/PartLifecycleService.cs`, `Economy/Shop/UpgradeConfig.cs`, `UI/Shop/UpgradeItemView.cs` |
-| K5 | Локализация с аргументами | **частично** (Unity Localization подключён, YG2 связан через YG2LocaleBridge; нужна String Table `UI` и переход на LocalizedString в оставшихся местах) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
+| K5 | Локализация с аргументами | **готово в коде, не проверено в Unity** (таблица `UI`, `UiText.Get`, `YG2LocaleBridge`; старый `Localization.cs` удалён) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | не начато | `UI/SafeAreaFitter.cs` (нет) |
 | K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
 | K8 | Скины и донат-валюта | не начато | `Data/Configs/SkinConfig.cs` (нет) |
@@ -141,6 +141,17 @@
 - **Вручную, один раз: создать String Table Collection `UI`.** Localization Tables → New String Table Collection, имя `UI`, колонки ru, en, tr. Пока таблицы нет, `DisplayName` и `GetDescription()` возвращают старые `UpgradeName` и `Description`.
 - **Не сделано: `Localization.cs` и `LanguageSwitcher` ещё работают.** Их можно убрать по мере переноса текстов на `Localize String Event`. Метод `Localization.Pick` стал не нужен.
 - **Не проверено в Unity.** В частности, `LocalizedString.IsEmpty` и поведение `GetLocalizedString()` до загрузки таблицы.
+
+### 24.10.2026, K5: итог
+
+- **Старая система удалена.** `Localization.cs`, `Localizer.cs`, `LanguageSwitcher.cs` и их `.meta`. Ни одна сцена или префаб на них не ссылалась.
+- **Весь UI-текст идёт через `UiText.Get(key, args)`.** Читает таблицу `UI`. Заменены вызовы в GarageView, TopHudView, UpgradeItemView, LifetimeRewardAd.
+- **Таблица `UI` заполнена вами.** Синхронизация через `Tools → CubeSmasher → Sync UI String Table` доступна, если понадобится пересинхронизировать из `Localization.cs`, но этого файла больше нет. Источник правды теперь — сама таблица.
+- **Названия апгрейдов и описания машин** читаются через `LocalizedString` (`LocalizedName`, `LocalizedDescription`), ключи выбираются в ассетах.
+- **Открыто:**
+  - Тексты, которые уже на экране, обновляются при следующей перерисовке окна, а не сразу при смене языка. HUD обновляется сам при изменении прогресса.
+  - Если таблица не загрузилась к моменту вызова, `UiText.Get` вернёт сам ключ (например, `shop.level`). Нужна предзагрузка таблицы при старте, пока не проверено в Unity.
+  - Не проверено в Unity: компиляция, подстановка `{0}` в `Arguments`, переключение языка через YG2 в Play Mode.
 
 ### Следующие шаги
 
