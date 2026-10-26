@@ -16,7 +16,7 @@
 | K1 | Палитра + генератор префабов | **готово** | `UI/UITheme.cs`, `Assets/Editor/UIBuilderTool.cs` |
 | K2 | HUD: верх, низ, окна | **готово** (сделано владельцем вручную, рабочий и адаптивный) | `my hud.prefab`, `UI/BottomNavView.cs` |
 | K3 | Окна скрывают HUD | **частично** (код готов, нужно назначить `_hideWhileOpen` в инспекторе и проверить в Play Mode) | `UI/GarageView.cs`, `UI/Shop/ShopView.cs` |
-| K4 | Прокачка кубов и спавна | **частично** (RespawnDelay и строка «было → станет» в коде; предел больших деталей — `StartPartsPerWave`, в ассете 2; связка с апгрейдом не сделана) | `Data/Configs/PhysicsConfig.cs`, `Gameplay/Systems/PartLifecycleService.cs`, `Economy/Shop/UpgradeConfig.cs`, `UI/Shop/UpgradeItemView.cs` |
+| K4 | Прокачка кубов и спавна | **готово в коде, не проверено в Unity** (`hammer_radius` доходит до молота с ограничением 0.5–6 м; спавн читает апгрейды `spawn_parts` и `respawn_delay`; `StatNameKey`/`UnitKey` идут через таблицу `UI`) |
 | K5 | Локализация с аргументами | **готово в коде, не проверено в Unity** (таблица `UI`, `UiText.Get`, `YG2LocaleBridge`; старый `Localization.cs` удалён) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | не начато | `UI/SafeAreaFitter.cs` (нет) |
 | K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
@@ -197,6 +197,14 @@
 - **Сделан свой импортёр: `Tools → CubeSmasher → Import UI CSV`.** Берёт колонки по кодам языков из заголовка (ru, en, tr), обновляет существующие ключи, добавляет новые. Файл выбирается диалогом, класть CSV в `Assets` не нужно.
 - Обновлённые ключи и значения сохраняются через `AssetDatabase.SaveAssets`.
 - Не проверено в Unity.
+
+### 26.10.2026, K4: прокачка молота и спавна
+
+- **`hammer_radius` раньше не доходил до молота.** `WeaponInitializer` применял только `hammer_damage`. Добавлен `HammerCaster.SetHitRadius` и подписка на покупку радиуса.
+- **Радиус ограничен 0.5–6 м.** В `HammerRadius.asset` стоит `BaseValue: 10`, и без ограничения молот бил бы по всему столу. Значения в ассете стоит пересмотреть: вероятно, там радиус, а не проценты.
+- **Спавн читает апгрейды.** `PartLifecycleService.ApplySpawnUpgrades` берёт `spawn_parts` (сколько кубов на столе) и `respawn_delay` (пауза в секундах). Вызывается при старте и после каждой покупки. Апгрейдов с такими Id в проекте пока нет: без них работают значения из `PhysicsConfig`.
+- **`StatNameKey` и `UnitKey` теперь переводятся** через `UiText.Get`, раньше выводились как сырые ключи.
+- **Не проверено в Unity.** Апгрейды `spawn_parts`/`respawn_delay` нужно создать в редакторе и добавить в `Bootstrapper._upgradeConfigs`.
 
 ### Следующие шаги
 

@@ -52,6 +52,19 @@ public class HammerCaster : MonoBehaviour
         _currentDamage = damage;
     }
 
+    /// <summary>
+    /// Радиус удара. Приходит из апгрейда hammer_radius.
+    /// Ограничен: в ассете апгрейда BaseValue = 10, без рамки молот бил бы по всему столу.
+    /// </summary>
+    public void SetHitRadius(float radius)
+    {
+        if (radius <= 0f) return;
+        _hitRadius = Mathf.Clamp(radius, MinHitRadius, MaxHitRadius);
+    }
+
+    private const float MinHitRadius = 0.5f;
+    private const float MaxHitRadius = 6f;
+
     private void MoveHammer()
     {
         if (_isSwinging) return;

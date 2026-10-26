@@ -62,8 +62,9 @@ public class UpgradeConfig : ScriptableObject
         float from = currentLevel <= 0 ? 0f : CalculateValue(currentLevel);
         float to = CalculateValue(currentLevel + 1);
         string fmt = "F" + Mathf.Clamp(Decimals, 0, 3);
-        string unit = string.IsNullOrEmpty(UnitKey) ? string.Empty : " " + UnitKey;
-        return from.ToString(fmt) + unit + " \u2192 " + to.ToString(fmt) + unit;
+        string stat = string.IsNullOrEmpty(StatNameKey) ? string.Empty : UiText.Get(StatNameKey) + " ";
+        string unit = string.IsNullOrEmpty(UnitKey) ? string.Empty : " " + UiText.Get(UnitKey);
+        return stat + from.ToString(fmt) + unit + " \u2192 " + to.ToString(fmt) + unit;
     }
 
     // Ìàòåìàòèêà äëÿ ðàñ÷åòà ÑËÅÄÓÞÙÅÃÎ óðîâíÿ

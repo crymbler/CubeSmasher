@@ -15,10 +15,19 @@ using UnityEngine;
 public class PartLifecycleService
 {
     /// <summary>Задержка перед появлением нового корневого куба после потери предыдущего.</summary>
-    private float RespawnDelay => _physics.RespawnDelay > 0f ? _physics.RespawnDelay : 2f;
+    private float RespawnDelay => _respawnDelay;
+
+    /// <summary>Сколько корневых кубов держать на столе. Растёт от апгрейда spawn_parts.</summary>
+    private int PartsPerWave => Mathf.Max(1, Mathf.RoundToInt(_partsPerWave));
+
+    private float _respawnDelay;
+    private float _partsPerWave;
 
     /// <summary>Сколько объектов создаётся заранее в новом пуле. Держим малым ради быстрой загрузки.</summary>
     private const int PoolWarmup = 4;
+
+    /// <summary>Нижняя граница задержки респавна: куб не должен появляться мгновенно.</summary>
+    private const float MinRespawnDelay = 0.2f;
 
     /// <summary>
     /// Гниение мелких осколков: детали поколения 2 исчезают через 5 секунд.
@@ -62,6 +71,9 @@ public class PartLifecycleService
         _wallet = wallet;
         _stageModel = stageModel;
 
+        _partsPerWave = _physics.StartPartsPerWave;
+        _respawnDelay = _physics.RespawnDelay > 0f ? _physics.RespawnDelay : 2f;
+
         _fractureSystem = new FractureSystem(GetPartFromPool, _fractureCalculator, _physics);
         _onFragmentSpawned = (EnableShardDecay && _decaySystem != null)
             ? new Action<CarPart>(_decaySystem.Register)
@@ -82,10 +94,29 @@ public class PartLifecycleService
             }
         }
 
-        for (int i = 0; i < _physics.StartPartsPerWave; i++)
+        for (int i = 0; i < PartsPerWave; i++)
         {
             SpawnRootPart();
         }
+    }
+
+    /// <summary>
+    /// Подтягивает спавн из апгрейдов: "spawn_parts" — сколько кубов на столе,
+    /// "respawn_delay" — пауза перед новым кубом, в секундах. Значения берутся как есть.
+    /// Если апгрейда нет, остаётся то, что задано в PhysicsConfig.
+    /// </summary>
+    public void ApplySpawnUpgrades(IShopService shop)
+    {
+        if (shop == null) return;
+
+        _partsPerWave = ReadUpgradeValue(shop, "spawn_parts", _physics.StartPartsPerWave);
+        _respawnDelay = Mathf.Max(MinRespawnDelay, ReadUpgradeValue(shop, "respawn_delay", _respawnDelay));
+    }
+
+    private static float ReadUpgradeValue(IShopService shop, string id, float fallback)
+    {
+        YG.UpgradeData data = shop.GetUpgradeData(id);
+        return data != null ? (float)data.value : fallback;
     }
 
     public void Tick(float deltaTime)
@@ -210,7 +241,7 @@ public class PartLifecycleService
     private void ScheduleRespawn()
     {
         int planned = _aliveRoots.Count + _pendingRespawns.Count;
-        if (planned < _physics.StartPartsPerWave)
+        if (planned < PartsPerWave)
         {
             _pendingRespawns.Add(Time.time + RespawnDelay);
         }

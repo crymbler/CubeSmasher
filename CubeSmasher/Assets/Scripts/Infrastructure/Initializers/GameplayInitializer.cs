@@ -36,6 +36,13 @@ namespace CubeSmasher.Infrastructure.Initializers
                 fractureCalculator, decaySystem, wallet, stageModel);
 
             services.Register(lifecycle);
+
+            // Спавн зависит от апгрейдов: применяем, когда оба сервиса уже созданы
+            if (services.TryGet(out IShopService shop))
+            {
+                lifecycle.ApplySpawnUpgrades(shop);
+                shop.OnUpgradePurchased += _ => lifecycle.ApplySpawnUpgrades(shop);
+            }
         }
     }
 }
