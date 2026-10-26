@@ -12,6 +12,15 @@ public struct GarageCarData
     public double IncomePerSecond;
     [TextArea] public string Description;
 
+    [Header("Название (локализация)")]
+    [Tooltip("Ключ из String Table UI. Если пусто, берётся CarName")]
+    public UnityEngine.Localization.LocalizedString LocalizedName;
+
+    /// <summary>Название на текущем языке.</summary>
+    public string GetName() => LocalizedName != null && !LocalizedName.IsEmpty
+        ? LocalizedName.GetLocalizedString()
+        : CarName;
+
     [Header("Описание (локализация)")]
     [Tooltip("Ключ из String Table UI. Если пусто, берётся Description")]
     public UnityEngine.Localization.LocalizedString LocalizedDescription;

@@ -6,6 +6,7 @@ using TMPro;
 using UnityEditor;
 using UnityEditor.Localization;
 using UnityEditor.SceneManagement;
+using CubeSmasher.Data.Configs;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
@@ -73,6 +74,9 @@ public static class UiKeyAutoAssign
 
         // 3. UpgradeConfig
         ProcessUpgrades(index, apply, stats);
+
+        // 4. Машины в GarageConfig
+        ProcessGarageCars(index, apply, stats);
 
         if (apply) AssetDatabase.SaveAssets();
 
@@ -200,6 +204,56 @@ public static class UiKeyAutoAssign
         return n;
     }
 
+    private static void ProcessGarageCars(List<(Regex Pattern, string Key)> index, bool apply, Stats stats)
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:GarageConfig"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            var cfg = AssetDatabase.LoadAssetAtPath<GarageConfig>(path);
+            if (cfg == null || cfg.GarageCars == null) continue;
+
+            GarageCarData[] cars = cfg.GarageCars;
+            bool changed = false;
+
+            for (int i = 0; i < cars.Length; i++)
+            {
+                string place = cfg.name + "[" + i + "]";
+
+                if (cars[i].LocalizedName == null || cars[i].LocalizedName.IsEmpty)
+                {
+                    string key = FindKey((cars[i].CarName ?? string.Empty).Trim(), index);
+                    if (key == null) stats.Lines.Add("НЕТ КЛЮЧА: " + place + " имя = \"" + cars[i].CarName + "\"");
+                    else
+                    {
+                        stats.Matched++;
+                        stats.Lines.Add("OK: " + place + " имя -> " + key);
+                        if (apply) { cars[i].LocalizedName = new LocalizedString(Collection, key); changed = true; }
+                    }
+                }
+
+                if (cars[i].LocalizedDescription == null || cars[i].LocalizedDescription.IsEmpty)
+                {
+                    if (string.IsNullOrEmpty(cars[i].Description)) continue;
+                    string key = FindKey(cars[i].Description.Trim(), index);
+                    if (key == null) stats.Lines.Add("НЕТ КЛЮЧА: " + place + " описание = \"" + cars[i].Description + "\"");
+                    else
+                    {
+                        stats.Matched++;
+                        stats.Lines.Add("OK: " + place + " описание -> " + key);
+                        if (apply) { cars[i].LocalizedDescription = new LocalizedString(Collection, key); changed = true; }
+                    }
+                }
+            }
+
+            if (apply && changed)
+            {
+                Undo.RecordObject(cfg, "Assign UI keys");
+                cfg.GarageCars = cars;
+                EditorUtility.SetDirty(cfg);
+            }
+        }
+    }
+
     private static string FindKey(string text, List<(Regex Pattern, string Key)> index)
     {
         foreach (var item in index)
@@ -245,7 +299,7 @@ public static class UiKeyAutoAssign
         if (parts.Sum(p => p.Length) < 2) return null;
 
         string body = string.Join(".*", parts.Select(p => Regex.Escape(p)));
-        return new Regex("^" + body + "$");
+        return new Regex("^" + body + "$", RegexOptions.IgnoreCase);
     }
 
     private static string GetPath(Transform t)

@@ -65,7 +65,7 @@ public class GaragePresenter : IDisposable
         int i = _garage.SelectedIndex;
         GarageCarData car = cars[i];
 
-        _view.ShowCar(i, car.CarName, car.Description, car.Characteristics,
+        _view.ShowCar(i, car.GetName(), car.GetDescription(), car.Characteristics,
                       car.IncomePerSecond, _garage.GetState(i), car.UnlockStage, car.ModelPrefab);
     }
 
