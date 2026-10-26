@@ -413,6 +413,7 @@ GameObject:
   - component: {fileID: 5878439184093256617}
   - component: {fileID: 7654926845165943315}
   - component: {fileID: 902476758353992788}
+  - component: {fileID: 8962550939194584778}
   m_Layer: 5
   m_Name: Level
   m_TagString: Untagged
@@ -536,6 +537,34 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8962550939194584778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270409109829911485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.level
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &607809493152464052
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,6 +1821,7 @@ GameObject:
   - component: {fileID: 1362464676403460346}
   - component: {fileID: 7928295587443002033}
   - component: {fileID: 7132696745263093035}
+  - component: {fileID: 2747567330750956766}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -1915,6 +1945,34 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2747567330750956766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2813394069649712265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: gar.status.open
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &2844797564613437755
 GameObject:
   m_ObjectHideFlags: 0
@@ -2906,6 +2964,7 @@ GameObject:
   - component: {fileID: 385202107353102085}
   - component: {fileID: 2596556642405690121}
   - component: {fileID: 1460943382534760086}
+  - component: {fileID: 978391225955684}
   m_Layer: 5
   m_Name: StageLabel
   m_TagString: Untagged
@@ -3029,6 +3088,34 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &978391225955684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3297707467633756507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: stage.machine
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &3335487488265372081
 GameObject:
   m_ObjectHideFlags: 0
@@ -3717,6 +3804,7 @@ GameObject:
   - component: {fileID: 2983184081392396753}
   - component: {fileID: 4676809047756503323}
   - component: {fileID: 5699088945612743649}
+  - component: {fileID: 8061298598261024407}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -3840,6 +3928,34 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8061298598261024407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4163290025016255902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: gar.income.none
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &4167471642234591835
 GameObject:
   m_ObjectHideFlags: 0
@@ -4754,15 +4870,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _window: {fileID: 5505684653480104092}
   _closeButton: {fileID: 2588942927581658738}
+  _hideWhileOpen: []
   _arenaCamera: {fileID: 0}
   _garageCamera: {fileID: 0}
   _showcase: {fileID: 0}
+  _infoRoot: {fileID: 0}
   _nameText: {fileID: 8629082712054756872}
   _descriptionText: {fileID: 7403342715008085349}
   _incomeText: {fileID: 5699088945612743649}
-  _statusText: {fileID: 7132696745263093035}
+  _statsText: {fileID: 0}
+  _lockPlate: {fileID: 0}
+  _lockText: {fileID: 0}
+  _openButtonRoot: {fileID: 0}
+  _openButton: {fileID: 0}
+  _openButtonText: {fileID: 0}
   _prevButton: {fileID: 3277980234517347220}
   _nextButton: {fileID: 4278697349379622264}
+  _thumbnailsContainer: {fileID: 0}
+  _thumbnailPrefab: {fileID: 0}
+  _bottomBar: {fileID: 0}
+  _thumbnailsScroll: {fileID: 0}
+  _unlockParticles: {fileID: 0}
+  _unlockParticlesSecondary: {fileID: 0}
+  _audioSource: {fileID: 0}
+  _unlockSound: {fileID: 0}
 --- !u!1 &5546209883852537874
 GameObject:
   m_ObjectHideFlags: 0
@@ -4981,6 +5112,7 @@ MonoBehaviour:
   _itemPrefab: {fileID: 6824890351057505523, guid: 521f58948f3b3d5499665caf2b1d2e80, type: 3}
   _itemsContainer: {fileID: 1024145337215411902}
   _closeButton: {fileID: 8977474960158126049}
+  _hideWhileOpen: []
 --- !u!1 &5703023605511912099
 GameObject:
   m_ObjectHideFlags: 0
@@ -4992,6 +5124,7 @@ GameObject:
   - component: {fileID: 8886582440022961625}
   - component: {fileID: 155197945203776560}
   - component: {fileID: 1860847502140677175}
+  - component: {fileID: 3478813929640915360}
   m_Layer: 5
   m_Name: IncomeValue
   m_TagString: Untagged
@@ -5115,6 +5248,34 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3478813929640915360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5703023605511912099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: hud.income
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &5785978121497916360
 GameObject:
   m_ObjectHideFlags: 0
@@ -5641,6 +5802,9 @@ MonoBehaviour:
   _priceText: {fileID: 4141144490003730573}
   _buyButton: {fileID: 4355374454274562098}
   _buttonBackground: {fileID: 2052835387161981871}
+  _levelBar: {fileID: 0}
+  _levelFill: {fileID: 0}
+  _deltaText: {fileID: 0}
   _affordableColor: {r: 0.2, g: 0.8, b: 0.2, a: 1}
   _expensiveColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!114 &7830080931505497564

@@ -122,6 +122,39 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &84426223 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3297707467633756507, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
+  m_PrefabInstance: {fileID: 338798563}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &84426225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 84426223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: stage.machine
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &243728789
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,12 +461,21 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1389345183}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5703023605511912099, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 550038367}
+    - targetCorrespondingSourceObject: {fileID: 3297707467633756507, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 84426225}
     - targetCorrespondingSourceObject: {fileID: 8922991938243153057, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
       insertIndex: -1
       addedObject: {fileID: 338798570}
     - targetCorrespondingSourceObject: {fileID: 270409109829911485, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2125552933}
+    - targetCorrespondingSourceObject: {fileID: 270409109829911485, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2125552935}
   m_SourcePrefab: {fileID: 100100000, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
 --- !u!1 &338798564 stripped
 GameObject:
@@ -758,6 +800,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 10586609656436688, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 442807113}
+    - targetCorrespondingSourceObject: {fileID: 10586609656436688, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 442807115}
+    - targetCorrespondingSourceObject: {fileID: 270534313110084852, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1318969768}
+    - targetCorrespondingSourceObject: {fileID: 5255596084661505698, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1637228637}
   m_SourcePrefab: {fileID: 100100000, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
 --- !u!114 &442807110 stripped
 MonoBehaviour:
@@ -812,6 +863,34 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
         m_Separator: ','
+--- !u!114 &442807115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442807112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: gar.status.locked
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &442807116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -928,6 +1007,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &550038365 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5703023605511912099, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
+  m_PrefabInstance: {fileID: 338798563}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &550038367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550038365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: hud.income
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &805479313
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,6 +1282,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1318969766 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 270534313110084852, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
+  m_PrefabInstance: {fileID: 442807109}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1318969768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318969766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: gar.open
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!224 &1389345183 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4633053732582212231, guid: 7369b553fd14eed49bef1d97d808c7b8, type: 3}
@@ -1397,6 +1542,39 @@ Transform:
   - {fileID: 1393206789}
   m_Father: {fileID: 400897614}
   m_LocalEulerAnglesHint: {x: -30, y: 0, z: 0}
+--- !u!1 &1637228635 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5255596084661505698, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
+  m_PrefabInstance: {fileID: 442807109}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1637228637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637228635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: gar.income
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1710753142
 GameObject:
   m_ObjectHideFlags: 0
@@ -1708,6 +1886,34 @@ MonoBehaviour:
         m_WaitForCompletion: 0
         m_LocalVariables: []
         m_Separator: ','
+--- !u!114 &2125552935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 338798564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.level
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &2134624674
 PrefabInstance:
   m_ObjectHideFlags: 0
