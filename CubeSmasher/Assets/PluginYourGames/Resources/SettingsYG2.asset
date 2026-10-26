@@ -122,7 +122,7 @@ MonoBehaviour:
         score: 60
         extraData: 
   Localization:
-    setLanguageMod: 1
+    setLanguageMod: 0
   Payments:
     durationPayPanel: 1
     testBuyFail: 0
