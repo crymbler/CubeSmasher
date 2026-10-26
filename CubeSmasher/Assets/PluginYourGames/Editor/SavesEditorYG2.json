@@ -1,12 +1,12 @@
 {
-    "idSave": 537,
-    "lastSaveTime": 1792876632,
+    "idSave": 542,
+    "lastSaveTime": 1792979453,
     "bestScore": 0,
     "isAdsRemoved": false,
     "level": 3,
     "stageDetails": 62,
     "hasPendingLocalSave": true,
-    "lastGarageCarIndex": 28,
+    "lastGarageCarIndex": 0,
     "openedGarageCars": [
         0,
         4,
@@ -37,7 +37,7 @@
         28
     ],
     "garageOpenMigrated": true,
-    "balance": 290166.8241252899,
+    "balance": 1068144.82412529,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 0.5,
