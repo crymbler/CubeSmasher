@@ -22,6 +22,9 @@ using UnityEngine.SceneManagement;
 public static class UiKeyAutoAssign
 {
     private const string Collection = "UI";
+
+    // Ключи, у которых в таблице есть {0}, {1}... Для них текст выводит код, LocalizeStringEvent не ставится
+    private static readonly HashSet<string> DynamicKeys = new HashSet<string>();
     private static readonly string[] Locales = { "ru", "en", "tr" };
 
     private sealed class Stats
@@ -106,6 +109,12 @@ public static class UiKeyAutoAssign
             stats.Lines.Add("OK: " + place + " -> " + key);
             if (!apply) continue;
 
+            if (DynamicKeys.Contains(key))
+            {
+                stats.Lines.Add("ДИНАМИЧЕСКИЙ, без LocalizeStringEvent: " + place + " -> " + key);
+                continue;
+            }
+
             LocalizeStringEvent ev = tmp.GetComponent<LocalizeStringEvent>();
             if (ev == null) ev = Undo.AddComponent<LocalizeStringEvent>(tmp.gameObject);
             if (ev.StringReference == null || ev.StringReference.IsEmpty)
@@ -152,6 +161,45 @@ public static class UiKeyAutoAssign
         }
     }
 
+    [MenuItem("Tools/CubeSmasher/UI Keys/Remove LocalizeStringEvent from dynamic texts")]
+    public static void RemoveDynamic()
+    {
+        BuildIndex(); // заполняет DynamicKeys
+        int removed = 0;
+
+        Scene scene = SceneManager.GetActiveScene();
+        foreach (GameObject root in scene.GetRootGameObjects()) removed += RemoveDynamicIn(root);
+        if (removed > 0) EditorSceneManager.MarkSceneDirty(scene);
+
+        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            GameObject prefab = PrefabUtility.LoadPrefabContents(path);
+            int n = RemoveDynamicIn(prefab);
+            if (n > 0) PrefabUtility.SaveAsPrefabAsset(prefab, path);
+            PrefabUtility.UnloadPrefabContents(prefab);
+            removed += n;
+        }
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("[UI Keys] Удалено LocalizeStringEvent у динамических текстов: " + removed);
+    }
+
+    private static int RemoveDynamicIn(GameObject root)
+    {
+        int n = 0;
+        foreach (LocalizeStringEvent ev in root.GetComponentsInChildren<LocalizeStringEvent>(true))
+        {
+            LocalizedString ls = ev.StringReference;
+            if (ls == null || ls.TableReference.TableCollectionName != Collection) continue;
+            if (!DynamicKeys.Contains(ls.TableEntryReference.Key)) continue;
+
+            Object.DestroyImmediate(ev);
+            n++;
+        }
+        return n;
+    }
+
     private static string FindKey(string text, List<(Regex Pattern, string Key)> index)
     {
         foreach (var item in index)
@@ -163,6 +211,7 @@ public static class UiKeyAutoAssign
 
     private static List<(Regex Pattern, string Key)> BuildIndex()
     {
+        DynamicKeys.Clear();
         var index = new List<(Regex Pattern, string Key)>();
         var collection = LocalizationEditorSettings.GetStringTableCollection(Collection);
         if (collection == null) return index;
@@ -179,6 +228,7 @@ public static class UiKeyAutoAssign
             {
                 if (table == null) continue;
                 string value = table.GetEntry(entry.Id)?.Value;
+                if (value != null && value.Contains("{")) DynamicKeys.Add(entry.Key);
                 Regex pattern = ToPattern(value);
                 if (pattern != null) index.Add((pattern, entry.Key));
             }
