@@ -19,7 +19,7 @@
 | K4 | Прокачка кубов и спавна | **готово в коде, не проверено в Unity** (`hammer_radius` доходит до молота с ограничением 0.5–6 м; спавн читает апгрейды `spawn_parts` и `respawn_delay`; `StatNameKey`/`UnitKey` идут через таблицу `UI`) |
 | K5 | Локализация с аргументами | **готово в коде, не проверено в Unity** (таблица `UI`, `UiText.Get`, `YG2LocaleBridge`; старый `Localization.cs` удалён) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | **готово в коде, не проверено в Unity** (`UI/SafeAreaFitter.cs`, установщик `Tools → CubeSmasher → Install SafeArea Fitter`) | `UI/SafeAreaFitter.cs` |
-| K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
+| K7 | Звук | **готово в коде, не проверено в Unity** (`AudioService` + `AudioInitializer`; параметры микшера `Music` и `UI`; звук открытия идёт через группу) | `Infrastructure/AudioService.cs`, `Infrastructure/Initializers/AudioInitializer.cs` |
 | K8 | Скины и донат-валюта | не начато | `Data/Configs/SkinConfig.cs` (нет) |
 | K9 | Частицы | не начато | `UI/ProgressBarShine.cs` (нет) |
 | K10 | Экран загрузки | **готово в коде, не проверено в Unity** (HSV-цвет и размер 0.6–1.4, спавн в объёме, физика у кубов отключена, градиентный фон, установщик `Tools → CubeSmasher → Setup Boot Scene`) | `Core/BootScreen.cs`, `UI/GradientBackground.cs` |
@@ -229,6 +229,15 @@
 - **Найдено: `_minShowSeconds` в сцене = 10 секунд.** Экран висел бы минимум 10 с. Установщик ставит 1.5.
 - **Установка:** `Tools → CubeSmasher → Setup Boot Scene` — градиент на `Background`, камера в `UITheme.SkyTop`, исправление `_minShowSeconds`, сохранение сцены.
 - Не проверено в Unity: компиляция, вид водопада, читаемость цвета в билде.
+
+### 26.10.2026, K7: звук
+
+- **Найдено: ползунок звука ничего не регулировал.** `SoundPanel` дёргает параметр `UI` в `Master.mixer`, а `GarageView` создавал свой `AudioSource` без группы микшера — звук шёл в обход громкости. Теперь `GarageView` играет через `AudioService`, направленный в группу `UI`.
+- **Найдено: в микшере параметры называются `Master`, `Music` и `UI`.** Параметра `Sound` нет. Сервис использует те же имена, что и `SoundPanel`, иначе ползунки двигали бы разные группы.
+- **`Infrastructure/AudioService.cs`.** Музыка в цикле, SFX через `PlayOneShot`, громкость из `YG2.saves.musicVolume` / `soundVolume`. Ноль переводится в −80 дБ: `Log10(0)` даёт минус бесконечность. Без микшера громкость ставится напрямую у `AudioSource`.
+- **`AudioInitializer`** создаёт сервис, регистрирует в контейнере, запускает музыку. Своих подписок на события не делает, чтобы звук открытия машины не играл дважды.
+- **Аудиофайлов мало.** Готовый звук один: `Assets/Audio/UnlockChime.wav`. Остальное в `Assets/References/Misuc` — референсы, не для сборки. Музыку нужно положить отдельно и назначить в `Bootstrapper._musicClip`.
+- **Не проверено в Unity.** Особенно: слышен ли звук через группу `UI` и не стал ли он тише после перехода на микшер.
 
 ### Следующие шаги
 

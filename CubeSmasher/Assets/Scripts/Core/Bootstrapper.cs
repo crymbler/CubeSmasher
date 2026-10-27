@@ -34,6 +34,12 @@ public class Bootstrapper : MonoBehaviour
     [SerializeField] private List<UpgradeConfig> _upgradeConfigs;
     [SerializeField] private Button _openShopButton;
 
+    [Header("Звук")]
+    [Tooltip("Микшер Master.mixer. Пусто — громкость ставится напрямую у AudioSource")]
+    [SerializeField] private UnityEngine.Audio.AudioMixer _audioMixer;
+    [Tooltip("Музыка в цикле. Можно оставить пустым")]
+    [SerializeField] private AudioClip _musicClip;
+
     [Header("UI - Гараж")]
     [SerializeField] private GarageView _garageView;
     [SerializeField] private Button _openGarageButton;
@@ -78,6 +84,7 @@ public class Bootstrapper : MonoBehaviour
             new EconomyInitializer(_gameSettings, saveService, _upgradeConfigs),
             new GameplayInitializer(_gameSettings, _carPartPrefab, _poolContainer),
             new WeaponInitializer(_hammerCaster),
+            new AudioInitializer(_audioMixer, _musicClip),
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
                                     _openShopButton, _openGarageButton, _upgradeConfigs)
         };

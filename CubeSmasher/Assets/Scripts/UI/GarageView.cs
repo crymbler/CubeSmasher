@@ -356,13 +356,25 @@ public class GarageView : MonoBehaviour, IGarageView
     public void PlayUnlockEffect()
     {
         if (_unlockSound == null) _unlockSound = UnlockEffect.CreateUnlockClip();
-        if (_audioSource == null)
+
+        // Через AudioService звук попадает в группу UI микшера, поэтому ползунок
+        // в настройках на него влияет. Свой AudioSource остаётся запасным вариантом,
+        // если сервис не зарегистрирован (например, сцену запустили без Bootstrapper).
+        if (CubeSmasher.Infrastructure.ServiceLocator.Instance.TryGet(
+                out CubeSmasher.Infrastructure.AudioService audio))
         {
-            _audioSource = gameObject.AddComponent<AudioSource>();
-            _audioSource.playOnAwake = false;
-            _audioSource.spatialBlend = 0f;
+            audio.PlaySfx(_unlockSound);
         }
-        _audioSource.PlayOneShot(_unlockSound);
+        else
+        {
+            if (_audioSource == null)
+            {
+                _audioSource = gameObject.AddComponent<AudioSource>();
+                _audioSource.playOnAwake = false;
+                _audioSource.spatialBlend = 0f;
+            }
+            _audioSource.PlayOneShot(_unlockSound);
+        }
 
         Transform anchor = _showcase != null ? _showcase : transform;
 
