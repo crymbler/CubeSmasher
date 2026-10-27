@@ -18,7 +18,7 @@
 | K3 | Окна скрывают HUD | **частично** (код готов, нужно назначить `_hideWhileOpen` в инспекторе и проверить в Play Mode) | `UI/GarageView.cs`, `UI/Shop/ShopView.cs` |
 | K4 | Прокачка кубов и спавна | **готово в коде, не проверено в Unity** (`hammer_radius` доходит до молота с ограничением 0.5–6 м; спавн читает апгрейды `spawn_parts` и `respawn_delay`; `StatNameKey`/`UnitKey` идут через таблицу `UI`) |
 | K5 | Локализация с аргументами | **готово в коде, не проверено в Unity** (таблица `UI`, `UiText.Get`, `YG2LocaleBridge`; старый `Localization.cs` удалён) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
-| K6 | SafeArea | не начато | `UI/SafeAreaFitter.cs` (нет) |
+| K6 | SafeArea | **готово в коде, не проверено в Unity** (`UI/SafeAreaFitter.cs`, установщик `Tools → CubeSmasher → Install SafeArea Fitter`) | `UI/SafeAreaFitter.cs` |
 | K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
 | K8 | Скины и донат-валюта | не начато | `Data/Configs/SkinConfig.cs` (нет) |
 | K9 | Частицы | не начато | `UI/ProgressBarShine.cs` (нет) |
@@ -205,6 +205,15 @@
 - **Спавн читает апгрейды.** `PartLifecycleService.ApplySpawnUpgrades` берёт `spawn_parts` (сколько кубов на столе) и `respawn_delay` (пауза в секундах). Вызывается при старте и после каждой покупки. Апгрейдов с такими Id в проекте пока нет: без них работают значения из `PhysicsConfig`.
 - **`StatNameKey` и `UnitKey` теперь переводятся** через `UiText.Get`, раньше выводились как сырые ключи.
 - **Не проверено в Unity.** Апгрейды `spawn_parts`/`respawn_delay` нужно создать в редакторе и добавить в `Bootstrapper._upgradeConfigs`.
+
+### 26.10.2026, K6: SafeArea
+
+- **Найдено:** контейнеры `SafeArea` в префабах уже есть (HUD, гараж), но скрипта на них нет, поэтому вырезы и полоса жестов на телефоне перекрывали интерфейс.
+- **Сделано:** `UI/SafeAreaFitter.cs` подгоняет RectTransform под `Screen.safeArea`. Пересчёт в `Awake`, `OnEnable` и раз в кадр при изменении безопасной зоны или размера экрана.
+- **Отступы пересчитываются через `scaleFactor` Canvas.** В первой версии пиксели делились на размер экрана и давали почти ноль.
+- **Установка:** `Tools → CubeSmasher → Install SafeArea Fitter` добавляет компонент на все объекты `SafeArea` в префабах и в открытой сцене. Второй раз не дублирует.
+- **Подстраховка:** на десктопе и WebGL безопасная зона равна экрану, отступы нулевые, вид не меняется.
+- Не проверено в Unity. Проверять на телефоне с вырезом либо через Device Simulator.
 
 ### Следующие шаги
 
