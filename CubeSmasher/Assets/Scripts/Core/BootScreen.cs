@@ -34,12 +34,6 @@ namespace CubeSmasher.Core
         [Tooltip("Минимальный и максимальный размер куба")]
         [SerializeField] private Vector2 _scaleRange = new Vector2(0.6f, 1.4f);
 
-        [Tooltip("Насыщенность цвета кубов")]
-        [SerializeField] private Vector2 _saturationRange = new Vector2(0.8f, 1f);
-
-        [Tooltip("Яркость цвета кубов")]
-        [SerializeField] private Vector2 _brightnessRange = new Vector2(0.85f, 1f);
-
         [Tooltip("Полоса загрузки (необязательно)")]
         [SerializeField] private Slider _progressBar;
 
@@ -91,7 +85,11 @@ namespace CubeSmasher.Core
             }
         }
 
-        /// <summary>Гасит физику и игровые скрипты у декоративного куба и красит его.</summary>
+        /// <summary>
+        /// Гасит физику у декоративного куба и просит цвет у ColorChanger.
+        /// Скрипты с куба не снимаются: CarPart требует ColorChanger
+        /// (RequireComponent), и удалять один без другого нельзя.
+        /// </summary>
         private void PrepareCube(GameObject cube)
         {
             foreach (Rigidbody body in cube.GetComponentsInChildren<Rigidbody>(true))
@@ -105,26 +103,11 @@ namespace CubeSmasher.Core
                 col.enabled = false;
             }
 
-            // CarPart считает куб игровым объектом: убираем, чтобы он не влиял на декор
-            foreach (MonoBehaviour behaviour in cube.GetComponentsInChildren<MonoBehaviour>(true))
+            // Цвет уже умеет ColorChanger с префаба детали: HSV, насыщенность 0.8–1,
+            // яркость 0.85–1. Он же клонирует материал, чтобы у кубов были разные цвета.
+            foreach (ColorChanger changer in cube.GetComponentsInChildren<ColorChanger>(true))
             {
-                string type = behaviour.GetType().Name;
-                if (type == "CarPart" || type == "ColorChanger") Destroy(behaviour);
-            }
-
-            Color color = Color.HSVToRGB(
-                Random.Range(0f, 1f),
-                Random.Range(_saturationRange.x, _saturationRange.y),
-                Random.Range(_brightnessRange.x, _brightnessRange.y));
-
-            var block = new MaterialPropertyBlock();
-            foreach (Renderer renderer in cube.GetComponentsInChildren<Renderer>(true))
-            {
-                renderer.GetPropertyBlock(block);
-                // Встроенный шейдер хранит цвет в _Color, URP — в _BaseColor
-                block.SetColor("_Color", color);
-                block.SetColor("_BaseColor", color);
-                renderer.SetPropertyBlock(block);
+                changer.ApplyAcidColor();
             }
         }
 
