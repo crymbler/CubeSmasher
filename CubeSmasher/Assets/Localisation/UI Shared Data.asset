@@ -15,6 +15,58 @@ MonoBehaviour:
   m_TableCollectionName: UI
   m_TableCollectionNameGuidString: e46390d77ff4bb845aaf2091481f0ea3
   m_Entries:
+  - m_Id: 401315427430400
+    m_Key: nav.garage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430401
+    m_Key: nav.shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430402
+    m_Key: nav.skins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430403
+    m_Key: nav.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430404
+    m_Key: shop.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430405
+    m_Key: ui.buy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430406
+    m_Key: ui.cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430407
+    m_Key: upgrade.hammer_damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430408
+    m_Key: upgrade.hammer_radius
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430409
+    m_Key: car.hatchback
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430410
+    m_Key: car.sedan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430411
+    m_Key: car.minivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430412
+    m_Key: car.sport
+    m_Metadata:
+      m_Items: []
   - m_Id: 100100919439360
     m_Key: gar.status.open
     m_Metadata:

@@ -74,6 +74,58 @@ MonoBehaviour:
     m_Localized: +{0}/sn
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430400
+    m_Localized: Garaj
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430401
+    m_Localized: "Ma\u011Faza"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430402
+    m_Localized: Kaplamalar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430403
+    m_Localized: Ayarlar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430404
+    m_Localized: "MA\u011EAZA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430405
+    m_Localized: "Sat\u0131n al"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430406
+    m_Localized: "\u0130ptal"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430407
+    m_Localized: "\xC7eki\xE7 hasar\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430408
+    m_Localized: "\xC7eki\xE7 yar\u0131\xE7ap\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430409
+    m_Localized: Hatchback
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430410
+    m_Localized: Sedan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430411
+    m_Localized: Minivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430412
+    m_Localized: Spor
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

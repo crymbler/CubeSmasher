@@ -15,12 +15,28 @@ MonoBehaviour:
   Id: hammer_damage
   Category: 0
   UpgradeName: "\u0423\u0440\u043E\u043D \u041A\u0443\u0432\u0430\u043B\u0434\u044B"
+  LocalizedName:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: upgrade.hammer_damage
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   Icon: {fileID: 21300000, guid: b4a875d1e0faec340a72f8604e8c81cc, type: 3}
   MaxLevel: 50
-  UnlockStageLevel: 1
+  UnlockStageLevel: 0
   BasePrice: 50
   PriceMultiplier: 1.22
   ValueGrowthType: 1
   BaseValue: 10
   ValueStep: 0.15
   ValueMultiplier: 1.18
+  StatNameKey: 
+  UnitKey: 
+  Decimals: 2
+  ValueDecreases: 0
+  references:
+    version: 2
+    RefIds: []

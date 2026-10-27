@@ -74,6 +74,58 @@ MonoBehaviour:
     m_Localized: +{0}/s
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430400
+    m_Localized: Garage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430401
+    m_Localized: Shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430402
+    m_Localized: Skins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430403
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430404
+    m_Localized: SHOP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430405
+    m_Localized: Buy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430406
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430407
+    m_Localized: Hammer damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430408
+    m_Localized: Hammer radius
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430409
+    m_Localized: Hatchback
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430410
+    m_Localized: Sedan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430411
+    m_Localized: Minivan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430412
+    m_Localized: Sport
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

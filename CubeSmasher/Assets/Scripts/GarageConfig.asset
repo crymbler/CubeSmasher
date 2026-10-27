@@ -19,6 +19,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -26,6 +44,24 @@ MonoBehaviour:
     UnlockStage: 2
     IncomePerSecond: 1
     Description: "\u0441\u0435\u0434\u0430\u043D"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.sedan
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.sedan
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -36,6 +72,24 @@ MonoBehaviour:
       \u043C\u0438\u043D\u0438\u0432\u044D\u043D\u043C\u0438\u043D\u0438\u0432\u044D\u043D\u043C\u0438\u043D\u0438\u0432\u044D\u043D
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.minivan
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -43,6 +97,24 @@ MonoBehaviour:
     UnlockStage: 10
     IncomePerSecond: 1
     Description: "\u0432\u0444\u0446\u0444\u0446\u0432\u0444\u0432\u0444\u0446\u0432\u0444\u0446\u0444\u0446\u0432\u0432\u0446"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.sport
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -52,6 +124,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -61,6 +151,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -70,6 +178,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -79,6 +205,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -88,6 +232,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -97,6 +259,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -106,6 +286,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -115,6 +313,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -124,6 +340,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -133,6 +367,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -142,6 +394,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -151,6 +421,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -160,6 +448,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -169,6 +475,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -178,6 +502,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -187,6 +529,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -196,6 +556,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -205,6 +583,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -214,6 +610,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -223,6 +637,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -232,6 +664,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -241,6 +691,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -250,6 +718,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -259,6 +745,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -268,6 +772,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -277,6 +799,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -286,6 +826,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -295,6 +853,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -304,6 +880,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -313,6 +907,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -322,6 +934,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -331,6 +961,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -340,6 +988,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -349,6 +1015,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -358,6 +1042,24 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
@@ -367,6 +1069,27 @@ MonoBehaviour:
     Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
       \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
       \u043D\u0430\u0447\u0430\u0442\u044C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: car.hatchback
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     Characteristics: 
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
+  references:
+    version: 2
+    RefIds: []

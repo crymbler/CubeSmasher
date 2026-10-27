@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58fa6d727ed99214ba0ed0a292c4d696, type: 3}
+  m_Name: RespawnDelay
+  m_EditorClassIdentifier: 
+  Id: respawn_delay
+  Category: 0
+  UpgradeName: "\u0441\u043A\u043E\u0440\u043E\u0441\u0442\u044C \u0441\u043F\u0430\u0432\u043D\u0430"
+  LocalizedName:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  Icon: {fileID: 0}
+  MaxLevel: 50
+  UnlockStageLevel: 5
+  BasePrice: 1000
+  PriceMultiplier: 1.35
+  ValueGrowthType: 1
+  BaseValue: 2
+  ValueStep: 0.15
+  ValueMultiplier: 0
+  StatNameKey: 
+  UnitKey: 
+  Decimals: 2
+  ValueDecreases: 0
+  references:
+    version: 2
+    RefIds: []

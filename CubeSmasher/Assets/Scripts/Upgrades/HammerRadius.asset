@@ -15,12 +15,28 @@ MonoBehaviour:
   Id: hammer_radius
   Category: 0
   UpgradeName: "\u0440\u0430\u0434\u0438\u0443\u0441 \u043A\u0443\u0432\u0430\u043B\u0434\u044B"
+  LocalizedName:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: upgrade.hammer_radius
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   Icon: {fileID: 21300000, guid: cc9c565a56b21cb4a9fa196ef264ce40, type: 3}
   MaxLevel: 50
   UnlockStageLevel: 2
   BasePrice: 100
   PriceMultiplier: 1.35
   ValueGrowthType: 1
-  BaseValue: 10
+  BaseValue: 1.5
   ValueStep: 0.15
-  ValueMultiplier: 1.2
+  ValueMultiplier: 0
+  StatNameKey: 
+  UnitKey: 
+  Decimals: 2
+  ValueDecreases: 0
+  references:
+    version: 2
+    RefIds: []
