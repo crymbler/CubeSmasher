@@ -22,7 +22,7 @@
 | K7 | Звук | не начато | `Infrastructure/AudioService.cs` (нет) |
 | K8 | Скины и донат-валюта | не начато | `Data/Configs/SkinConfig.cs` (нет) |
 | K9 | Частицы | не начато | `UI/ProgressBarShine.cs` (нет) |
-| K10 | Экран загрузки | не начато | `Core/BootScreen.cs` |
+| K10 | Экран загрузки | **готово в коде, не проверено в Unity** (HSV-цвет и размер 0.6–1.4, спавн в объёме, физика у кубов отключена, градиентный фон, установщик `Tools → CubeSmasher → Setup Boot Scene`) | `Core/BootScreen.cs`, `UI/GradientBackground.cs` |
 
 Проверено по дереву `origin/main`: `SafeAreaFitter`, `AudioService`, `SkinConfig`, `SkinService`, `SkinShopView`, `BottomNavView`, `ProgressBarShine` отсутствуют. В `PhysicsConfig` нет `RespawnDelay` и `MaxPartsPerWave`. В `UpgradeConfig` нет `StatNameKey`. В `Localizer` нет `SetArgs`. В `BootScreen` нет окраски кубов.
 
@@ -214,6 +214,16 @@
 - **Установка:** `Tools → CubeSmasher → Install SafeArea Fitter` добавляет компонент на все объекты `SafeArea` в префабах и в открытой сцене. Второй раз не дублирует.
 - **Подстраховка:** на десктопе и WebGL безопасная зона равна экрану, отступы нулевые, вид не меняется.
 - Не проверено в Unity. Проверять на телефоне с вырезом либо через Device Simulator.
+
+### 26.10.2026, K10: экран загрузки
+
+- **Найдено: префаб куба для водопада несёт `Rigidbody` и `CarPart`.** `BootScreen` двигает кубы через transform, физика с этим спорит: кубы падали не по сценарию и сталкивались. Теперь у декоративных кубов `isKinematic`, коллайдеры выключены, `CarPart` и `ColorChanger` снимаются.
+- **Цвет и размер.** HSV-цвет, насыщенность 0.8–1, яркость 0.85–1; размер 0.6–1.4. Красится через `MaterialPropertyBlock` (свойства `_Color` и `_BaseColor`, чтобы работало и в URP, и во встроенном шейдере), материал не клонируется.
+- **Спавн в объёме.** Поле `_depthRange`: кубы рождаются на разной глубине, а не в одной плоскости.
+- **Фон-градиент: `UI/GradientBackground.cs`.** Рисует текстуру 1×128 в `Awake`.
+- **Найдено: `_minShowSeconds` в сцене = 10 секунд.** Экран висел бы минимум 10 с. Установщик ставит 1.5.
+- **Установка:** `Tools → CubeSmasher → Setup Boot Scene` — градиент на `Background`, камера в `UITheme.SkyTop`, исправление `_minShowSeconds`, сохранение сцены.
+- Не проверено в Unity: компиляция, вид водопада, читаемость цвета в билде.
 
 ### Следующие шаги
 

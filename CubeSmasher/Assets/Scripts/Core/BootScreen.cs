@@ -27,6 +27,19 @@ namespace CubeSmasher.Core
         [Tooltip("Ширина и высота области падения")]
         [SerializeField] private Vector2 _area = new Vector2(8f, 12f);
 
+        [Tooltip("Глубина области: кубы рождаются не в одной плоскости, а в объёме")]
+        [SerializeField] private Vector2 _depthRange = new Vector2(-2f, 4f);
+
+        [Header("Вид кубов")]
+        [Tooltip("Минимальный и максимальный размер куба")]
+        [SerializeField] private Vector2 _scaleRange = new Vector2(0.6f, 1.4f);
+
+        [Tooltip("Насыщенность цвета кубов")]
+        [SerializeField] private Vector2 _saturationRange = new Vector2(0.8f, 1f);
+
+        [Tooltip("Яркость цвета кубов")]
+        [SerializeField] private Vector2 _brightnessRange = new Vector2(0.85f, 1f);
+
         [Tooltip("Полоса загрузки (необязательно)")]
         [SerializeField] private Slider _progressBar;
 
@@ -63,11 +76,55 @@ namespace CubeSmasher.Core
             for (int i = 0; i < _cubeCount; i++)
             {
                 GameObject c = Instantiate(_fallingCubePrefab, transform);
+
+                // В префабе детали есть Rigidbody и CarPart: для декора они лишние,
+                // иначе физика спорит с движением через transform
+                PrepareCube(c);
+
                 float x = Random.Range(-_area.x * 0.5f, _area.x * 0.5f);
                 float y = Random.Range(-_area.y * 0.5f, _area.y * 0.5f);
-                c.transform.localPosition = new Vector3(x, y, 0f);
+                float z = Random.Range(_depthRange.x, _depthRange.y);
+                c.transform.localPosition = new Vector3(x, y, z);
                 c.transform.localRotation = Random.rotation;
+                c.transform.localScale = Vector3.one * Random.Range(_scaleRange.x, _scaleRange.y);
                 _cubes.Add(c.transform);
+            }
+        }
+
+        /// <summary>Гасит физику и игровые скрипты у декоративного куба и красит его.</summary>
+        private void PrepareCube(GameObject cube)
+        {
+            foreach (Rigidbody body in cube.GetComponentsInChildren<Rigidbody>(true))
+            {
+                body.isKinematic = true;
+                body.detectCollisions = false;
+            }
+
+            foreach (Collider col in cube.GetComponentsInChildren<Collider>(true))
+            {
+                col.enabled = false;
+            }
+
+            // CarPart считает куб игровым объектом: убираем, чтобы он не влиял на декор
+            foreach (MonoBehaviour behaviour in cube.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                string type = behaviour.GetType().Name;
+                if (type == "CarPart" || type == "ColorChanger") Destroy(behaviour);
+            }
+
+            Color color = Color.HSVToRGB(
+                Random.Range(0f, 1f),
+                Random.Range(_saturationRange.x, _saturationRange.y),
+                Random.Range(_brightnessRange.x, _brightnessRange.y));
+
+            var block = new MaterialPropertyBlock();
+            foreach (Renderer renderer in cube.GetComponentsInChildren<Renderer>(true))
+            {
+                renderer.GetPropertyBlock(block);
+                // Встроенный шейдер хранит цвет в _Color, URP — в _BaseColor
+                block.SetColor("_Color", color);
+                block.SetColor("_BaseColor", color);
+                renderer.SetPropertyBlock(block);
             }
         }
 
