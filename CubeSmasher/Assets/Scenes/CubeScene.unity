@@ -283,6 +283,10 @@ PrefabInstance:
       objectReference: {fileID: 905133505}
     - target: {fileID: 1024145337215411902, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1024145337215411902, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1029087562915172919, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
@@ -411,7 +415,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5699694094297467920, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5932457882209118910, guid: 55e4f058b3fa52f42be9e87565a3d236, type: 3}
       propertyPath: m_AnchorMax.y
@@ -746,6 +750,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d32cdedf7150b2e45abb0bcb0d9ff743, type: 2}
   - {fileID: 11400000, guid: 079e68105720cdd47a7cb0bc615abb93, type: 2}
   _openShopButton: {fileID: 338798566}
+  _audioMixer: {fileID: 24100000, guid: 657c990bc4a9fd44da75491a792bb0e1, type: 2}
+  _musicClip: {fileID: 8300000, guid: f8e4119b72c9c3f41b20ec85d3612958, type: 3}
   _garageView: {fileID: 442807110}
   _openGarageButton: {fileID: 338798567}
 --- !u!1 &400897613
@@ -803,7 +809,7 @@ PrefabInstance:
     - target: {fileID: 2539943790265252575, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
       propertyPath: _unlockSound
       value: 
-      objectReference: {fileID: 8300000, guid: ee1d8a1c332c44beb24d05547863698c, type: 3}
+      objectReference: {fileID: 8300000, guid: 1821151bf3d44ab4ca36184af29cb227, type: 3}
     - target: {fileID: 2539943790265252575, guid: 29323ae0ef29b9f43aa8c7b4fa8766fa, type: 3}
       propertyPath: _garageCamera
       value: 

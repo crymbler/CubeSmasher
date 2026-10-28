@@ -1,19 +1,50 @@
 {
-    "idSave": 598,
-    "lastSaveTime": 0,
+    "idSave": 606,
+    "lastSaveTime": 1793170662,
     "bestScore": 0,
     "isAdsRemoved": false,
-    "level": 0,
-    "stageDetails": 0,
-    "hasPendingLocalSave": false,
-    "lastGarageCarIndex": 0,
-    "openedGarageCars": [],
-    "garageOpenMigrated": false,
-    "balance": 1.0,
+    "level": 1,
+    "stageDetails": 12,
+    "hasPendingLocalSave": true,
+    "lastGarageCarIndex": 4,
+    "openedGarageCars": [
+        0
+    ],
+    "garageOpenMigrated": true,
+    "balance": 153.19999241828919,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 0.5,
     "musicVolume": 0.5,
     "passiveUpgrades": [],
-    "tapUpgrades": []
+    "tapUpgrades": [
+        {
+            "id": "hammer_damage",
+            "level": 1,
+            "price": 50.0,
+            "value": 10.0,
+            "isLocked": false
+        },
+        {
+            "id": "hammer_radius",
+            "level": 1,
+            "price": 100.0,
+            "value": 1.5,
+            "isLocked": true
+        },
+        {
+            "id": "respawn_delay",
+            "level": 1,
+            "price": 1000.0,
+            "value": 2.0,
+            "isLocked": true
+        },
+        {
+            "id": "spawn_parts",
+            "level": 1,
+            "price": 1000000.0,
+            "value": 2.0,
+            "isLocked": true
+        }
+    ]
 }
