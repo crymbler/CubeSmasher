@@ -5,12 +5,19 @@ using YG;
 namespace CubeSmasher.Infrastructure
 {
     /// <summary>
-    /// Звук игры: музыка в цикле и короткие эффекты через PlayOneShot.
+    /// Звук игры: музыка в цикле и короткие эффекты через пул AudioSource.
     ///
     /// Громкость берётся из сохранения YG2 (musicVolume, soundVolume) и уходит
     /// в AudioMixer. Параметры в Master.mixer называются Music и UI — этот сервис
     /// использует те же имена, что и SoundPanel, иначе ползунки в настройках
     /// двигали бы не те группы.
+    ///
+    /// SFX играются через пул из нескольких AudioSource, а не через один общий.
+    /// AudioSource.pitch — это свойство самого источника, оно действует на все
+    /// звуки, что сейчас на нём играют. Если несколько эффектов перекрываются
+    /// во времени (быстрые клики, перетаскивание слайдера), один общий источник
+    /// на лету поменял бы питч уже играющему звуку. Пул даёт каждому эффекту
+    /// свою дорожку, поэтому разный питч не мешает соседним звукам.
     ///
     /// Без микшера громкость ставится напрямую у AudioSource, поэтому сервис
     /// работает и в сцене, где микшер не назначен.
@@ -20,10 +27,13 @@ namespace CubeSmasher.Infrastructure
         public const string MusicParam = "Music";
         public const string SoundParam = "UI";
         private const float MutedDecibels = -80f;
+        private const int SfxPoolSize = 6;
 
         private readonly AudioSource _music;
-        private readonly AudioSource _sfx;
+        private readonly AudioSource[] _sfxPool;
         private readonly AudioMixer _mixer;
+        private readonly float _sfxBaseVolume;
+        private int _nextSfxIndex;
 
         public AudioService(AudioMixer mixer)
         {
@@ -37,15 +47,23 @@ namespace CubeSmasher.Infrastructure
             _music.playOnAwake = false;
             _music.spatialBlend = 0f;
 
-            _sfx = host.AddComponent<AudioSource>();
-            _sfx.playOnAwake = false;
-            _sfx.spatialBlend = 0f;
+            AudioMixerGroup musicGroup = FindGroup("Music");
+            AudioMixerGroup sfxGroup = FindGroup("UI") ?? FindGroup("Sound");
+            if (musicGroup != null) _music.outputAudioMixerGroup = musicGroup;
 
-            if (_mixer != null)
+            _sfxPool = new AudioSource[SfxPoolSize];
+            for (int i = 0; i < _sfxPool.Length; i++)
             {
-                _music.outputAudioMixerGroup = FindGroup("Music");
-                _sfx.outputAudioMixerGroup = FindGroup("UI") ?? FindGroup("Sound");
+                var source = host.AddComponent<AudioSource>();
+                source.playOnAwake = false;
+                source.spatialBlend = 0f;
+                if (sfxGroup != null) source.outputAudioMixerGroup = sfxGroup;
+                _sfxPool[i] = source;
             }
+
+            // Без микшера громкость SFX хранится тут и применяется к каждому
+            // источнику пула перед проигрыванием (volume у PlayOneShot — множитель).
+            _sfxBaseVolume = 1f;
 
             ApplyVolumes(YG2.saves.musicVolume, YG2.saves.soundVolume);
         }
@@ -62,11 +80,31 @@ namespace CubeSmasher.Infrastructure
 
         public void StopMusic() => _music.Stop();
 
-        /// <summary>Короткий эффект. Громкость задаётся ползунком звука.</summary>
-        public void PlaySfx(AudioClip clip, float volume = 1f)
+        /// <summary>Короткий эффект без изменения высоты тона.</summary>
+        public void PlaySfx(AudioClip clip, float volume = 1f) => PlaySfx(clip, volume, 1f);
+
+        /// <summary>
+        /// Короткий эффект со случайным питчем в диапазоне [1-jitter, 1+jitter].
+        /// Небольшой разброс (0.05-0.08) делает повторяющиеся звуки (клик, удар,
+        /// тик слайдера) менее монотонными без заметного искажения тона.
+        /// </summary>
+        public void PlaySfxWithJitter(AudioClip clip, float pitchJitter, float volume = 1f)
         {
-            if (clip == null) return;
-            _sfx.PlayOneShot(clip, Mathf.Clamp01(volume));
+            float pitch = 1f + Random.Range(-pitchJitter, pitchJitter);
+            PlaySfx(clip, volume, pitch);
+        }
+
+        public void PlaySfx(AudioClip clip, float volume, float pitch)
+        {
+            if (clip == null || _sfxPool.Length == 0) return;
+
+            AudioSource source = _sfxPool[_nextSfxIndex];
+            _nextSfxIndex = (_nextSfxIndex + 1) % _sfxPool.Length;
+
+            // volume у PlayOneShot — множитель к базовой громкости источника
+            // (source.volume), которую выставляет SetSfxVolume без микшера.
+            source.pitch = pitch;
+            source.PlayOneShot(clip, Mathf.Clamp01(volume));
         }
 
         /// <summary>
@@ -83,7 +121,18 @@ namespace CubeSmasher.Infrastructure
             else
             {
                 _music.volume = Mathf.Clamp01(musicVolume);
-                _sfx.volume = Mathf.Clamp01(soundVolume);
+                SetSfxVolume(Mathf.Clamp01(soundVolume));
+            }
+        }
+
+        private void SetSfxVolume(float volume)
+        {
+            // volume у PlayOneShot — множитель к этому полю не относится: оно задаёт
+            // базовую громкость источника. Храним множитель отдельно через поле класса,
+            // чтобы не плодить лишние состояния на каждом источнике пула.
+            for (int i = 0; i < _sfxPool.Length; i++)
+            {
+                _sfxPool[i].volume = volume;
             }
         }
 

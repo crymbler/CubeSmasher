@@ -39,6 +39,12 @@ public class Bootstrapper : MonoBehaviour
     [SerializeField] private UnityEngine.Audio.AudioMixer _audioMixer;
     [Tooltip("Музыка в цикле. Можно оставить пустым")]
     [SerializeField] private AudioClip _musicClip;
+    [Tooltip("Звук клика по умолчанию для кнопок без своего клипа (ButtonClickSound)")]
+    [SerializeField] private AudioClip _clickClip;
+    [Tooltip("Звук удара молота")]
+    [SerializeField] private AudioClip _hammerHitClip;
+    [Tooltip("Звук открытия машины. Пусто — звук сгенерируется кодом")]
+    [SerializeField] private AudioClip _unlockClip;
 
     [Header("UI - Гараж")]
     [SerializeField] private GarageView _garageView;
@@ -84,7 +90,7 @@ public class Bootstrapper : MonoBehaviour
             new EconomyInitializer(_gameSettings, saveService, _upgradeConfigs),
             new GameplayInitializer(_gameSettings, _carPartPrefab, _poolContainer),
             new WeaponInitializer(_hammerCaster),
-            new AudioInitializer(_audioMixer, _musicClip),
+            new AudioInitializer(_audioMixer, _musicClip, _clickClip, _hammerHitClip, _unlockClip),
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
                                     _openShopButton, _openGarageButton, _upgradeConfigs)
         };

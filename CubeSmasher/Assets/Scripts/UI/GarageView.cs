@@ -355,7 +355,12 @@ public class GarageView : MonoBehaviour, IGarageView
     /// <summary>Партиклы и торжественный звук в момент открытия машины.</summary>
     public void PlayUnlockEffect()
     {
-        if (_unlockSound == null) _unlockSound = UnlockEffect.CreateUnlockClip();
+        // Берём настоящий файл из AudioClipLibrary (Assets/Audio/Sounds/Unlock.mp3),
+        // если он назначен через AudioInitializer. Процедурный UnlockEffect.CreateUnlockClip
+        // остаётся запасным вариантом на случай, если звук ещё не подключили.
+        AudioClip clip = CubeSmasher.UI.AudioClipLibrary.Unlock != null
+            ? CubeSmasher.UI.AudioClipLibrary.Unlock
+            : (_unlockSound ??= UnlockEffect.CreateUnlockClip());
 
         // Через AudioService звук попадает в группу UI микшера, поэтому ползунок
         // в настройках на него влияет. Свой AudioSource остаётся запасным вариантом,
@@ -363,7 +368,7 @@ public class GarageView : MonoBehaviour, IGarageView
         if (CubeSmasher.Infrastructure.ServiceLocator.Instance.TryGet(
                 out CubeSmasher.Infrastructure.AudioService audio))
         {
-            audio.PlaySfx(_unlockSound);
+            audio.PlaySfxWithJitter(clip, 0.05f);
         }
         else
         {
@@ -373,7 +378,7 @@ public class GarageView : MonoBehaviour, IGarageView
                 _audioSource.playOnAwake = false;
                 _audioSource.spatialBlend = 0f;
             }
-            _audioSource.PlayOneShot(_unlockSound);
+            _audioSource.PlayOneShot(clip);
         }
 
         Transform anchor = _showcase != null ? _showcase : transform;

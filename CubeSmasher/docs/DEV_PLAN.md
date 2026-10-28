@@ -19,7 +19,7 @@
 | K4 | Прокачка кубов и спавна | **готово в коде, не проверено в Unity** (`hammer_radius` доходит до молота с ограничением 0.5–6 м; спавн читает апгрейды `spawn_parts` и `respawn_delay`; `StatNameKey`/`UnitKey` идут через таблицу `UI`) |
 | K5 | Локализация с аргументами | **готово в коде, не проверено в Unity** (таблица `UI`, `UiText.Get`, `YG2LocaleBridge`; старый `Localization.cs` удалён) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | **готово в коде, не проверено в Unity** (`UI/SafeAreaFitter.cs`, установщик `Tools → CubeSmasher → Install SafeArea Fitter`) | `UI/SafeAreaFitter.cs` |
-| K7 | Звук | **готово в коде, не проверено в Unity** (`AudioService` + `AudioInitializer`; параметры микшера `Music` и `UI`; звук открытия идёт через группу) | `Infrastructure/AudioService.cs`, `Infrastructure/Initializers/AudioInitializer.cs` |
+| K7 | Звук | **готово в коде, не проверено в Unity** (`AudioService` с пулом источников и питчем; клики, удар молота и тики слайдера подключены; установщик `Tools → CubeSmasher → Setup Audio`) | `Infrastructure/AudioService.cs`, `UI/ButtonClickSound.cs`, `UI/SliderTickSound.cs` |
 | K8 | Скины и донат-валюта | не начато | `Data/Configs/SkinConfig.cs` (нет) |
 | K9 | Частицы | не начато | `UI/ProgressBarShine.cs` (нет) |
 | K10 | Экран загрузки | **готово в коде, не проверено в Unity** (HSV-цвет и размер 0.6–1.4, спавн в объёме, физика у кубов отключена, градиентный фон, установщик `Tools → CubeSmasher → Setup Boot Scene`) | `Core/BootScreen.cs`, `UI/GradientBackground.cs` |
@@ -238,6 +238,17 @@
 - **`AudioInitializer`** создаёт сервис, регистрирует в контейнере, запускает музыку. Своих подписок на события не делает, чтобы звук открытия машины не играл дважды.
 - **Аудиофайлов мало.** Готовый звук один: `Assets/Audio/UnlockChime.wav`. Остальное в `Assets/References/Misuc` — референсы, не для сборки. Музыку нужно положить отдельно и назначить в `Bootstrapper._musicClip`.
 - **Не проверено в Unity.** Особенно: слышен ли звук через группу `UI` и не стал ли он тише после перехода на микшер.
+
+### 28.10.2026, K7: кнопки, удар молота, звук слайдера
+
+- **Подключены звуки из `Assets/Audio`.** Click, HammerHit, Unlock, BackgroundMusic — через `Bootstrapper._clickClip` / `_hammerHitClip` / `_unlockClip` / `_musicClip`. `AudioInitializer` раскладывает их в `AudioClipLibrary`, откуда их берут `ButtonClickSound` и `HammerCaster`.
+- **Звука слайдера в проекте нет, готового бесплатного аналога под рукой тоже.** `UI/SliderPlip.cs` генерирует короткий "плип" кодом: тон 1500 Гц с быстрым затуханием плюс короткий щелчок атаки 5000 Гц первые 6 мс — звучит похоже на референс с uppbeat, без внешнего файла.
+- **Разный питч у повторяющихся звуков.** `AudioService.PlaySfxWithJitter` даёт случайный питч в диапазоне ±jitter. Чтобы перекрывающиеся звуки не портили друг другу питч, SFX теперь играются через пул из 6 `AudioSource` по кругу, а не через один общий — иначе `AudioSource.pitch` одного источника задевал бы уже играющий на нём звук.
+- **`ButtonClickSound`** на любой `Button`: звук клика с питчем ±5%. Свой клип можно назначить, иначе берётся общий `AudioClipLibrary.Click`.
+- **`SliderTickSound`** на любой `Slider`: тик при сдвиге значения на заметный шаг (по умолчанию 1/20 диапазона), а не на каждый кадр перетаскивания — иначе быстрый свайп превратился бы в шум. Первый вызов `OnValueChanged` при инициализации (`SoundPanel.Load`) не звучит, иначе тик играл бы при каждом открытии настроек.
+- **Удар молота: один звук за взмах,** даже если задело несколько кубов сразу — иначе одновременные удары слились бы в треск.
+- **Установщик:** `Tools → CubeSmasher → Setup Audio` ставит `ButtonClickSound` на все `Button` и `SliderTickSound` на все `Slider` в открытой сцене и во всех префабах. Повторный запуск не дублирует.
+- Не проверено в Unity.
 
 ### Следующие шаги
 

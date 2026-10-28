@@ -129,9 +129,14 @@ public class HammerCaster : MonoBehaviour
         _isSwinging = false;
     }
 
+    [Header("«вук")]
+    [Tooltip("–азброс питча удара: 0.08 даЄт заметный, но не пискл€вый разброс")]
+    [SerializeField, Range(0f, 0.3f)] private float _hitPitchJitter = 0.08f;
+
     private void Hit()
     {
         Collider[] hits = Physics.OverlapSphere(_cursorTarget.position, _hitRadius, _hitMask);
+        if (hits.Length > 0) PlayHitSound();
 
         foreach (Collider hit in hits)
         {
@@ -148,5 +153,18 @@ public class HammerCaster : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// «вук удара играет один раз за взмах, даже если молот попал по нескольким
+    /// детал€м сразу: иначе при попадании по трЄм кубам прозвучали бы три удара
+    /// одновременно, и звук превратилс€ бы в треск.
+    /// </summary>
+    private void PlayHitSound()
+    {
+        if (!CubeSmasher.Infrastructure.ServiceLocator.Instance.TryGet(
+                out CubeSmasher.Infrastructure.AudioService audio)) return;
+
+        audio.PlaySfxWithJitter(CubeSmasher.UI.AudioClipLibrary.HammerHit, _hitPitchJitter);
     }
 }
