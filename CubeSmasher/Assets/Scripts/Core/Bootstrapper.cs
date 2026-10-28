@@ -45,6 +45,8 @@ public class Bootstrapper : MonoBehaviour
     [SerializeField] private AudioClip _hammerHitClip;
     [Tooltip("«вук открыти€ машины. ѕусто Ч звук сгенерируетс€ кодом")]
     [SerializeField] private AudioClip _unlockClip;
+    [Tooltip("«вук раскола детали на осколки")]
+    [SerializeField] private AudioClip _splitClip;
 
     [Header("UI - √араж")]
     [SerializeField] private GarageView _garageView;
@@ -90,7 +92,7 @@ public class Bootstrapper : MonoBehaviour
             new EconomyInitializer(_gameSettings, saveService, _upgradeConfigs),
             new GameplayInitializer(_gameSettings, _carPartPrefab, _poolContainer),
             new WeaponInitializer(_hammerCaster),
-            new AudioInitializer(_audioMixer, _musicClip, _clickClip, _hammerHitClip, _unlockClip),
+            new AudioInitializer(_audioMixer, _musicClip, _clickClip, _hammerHitClip, _unlockClip, _splitClip),
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
                                     _openShopButton, _openGarageButton, _upgradeConfigs)
         };

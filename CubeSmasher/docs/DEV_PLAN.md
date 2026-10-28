@@ -250,6 +250,14 @@
 - **Установщик:** `Tools → CubeSmasher → Setup Audio` ставит `ButtonClickSound` на все `Button` и `SliderTickSound` на все `Slider` в открытой сцене и во всех префабах. Повторный запуск не дублирует.
 - Не проверено в Unity.
 
+### 28.10.2026, звуки: раскол, единый питч, автоназначение
+
+- **Звук раскола детали.** `PartLifecycleService` играет `AudioClipLibrary.Split` один раз на разбитую деталь, а не на каждый осколок. Клип назначается в `Bootstrapper._splitClip`; если файла нет, звука раскола не будет.
+- **Единый питч 0.92–1.08** для молота, кнопок, слайдера и открытия машины (`AudioService.PlaySfxVaried`). Прежние разбросы ±5% и ±8% убраны.
+- **Автоназначение.** `Tools → CubeSmasher → Setup Audio` заполняет поля `Bootstrapper` файлами из `Assets/Audio` по имени: `BackgroundMusic`, `Click`, `HammerHit`, `Unlock`, `Split`. Уже назначенные вручную поля не перезаписываются.
+- **Кнопки и слайдеры.** Инструмент ставит `ButtonClickSound` и `SliderTickSound` на все `Button` и `Slider` в сцене и префабах; клип кнопкам не назначается, они берут общий `Click`.
+- Не проверено в Unity.
+
 ### Следующие шаги
 
 1. K4, прокачка кубов и спавна (`RespawnDelay`, `MaxPartsPerWave`, `StatNameKey`).

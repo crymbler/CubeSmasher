@@ -129,10 +129,6 @@ public class HammerCaster : MonoBehaviour
         _isSwinging = false;
     }
 
-    [Header("Звук")]
-    [Tooltip("Разброс питча удара: 0.08 даёт заметный, но не писклявый разброс")]
-    [SerializeField, Range(0f, 0.3f)] private float _hitPitchJitter = 0.08f;
-
     private void Hit()
     {
         Collider[] hits = Physics.OverlapSphere(_cursorTarget.position, _hitRadius, _hitMask);
@@ -165,6 +161,6 @@ public class HammerCaster : MonoBehaviour
         if (!CubeSmasher.Infrastructure.ServiceLocator.Instance.TryGet(
                 out CubeSmasher.Infrastructure.AudioService audio)) return;
 
-        audio.PlaySfxWithJitter(CubeSmasher.UI.AudioClipLibrary.HammerHit, _hitPitchJitter);
+        audio.PlaySfxVaried(CubeSmasher.UI.AudioClipLibrary.HammerHit);
     }
 }

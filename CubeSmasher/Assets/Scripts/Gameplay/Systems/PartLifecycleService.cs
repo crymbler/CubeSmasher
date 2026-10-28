@@ -218,8 +218,9 @@ public class PartLifecycleService
         _stageModel.AddProgress(1);
 
         // Новые осколки уходят в систему гниения (если она включена)
-        _fractureSystem.ProcessFracture(
+        int fragments = _fractureSystem.ProcessFracture(
             destroyedPart, _stageModel.CurrentStage, HandlePartDestroyed, _onFragmentSpawned);
+        if (fragments > 0) PlaySplitSound();
 
         if (wasRootPart)
         {
@@ -245,5 +246,17 @@ public class PartLifecycleService
         {
             _pendingRespawns.Add(Time.time + RespawnDelay);
         }
+    }
+
+    /// <summary>
+    /// Звук раскола: один на разбитую деталь, а не на каждый осколок.
+    /// Иначе при 2–4 осколках звук бы утроился и слился в треск.
+    /// </summary>
+    private void PlaySplitSound()
+    {
+        if (!CubeSmasher.Infrastructure.ServiceLocator.Instance.TryGet(
+                out CubeSmasher.Infrastructure.AudioService audio)) return;
+
+        audio.PlaySfxVaried(CubeSmasher.UI.AudioClipLibrary.Split);
     }
 }

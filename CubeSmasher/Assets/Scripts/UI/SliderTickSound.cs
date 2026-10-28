@@ -20,9 +20,6 @@ namespace CubeSmasher.UI
         [Tooltip("Доля диапазона слайдера между тиками. 0.05 = 20 тиков на весь путь")]
         [SerializeField, Range(0.01f, 0.5f)] private float _step = 0.05f;
 
-        [Tooltip("Разброс питча на каждый тик")]
-        [SerializeField, Range(0f, 0.3f)] private float _pitchJitter = 0.08f;
-
         [SerializeField, Range(0f, 1f)] private float _volume = 0.6f;
 
         private Slider _slider;
@@ -67,7 +64,7 @@ namespace CubeSmasher.UI
             if (!CubeSmasher.Infrastructure.ServiceLocator.Instance.TryGet(
                     out CubeSmasher.Infrastructure.AudioService audio)) return;
 
-            audio.PlaySfxWithJitter(AudioClipLibrary.SliderTick, _pitchJitter, _volume);
+            audio.PlaySfxVaried(AudioClipLibrary.SliderTick, _volume);
         }
     }
 }

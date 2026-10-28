@@ -17,6 +17,7 @@ namespace CubeSmasher.UI
         public static AudioClip Click;
         public static AudioClip HammerHit;
         public static AudioClip Unlock;
+        public static AudioClip Split;
 
         private static AudioClip _sliderTick;
         public static AudioClip SliderTick => _sliderTick ??= SliderPlip.CreateClip();

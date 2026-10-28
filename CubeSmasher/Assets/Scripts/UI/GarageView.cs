@@ -368,7 +368,7 @@ public class GarageView : MonoBehaviour, IGarageView
         if (CubeSmasher.Infrastructure.ServiceLocator.Instance.TryGet(
                 out CubeSmasher.Infrastructure.AudioService audio))
         {
-            audio.PlaySfxWithJitter(clip, 0.05f);
+            audio.PlaySfxVaried(clip);
         }
         else
         {

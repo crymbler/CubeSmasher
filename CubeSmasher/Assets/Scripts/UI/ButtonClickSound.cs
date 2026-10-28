@@ -16,9 +16,6 @@ namespace CubeSmasher.UI
         [Tooltip("Пусто — берётся общий звук клика из AudioClipLibrary")]
         [SerializeField] private AudioClip _clip;
 
-        [Tooltip("Разброс питча: 0.05 даёт ±5% к высоте звука")]
-        [SerializeField, Range(0f, 0.3f)] private float _pitchJitter = 0.05f;
-
         private Button _button;
 
         private void Awake()
@@ -35,7 +32,7 @@ namespace CubeSmasher.UI
                     out CubeSmasher.Infrastructure.AudioService audio)) return;
 
             AudioClip clip = _clip != null ? _clip : AudioClipLibrary.Click;
-            audio.PlaySfxWithJitter(clip, _pitchJitter);
+            audio.PlaySfxVaried(clip);
         }
     }
 }

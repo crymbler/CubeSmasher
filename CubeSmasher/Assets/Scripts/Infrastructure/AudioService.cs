@@ -94,6 +94,20 @@ namespace CubeSmasher.Infrastructure
             PlaySfx(clip, volume, pitch);
         }
 
+        /// <summary>
+        /// Единый диапазон питча для всех повторяющихся звуков: 0.92–1.08.
+        /// Одинаковый клик, удар или раскол звучат чуть по-разному, но не уходят
+        /// в писк или бас.
+        /// </summary>
+        public const float PitchMin = 0.92f;
+        public const float PitchMax = 1.08f;
+
+        public void PlaySfxVaried(AudioClip clip, float volume = 1f)
+        {
+            float pitch = Random.Range(PitchMin, PitchMax);
+            PlaySfx(clip, volume, pitch);
+        }
+
         public void PlaySfx(AudioClip clip, float volume, float pitch)
         {
             if (clip == null || _sfxPool.Length == 0) return;

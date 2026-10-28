@@ -21,15 +21,18 @@ namespace CubeSmasher.Infrastructure.Initializers
         private readonly AudioClip _click;
         private readonly AudioClip _hammerHit;
         private readonly AudioClip _unlock;
+        private readonly AudioClip _split;
 
         public AudioInitializer(AudioMixer mixer, AudioClip music,
-                                AudioClip click, AudioClip hammerHit, AudioClip unlock)
+                                AudioClip click, AudioClip hammerHit, AudioClip unlock,
+                                AudioClip split)
         {
             _mixer = mixer;
             _music = music;
             _click = click;
             _hammerHit = hammerHit;
             _unlock = unlock;
+            _split = split;
         }
 
         public void Initialize()
@@ -42,6 +45,7 @@ namespace CubeSmasher.Infrastructure.Initializers
             AudioClipLibrary.Click = _click;
             AudioClipLibrary.HammerHit = _hammerHit;
             AudioClipLibrary.Unlock = _unlock;
+            AudioClipLibrary.Split = _split;
         }
     }
 }
