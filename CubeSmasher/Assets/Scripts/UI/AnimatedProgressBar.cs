@@ -27,6 +27,16 @@ public class AnimatedProgressBar : MonoBehaviour
     [Tooltip("Картинка, которая светлеет при наполнении. Пусто — Image заливки.")]
     [SerializeField] private Graphic _glow;
 
+    [Header("Блик и частицы")]
+    [Tooltip("Блик на кромке заливки (объект Shine из ProgressBar.prefab). Пусто — ищется по имени")]
+    [SerializeField] private RectTransform _shine;
+
+    [Tooltip("Частицы у кромки заливки во время роста. Выключается, если не нужно")]
+    [SerializeField] private bool _emitSparks = true;
+
+    [Tooltip("Частиц за один шаг роста (на каждый заметный прирост значения)")]
+    [SerializeField, Range(1, 20)] private int _sparksPerStep = 6;
+
     [Header("Анимация")]
     [SerializeField, Min(0.01f)] private float _fillDuration = 0.45f;
     [Tooltip("Насколько бар увеличивается в пике наполнения (0.06 = на 6%)")]
@@ -40,6 +50,8 @@ public class AnimatedProgressBar : MonoBehaviour
     private bool _glowBaseCaptured;
     private Vector3 _baseScale = Vector3.one;
     private Coroutine _routine;
+    private ParticleSystem _sparks;
+    private float _sparkAccumulated;
 
     /// <summary>Найти или добавить компонент на объект бара.</summary>
     public static AnimatedProgressBar For(Component barRoot)
@@ -70,6 +82,13 @@ public class AnimatedProgressBar : MonoBehaviour
         _initialized = true;
         if (_slider == null) _slider = GetComponent<Slider>();
         _baseScale = transform.localScale;
+
+        if (_shine == null)
+        {
+            Transform found = FindDeep(transform, "Shine");
+            if (found != null) _shine = found as RectTransform;
+        }
+        if (_shine != null) _shine.gameObject.SetActive(false);
     }
 
     private void OnDisable()
@@ -113,6 +132,8 @@ public class AnimatedProgressBar : MonoBehaviour
 
     private IEnumerator Animate(float from, float to)
     {
+        _lastEdge = -1f;
+        _sparkAccumulated = 0f;
         float t = 0f;
         while (t < 1f)
         {
@@ -120,7 +141,9 @@ public class AnimatedProgressBar : MonoBehaviour
             float k = Mathf.Clamp01(t);
             float eased = 1f - Mathf.Pow(1f - k, 3f); // быстрый старт, мягкая остановка
 
-            Apply(Mathf.Lerp(from, to, eased));
+            float current = Mathf.Lerp(from, to, eased);
+            Apply(current);
+            UpdateEdgeFx(current, from, to, k);
 
             // Пик эффекта в середине наполнения, к концу возвращается к норме
             float pulse = Mathf.Sin(k * Mathf.PI);
@@ -132,7 +155,112 @@ public class AnimatedProgressBar : MonoBehaviour
 
         Apply(to);
         ResetFx();
+        HideEdgeFx();
         _routine = null;
+    }
+
+    /// <summary>
+    /// Блик и искры на кромке заливки. Кромка — это точка anchorMax.x у заливки
+    /// (или конец Slider.fillRect). Блик показывается, пока заливка растёт,
+    /// искры вылетают при каждом заметном приросте, а не каждый кадр.
+    /// </summary>
+    private void UpdateEdgeFx(float current, float from, float to, float k)
+    {
+        RectTransform rt = EdgeRect();
+        if (rt == null) return;
+
+        if (_shine != null)
+        {
+            _shine.gameObject.SetActive(true);
+            // Блик — тонкая полоска шириной 8 px, центр которой стоит на кромке заливки.
+            // При нулевой ширине (anchorMin.x == anchorMax.x и sizeDelta.x == 0) он невидим.
+            _shine.anchorMin = new Vector2(current, _shine.anchorMin.y);
+            _shine.anchorMax = new Vector2(current, _shine.anchorMax.y);
+            _shine.pivot = new Vector2(0.5f, _shine.pivot.y);
+            _shine.sizeDelta = new Vector2(8f, _shine.sizeDelta.y);
+        }
+
+        if (!_emitSparks || to <= from) return;
+
+        // Искры копятся: вылетают пачкой каждые 2% прироста, а не на каждый кадр
+        _sparkAccumulated += (current - (_lastEdge < 0 ? from : _lastEdge));
+        _lastEdge = current;
+        if (_sparkAccumulated < 0.02f) return;
+        _sparkAccumulated = 0f;
+
+        EnsureSparks();
+        if (_sparks == null) return;
+
+        // Позиция кромки на экране: по локальным координатам RectTransform заливки
+        Rect r = rt.rect;
+        float x = Mathf.Lerp(r.xMin, r.xMax, current);
+        _sparks.transform.localPosition = new Vector3(x, 0f, 0f);
+        _sparks.Emit(_sparksPerStep);
+    }
+
+    private float _lastEdge = -1f;
+
+    private RectTransform EdgeRect()
+    {
+        if (_fill != null) return _fill.parent as RectTransform;
+        if (_slider != null && _slider.fillRect != null) return _slider.fillRect.parent as RectTransform;
+        return null;
+    }
+
+    private void HideEdgeFx()
+    {
+        if (_shine != null) _shine.gameObject.SetActive(false);
+        _sparkAccumulated = 0f;
+        _lastEdge = -1f;
+    }
+
+    /// <summary>
+    /// Создаёт систему частиц в коде: короткая вспышка неоново-зелёных искр
+    /// в цвете UITheme.NeonGreen. Префаб не нужен.
+    /// </summary>
+    private void EnsureSparks()
+    {
+        if (_sparks != null) return;
+
+        RectTransform rt = EdgeRect();
+        if (rt == null) return;
+
+        var go = new GameObject("EdgeSparks", typeof(RectTransform));
+        go.transform.SetParent(rt, false);
+        go.transform.localPosition = Vector3.zero;
+
+        _sparks = go.AddComponent<ParticleSystem>();
+        var main = _sparks.main;
+        main.loop = false;
+        main.playOnAwake = false;
+        main.useUnscaledTime = true;   // работает при паузе, как и анимация бара
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(0.25f, 0.45f);
+        main.startSpeed = new ParticleSystem.MinMaxCurve(20f, 60f);
+        main.startSize = new ParticleSystem.MinMaxCurve(2f, 4f);
+        main.startColor = CubeSmasher.UI.UITheme.NeonGreen;
+        main.gravityModifier = 0.3f;
+        main.maxParticles = 60;
+
+        var emission = _sparks.emission;
+        emission.enabled = false;   // только по Emit(), без постоянного потока
+
+        var shape = _sparks.shape;
+        shape.shapeType = ParticleSystemShapeType.Circle;
+        shape.radius = 2f;
+
+        var renderer = go.GetComponent<ParticleSystemRenderer>();
+        renderer.sharedMaterial = UnlockEffect.MakeMaterial(CubeSmasher.UI.UITheme.NeonGreen);
+        renderer.sortingOrder = 10;
+    }
+
+    private static Transform FindDeep(Transform root, string name)
+    {
+        foreach (Transform t in root.GetComponentsInChildren<Transform>(true))
+        {
+            if (t.name == name) return t;
+        }
+        return null;
     }
 
     private float CurrentShown()
