@@ -50,6 +50,13 @@ namespace CubeSmasher.Infrastructure.Initializers
             services.Register<IShopService>(shopModel);
             services.Register(shopModel); // презентеры магазина работают с конкретной моделью
 
+            // Скины: только если конфиг назначен. Без него детали красятся случайно, как раньше
+            if (_settings.Skins != null)
+            {
+                var skins = new SkinService(_settings.Skins, wallet, _saveService);
+                services.Register<ISkinService>(skins);
+            }
+
             var offlineEarnings = new OfflineEarningsService(wallet, passiveIncome);
             services.Register(offlineEarnings);
 

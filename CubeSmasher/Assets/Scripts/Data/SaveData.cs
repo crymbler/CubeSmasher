@@ -43,6 +43,18 @@ namespace YG
         public float soundVolume = 0.5f;
         public float musicVolume = 0.5f;
 
+        /// <summary>Твёрдая валюта (донат). Тратится только при включённом флаге в SkinConfig.</summary>
+        public int hardCurrency = 0;
+
+        /// <summary>Id выбранного скина. Пустая строка — скин не выбран.</summary>
+        public string selectedSkinId = "";
+
+        /// <summary>Купленные скины. Стартовый сюда не попадает, он доступен по флагу IsDefault.</summary>
+        public List<string> ownedSkins = new List<string>();
+
+        /// <summary>Стартовый скин и валюта выданы. Не даёт выдать повторно.</summary>
+        public bool skinGranted = false;
+
         // Твои списки. Мы будем использовать tapUpgrades для молота, 
         // а passiveUpgrades оставим для Гаража и деталей!
         public List<UpgradeData> passiveUpgrades = new List<UpgradeData>();

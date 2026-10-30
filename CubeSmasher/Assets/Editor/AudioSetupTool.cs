@@ -9,14 +9,14 @@ using CubeSmasher.UI;
 /// <summary>
 /// Tools > CubeSmasher > Setup Audio
 ///
-/// 1. Назначает звуки из Assets/Audio на Bootstrapper по именам файлов:
-///    BackgroundMusic -> _musicClip, Click -> _clickClip, HammerHit -> _hammerHitClip,
-///    Unlock -> _unlockClip. Split пока отсутствует: поле останется пустым, пока файл не добавлен
-///    (в Assets/Audio/Sounds/Split.mp3 или Split.wav).
-///    Поля, которые уже назначены вручную, не перезаписываются.
-/// 2. Ставит ButtonClickSound на все Button и SliderTickSound на все Slider
-///    в открытой сцене и во всех префабах. Повторный запуск ничего не дублирует.
-///    Кнопкам клип не назначается: они берут общий Click из AudioClipLibrary.
+/// Порядок важен: сначала префабы, потом сцена. Если сделать наоборот, компонент
+/// добавится в сцену как override поверх инстанса префаба, а потом ещё раз
+/// в сам префаб — и в Play Mode на одном объекте окажется два компонента.
+///
+/// Объекты, которые уже являются частью инстанса префаба, пропускаются:
+/// они получат компонент из самого префаба.
+///
+/// Отдельный проход снимает лишние копии, если они уже успели появиться.
 /// </summary>
 public static class AudioSetupTool
 {
@@ -26,40 +26,45 @@ public static class AudioSetupTool
     public static void Setup()
     {
         int assigned = AssignBootstrapperClips();
+        int buttons = 0, sliders = 0, removed = 0;
 
-        int buttons = 0, sliders = 0;
+        // 1. Префабы первыми: они источник компонентов для своих инстансов
+        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            GameObject root = PrefabUtility.LoadPrefabContents(path);
 
+            (int b, int s) = InstallIn(root);
+            removed += RemoveDuplicatesIn(root);
+
+            if (b > 0 || s > 0 || removed > 0)
+            {
+                PrefabUtility.SaveAsPrefabAsset(root, path);
+                buttons += b;
+                sliders += s;
+            }
+
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+
+        // 2. Сцена: только собственные объекты, не части инстансов
         Scene scene = SceneManager.GetActiveScene();
         if (scene.IsValid())
         {
             foreach (GameObject root in scene.GetRootGameObjects())
             {
                 (int b, int s) = InstallIn(root);
+                removed += RemoveDuplicatesIn(root);
                 buttons += b;
                 sliders += s;
             }
             EditorSceneManager.MarkSceneDirty(scene);
         }
 
-        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" }))
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            GameObject prefab = PrefabUtility.LoadPrefabContents(path);
-
-            (int b, int s) = InstallIn(prefab);
-            if (b > 0 || s > 0)
-            {
-                PrefabUtility.SaveAsPrefabAsset(prefab, path);
-                buttons += b;
-                sliders += s;
-            }
-
-            PrefabUtility.UnloadPrefabContents(prefab);
-        }
-
         AssetDatabase.SaveAssets();
         Debug.Log("[Audio] Готово. Клипов назначено: " + assigned +
-                  ", кнопок: " + buttons + ", слайдеров: " + sliders);
+                  ", кнопок: " + buttons + ", слайдеров: " + sliders +
+                  ", лишних компонентов снято: " + removed);
     }
 
     /// <summary>Находит Bootstrapper в открытой сцене и заполняет пустые поля клипами по имени файла.</summary>
@@ -118,28 +123,61 @@ public static class AudioSetupTool
         return null;
     }
 
+    /// <summary>
+    /// Ставит компоненты только на собственные объекты. Всё, что является частью
+    /// инстанса префаба (в префабе — вложенный префаб, в сцене — инстанс префаба),
+    /// пропускается: компонент придёт из самого префаба-источника.
+    /// </summary>
     private static (int buttons, int sliders) InstallIn(GameObject root)
     {
         int buttons = 0, sliders = 0;
 
         foreach (Button button in root.GetComponentsInChildren<Button>(true))
         {
-            if (button.GetComponent<ButtonClickSound>() == null)
-            {
-                button.gameObject.AddComponent<ButtonClickSound>();
-                buttons++;
-            }
+            if (PrefabUtility.IsPartOfPrefabInstance(button.gameObject)) continue;
+            if (button.GetComponent<ButtonClickSound>() != null) continue;
+
+            button.gameObject.AddComponent<ButtonClickSound>();
+            buttons++;
         }
 
         foreach (Slider slider in root.GetComponentsInChildren<Slider>(true))
         {
-            if (slider.GetComponent<SliderTickSound>() == null)
-            {
-                slider.gameObject.AddComponent<SliderTickSound>();
-                sliders++;
-            }
+            if (PrefabUtility.IsPartOfPrefabInstance(slider.gameObject)) continue;
+            if (slider.GetComponent<SliderTickSound>() != null) continue;
+
+            slider.gameObject.AddComponent<SliderTickSound>();
+            sliders++;
         }
 
         return (buttons, sliders);
+    }
+
+    /// <summary>Снимает лишние копии, оставляя по одному компоненту каждого типа.</summary>
+    private static int RemoveDuplicatesIn(GameObject root)
+    {
+        int removed = 0;
+
+        foreach (Transform t in root.GetComponentsInChildren<Transform>(true))
+        {
+            if (PrefabUtility.IsPartOfPrefabInstance(t.gameObject)) continue;
+
+            removed += RemoveExtras<ButtonClickSound>(t.gameObject);
+            removed += RemoveExtras<SliderTickSound>(t.gameObject);
+        }
+
+        return removed;
+    }
+
+    private static int RemoveExtras<T>(GameObject go) where T : Component
+    {
+        T[] found = go.GetComponents<T>();
+        if (found.Length <= 1) return 0;
+
+        for (int i = 1; i < found.Length; i++)
+        {
+            Object.DestroyImmediate(found[i]);
+        }
+        return found.Length - 1;
     }
 }

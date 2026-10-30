@@ -19,5 +19,8 @@ namespace CubeSmasher.Data.Configs
 
         [Tooltip("Машины гаража и их пассивный доход")]
         public GarageConfig Garage;
+
+        [Tooltip("Скины деталей и флаг твёрдой валюты. Пусто — скинов нет, детали красятся случайно")]
+        public SkinConfig Skins;
     }
 }
