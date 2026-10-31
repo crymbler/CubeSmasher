@@ -35,6 +35,27 @@ namespace CubeSmasher.UI.Skins
 
         private string _key;
 
+        /// <summary>
+        /// Заполнить ссылки на дочерние элементы. Нужно, когда слот собирается
+        /// кодом, а не берётся из префаба: поля приватные и сериализованные,
+        /// поэтому снаружи их не назначить напрямую.
+        /// </summary>
+        public void Bind(TextMeshProUGUI nameText, TextMeshProUGUI priceText,
+                         TextMeshProUGUI stateText, Button button, Image background)
+        {
+            _nameText = nameText;
+            _priceText = priceText;
+            _stateText = stateText;
+            _button = button;
+            _background = background;
+
+            if (_button != null)
+            {
+                _button.onClick.RemoveListener(RaiseClicked);
+                _button.onClick.AddListener(RaiseClicked);
+            }
+        }
+
         private void Awake()
         {
             if (_button != null) _button.onClick.AddListener(RaiseClicked);
@@ -63,7 +84,7 @@ namespace CubeSmasher.UI.Skins
 
                 case CosmeticSlotState.ForYan:
                     // Цена в янах приходит строкой из платформы: "25 YAN".
-                    // Пусто — товар ещё не загрузился, показываем название кнопки.
+                    // Пусто — товар ещё не загрузился, показываем просто "Купить".
                     price = string.IsNullOrEmpty(slot.YanPrice) ? string.Empty : slot.YanPrice;
                     state = string.IsNullOrEmpty(price)
                         ? UiText.Get("ui.buy")
@@ -108,7 +129,7 @@ namespace CubeSmasher.UI.Skins
 
         private void OnDestroy()
         {
-            if (_button != null) _button.onClick.RemoveAllListeners();
+            if (_button != null) _button.onClick.RemoveListener(RaiseClicked);
         }
     }
 }

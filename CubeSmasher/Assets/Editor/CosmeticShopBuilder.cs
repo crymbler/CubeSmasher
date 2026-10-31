@@ -19,6 +19,7 @@ using CubeSmasher.UI.Skins;
 public static class CosmeticShopBuilder
 {
     private const string UIFolder = "Assets/Prefabs/UI";
+    private const string FontPath = "Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset";
     private const string ShopPath = UIFolder + "/Cosmetic_Shop.prefab";
     private const string CoinSlotPath = UIFolder + "/CosmeticSlot_Coin.prefab";
     private const string PremiumSlotPath = UIFolder + "/CosmeticSlot_Premium.prefab";
@@ -28,11 +29,19 @@ public static class CosmeticShopBuilder
     {
         EnsureFolder();
 
-        GameObject coinSlot = BuildSlot(CoinSlotPath, false);
-        GameObject premiumSlot = BuildSlot(PremiumSlotPath, true);
+        // Без шрифта с кириллицей русские названия превращаются в квадраты
+        TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
+        if (font == null)
+        {
+            Debug.LogWarning("[CosmeticShop] Не найден шрифт " + FontPath +
+                             ". Русский текст не отрисуется.");
+        }
+
+        GameObject coinSlot = BuildSlot(CoinSlotPath, false, font);
+        GameObject premiumSlot = BuildSlot(PremiumSlotPath, true, font);
 
         GameObject root = BuildScreen(coinSlot.GetComponent<CosmeticSlotView>(),
-                                      premiumSlot.GetComponent<CosmeticSlotView>());
+                                      premiumSlot.GetComponent<CosmeticSlotView>(), font);
 
         PrefabUtility.SaveAsPrefabAsset(root, ShopPath);
         Object.DestroyImmediate(root);
@@ -52,7 +61,8 @@ public static class CosmeticShopBuilder
         if (!AssetDatabase.IsValidFolder(UIFolder)) AssetDatabase.CreateFolder("Assets/Prefabs", "UI");
     }
 
-    private static GameObject BuildScreen(CosmeticSlotView coinSlot, CosmeticSlotView premiumSlot)
+    private static GameObject BuildScreen(CosmeticSlotView coinSlot, CosmeticSlotView premiumSlot,
+                                          TMP_FontAsset font)
     {
         var root = NewUI("Cosmetic_Shop", null);
         var rootRect = (RectTransform)root.transform;
@@ -96,6 +106,7 @@ public static class CosmeticShopBuilder
 
         // Ссылки в компонент экрана
         var so = new SerializedObject(view);
+        so.FindProperty("_font").objectReferenceValue = font;
         so.FindProperty("_groupsContainer").objectReferenceValue = content;
         so.FindProperty("_closeButton").objectReferenceValue = close;
         so.FindProperty("_coinSlotPrefab").objectReferenceValue = coinSlot;
@@ -112,7 +123,7 @@ public static class CosmeticShopBuilder
     }
 
     /// <summary>Слот: фон, название, цена, состояние, кнопка на весь слот.</summary>
-    private static GameObject BuildSlot(string path, bool premium)
+    private static GameObject BuildSlot(string path, bool premium, TMP_FontAsset font)
     {
         var root = NewUI(premium ? "CosmeticSlot_Premium" : "CosmeticSlot_Coin", null);
         var rect = (RectTransform)root.transform;
@@ -192,7 +203,29 @@ public static class CosmeticShopBuilder
         tmp.color = color;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.raycastTarget = false;
+
+        // Шрифт с кириллицей. Ищем один раз на сборку
+        TMP_FontAsset font = GetFont();
+        if (font != null) tmp.font = font;
+
         return tmp;
+    }
+
+    private static TMP_FontAsset _cachedFont;
+    private static bool _fontLookedUp;
+
+    private static TMP_FontAsset GetFont()
+    {
+        if (_fontLookedUp) return _cachedFont;
+
+        _fontLookedUp = true;
+        _cachedFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
+
+        if (_cachedFont == null)
+        {
+            Debug.LogWarning("[CosmeticShop] Не найден шрифт " + FontPath + ": кириллица не отрисуется.");
+        }
+        return _cachedFont;
     }
 
     private static Button NewButton(Transform parent, string name, string label)

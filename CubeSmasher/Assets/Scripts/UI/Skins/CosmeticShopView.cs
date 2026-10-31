@@ -11,14 +11,13 @@ namespace CubeSmasher.UI.Skins
     /// Вёрстка по макету: группы идут списком, в каждой три слота —
     /// два маленьких за монеты и один крупный премиальный. Внутри группы:
     /// премиальный слот занимает колонку на всю высоту, два обычных делят
-    /// вторую колонку пополам. Сторона премиального задаётся флагом,
-    /// поэтому группу можно зеркалить как на картинке.
+    /// вторую колонку пополам.
     ///
-    /// Высоты задаются здесь числами, а не берутся из префабов. Причина:
-    /// когда высотой управляет VerticalLayoutGroup с childControlHeight,
-    /// он спрашивает у ребёнка preferredHeight, а у слота без LayoutElement
-    /// он равен нулю — слоты схлопывались в пиксель. Теперь размеры
-    /// выставляются явно через LayoutElement на каждом уровне.
+    /// Высоты заданы явно через LayoutElement, ContentSizeFitter стоит только
+    /// на контейнере групп. Причина: когда VerticalLayoutGroup с
+    /// childControlHeight управляет детьми, а на ребёнке ещё и ContentSizeFitter,
+    /// они пересчитывают друг друга и высота уходит в ноль. Здесь каждый уровень
+    /// объявляет свою высоту числом, и спорить не о чем.
     /// </summary>
     public class CosmeticShopView : MonoBehaviour, ICosmeticShopView
     {
@@ -28,19 +27,24 @@ namespace CubeSmasher.UI.Skins
         [SerializeField] private GameObject[] _hideWhileOpen;
 
         [Header("Префабы слотов")]
-        [Tooltip("Маленький слот за монеты")]
+        [Tooltip("Маленький слот за монеты. Пусто — слот соберётся кодом")]
         [SerializeField] private CosmeticSlotView _coinSlotPrefab;
-        [Tooltip("Крупный премиальный слот за яны")]
+        [Tooltip("Крупный премиальный слот за яны. Пусто — используется слот за монеты")]
         [SerializeField] private CosmeticSlotView _premiumSlotPrefab;
 
+        [Header("Шрифт")]
+        [Tooltip("Шрифт с кириллицей. Пусто — берётся Franklin из References, " +
+                 "а если его нет, TMP сам подставит свой")]
+        [SerializeField] private TMP_FontAsset _font;
+
         [Header("Раскладка")]
-        [Tooltip("Высота крупного премиального слота. Она же высота всей группы со слотами")]
+        [Tooltip("Высота крупного премиального слота. Она же высота ряда со слотами")]
         [SerializeField, Min(120f)] private float _premiumSlotHeight = 420f;
-        [Tooltip("Высота заголовка группы")]
+        [Tooltip("Высота заголовка группы. 0 — без заголовков")]
         [SerializeField, Min(0f)] private float _titleHeight = 64f;
         [Tooltip("Расстояние между группами")]
         [SerializeField] private float _groupSpacing = 32f;
-        [Tooltip("Расстояние между слотами внутри группы")]
+        [Tooltip("Расстояние между заголовком и слотами, и между слотами в колонке")]
         [SerializeField] private float _slotSpacing = 16f;
         [Tooltip("Доля ширины ряда, которую занимает премиальная колонка")]
         [SerializeField, Range(0.3f, 0.7f)] private float _premiumShare = 0.55f;
@@ -48,8 +52,6 @@ namespace CubeSmasher.UI.Skins
         [SerializeField] private bool _premiumOnRight = true;
 
         [Header("Заголовок группы")]
-        [Tooltip("Создать заголовок кодом, если префаб не назначен")]
-        [SerializeField] private bool _buildTitleInCode = true;
         [SerializeField] private float _titleFontSize = 44f;
 
         public event System.Action<string> SlotClicked;
@@ -68,6 +70,27 @@ namespace CubeSmasher.UI.Skins
         {
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
         }
+
+        /// <summary>
+        /// Шрифт для текста, созданного кодом. В инспекторе задаётся шрифт
+        /// с кириллицей (Franklin из References). Если поле пустое, берётся
+        /// дефолтный шрифт TMP: он без кириллицы, и русский текст превратится
+        /// в квадраты — поэтому шрифт лучше назначать.
+        /// </summary>
+        private TMP_FontAsset ResolveFont()
+        {
+            if (_font != null) return _font;
+
+            if (_fontWarned) return null;
+            _fontWarned = true;
+
+            Debug.LogWarning("[CosmeticShop] Не назначен шрифт с кириллицей (_font). " +
+                             "Русские названия групп и слотов не отрисуются. " +
+                             "Назначьте Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset");
+            return null;
+        }
+
+        private bool _fontWarned;
 
         public void Open()
         {
@@ -109,40 +132,33 @@ namespace CubeSmasher.UI.Skins
         private GroupUi CreateGroup(CosmeticGroupData group)
         {
             Transform parent = _groupsContainer != null ? _groupsContainer : transform;
+            float rowHeight = Mathf.Max(120f, _premiumSlotHeight);
 
+            float groupHeight = rowHeight + _slotSpacing;
+            if (_titleHeight > 0f) groupHeight += _titleHeight;
+
+            // --- Группа ---
             var root = new GameObject("Group_" + group.GroupId, typeof(RectTransform));
             root.transform.SetParent(parent, false);
 
-            var rootRect = (RectTransform)root.transform;
-            rootRect.anchorMin = new Vector2(0f, 1f);
-            rootRect.anchorMax = new Vector2(1f, 1f);
-            rootRect.pivot = new Vector2(0.5f, 1f);
-
             var rootLayout = root.AddComponent<VerticalLayoutGroup>();
-            rootLayout.spacing = _groupSpacing;
+            rootLayout.spacing = _slotSpacing;
+            rootLayout.padding = new RectOffset(0, 0, 0, 0);
             rootLayout.childControlHeight = true;
             rootLayout.childControlWidth = true;
             rootLayout.childForceExpandHeight = false;
             rootLayout.childForceExpandWidth = true;
             rootLayout.childAlignment = TextAnchor.UpperCenter;
 
-            float rowHeight = Mathf.Max(120f, _premiumSlotHeight);
-            float groupHeight = rowHeight + (_titleHeight > 0f ? _titleHeight + _groupSpacing : 0f);
-
+            // Высота объявлена числом: родитель (контейнер групп) её прочитает
             var rootElement = root.AddComponent<LayoutElement>();
             rootElement.preferredHeight = groupHeight;
             rootElement.minHeight = groupHeight;
+            rootElement.flexibleWidth = 1f;
 
-            var fitter = root.AddComponent<ContentSizeFitter>();
-            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            if (_titleHeight > 0f) CreateTitle(group.Title, root.transform);
 
-            // Заголовок группы
-            if (_titleHeight > 0f)
-            {
-                CreateTitle(group.Title, root.transform);
-            }
-
-            // Ряд со слотами
+            // --- Ряд со слотами ---
             var row = new GameObject("Slots", typeof(RectTransform));
             row.transform.SetParent(root.transform, false);
 
@@ -152,7 +168,7 @@ namespace CubeSmasher.UI.Skins
             rowLayout.childControlHeight = true;
             rowLayout.childForceExpandWidth = true;
             rowLayout.childForceExpandHeight = true;
-            rowLayout.childAlignment = TextAnchor.UpperCenter;
+            rowLayout.childAlignment = TextAnchor.MiddleCenter;
 
             var rowElement = row.AddComponent<LayoutElement>();
             rowElement.preferredHeight = rowHeight;
@@ -172,8 +188,8 @@ namespace CubeSmasher.UI.Skins
                 else coins.Add(slots[i]);
             }
 
-            GameObject coinColumn = CreateColumn(row.transform, "CoinColumn");
-            GameObject premiumColumn = CreateColumn(row.transform, "PremiumColumn");
+            GameObject coinColumn = CreateColumn(row.transform, "CoinColumn", rowHeight, 1f - _premiumShare);
+            GameObject premiumColumn = CreateColumn(row.transform, "PremiumColumn", rowHeight, _premiumShare);
 
             // Порядок в ряду задаёт сторону премиального слота
             if (_premiumOnRight)
@@ -186,12 +202,6 @@ namespace CubeSmasher.UI.Skins
                 premiumColumn.transform.SetSiblingIndex(0);
                 coinColumn.transform.SetSiblingIndex(1);
             }
-
-            SetColumnWidth(premiumColumn, _premiumShare);
-            SetColumnWidth(coinColumn, 1f - _premiumShare);
-
-            SetColumnHeight(coinColumn, rowHeight);
-            SetColumnHeight(premiumColumn, rowHeight);
 
             var created = new List<CosmeticSlotView>();
 
@@ -211,20 +221,21 @@ namespace CubeSmasher.UI.Skins
             return new GroupUi { Root = root, Slots = created.ToArray() };
         }
 
-        /// <summary>Заголовок группы: готовый префаб или простой текст, созданный кодом.</summary>
         private void CreateTitle(string text, Transform parent)
         {
-            if (!_buildTitleInCode) return;
-
             var go = new GameObject("Title", typeof(RectTransform));
             go.transform.SetParent(parent, false);
 
             var label = go.AddComponent<TextMeshProUGUI>();
             label.text = text;
             label.fontSize = _titleFontSize;
+            label.fontStyle = FontStyles.Bold;
             label.color = UITheme.NeonGreen;
             label.alignment = TextAlignmentOptions.Left;
             label.raycastTarget = false;
+
+            TMP_FontAsset font = ResolveFont();
+            if (font != null) label.font = font;
 
             var element = go.AddComponent<LayoutElement>();
             element.preferredHeight = _titleHeight;
@@ -234,18 +245,24 @@ namespace CubeSmasher.UI.Skins
 
         private CosmeticSlotView CreateSlot(CosmeticSlotData data, CosmeticSlotView prefab, Transform parent)
         {
-            if (prefab == null)
+            CosmeticSlotView view;
+
+            if (prefab != null)
             {
-                Debug.LogWarning("[CosmeticShop] Не назначен префаб слота: магазин будет пустым.");
-                return null;
+                view = Instantiate(prefab, parent);
+            }
+            else
+            {
+                // Префаб не назначен: собираем слот кодом, чтобы магазин всё равно работал
+                view = BuildSlotInCode(parent);
             }
 
-            CosmeticSlotView view = Instantiate(prefab, parent);
+            if (view == null) return null;
+
             view.Initialize(SlotKey(data));
             view.Clicked += HandleSlotClicked;
 
-            // Слоты делят высоту колонки: у слота нет своей preferredHeight,
-            // он растягивается на всё, что дал родитель
+            // Слот делит высоту колонки: своей preferredHeight у него нет
             var element = view.GetComponent<LayoutElement>();
             if (element == null) element = view.gameObject.AddComponent<LayoutElement>();
             element.flexibleHeight = 1f;
@@ -258,7 +275,63 @@ namespace CubeSmasher.UI.Skins
             return view;
         }
 
-        private static GameObject CreateColumn(Transform parent, string name)
+        /// <summary>Запасной слот: используется, если префаб не назначен в инспекторе.</summary>
+        private CosmeticSlotView BuildSlotInCode(Transform parent)
+        {
+            var go = new GameObject("Slot", typeof(RectTransform));
+            go.transform.SetParent(parent, false);
+
+            var background = go.AddComponent<Image>();
+            background.color = new Color(0.36f, 0.55f, 0.22f);
+
+            var button = go.AddComponent<Button>();
+            button.targetGraphic = background;
+
+            TextMeshProUGUI name = BuildLabel(go.transform, "Name", 30f, TextAlignmentOptions.Top);
+            TextMeshProUGUI price = BuildLabel(go.transform, "Price", 36f, TextAlignmentOptions.Center);
+            TextMeshProUGUI state = BuildLabel(go.transform, "State", 28f, TextAlignmentOptions.Bottom);
+
+            var nameRect = (RectTransform)name.transform;
+            nameRect.anchorMin = new Vector2(0f, 0.62f);
+            nameRect.anchorMax = new Vector2(1f, 1f);
+            nameRect.offsetMin = new Vector2(12f, 0f);
+            nameRect.offsetMax = new Vector2(-12f, -8f);
+
+            var priceRect = (RectTransform)price.transform;
+            priceRect.anchorMin = new Vector2(0f, 0.3f);
+            priceRect.anchorMax = new Vector2(1f, 0.62f);
+            priceRect.offsetMin = new Vector2(12f, 0f);
+            priceRect.offsetMax = new Vector2(-12f, 0f);
+
+            var stateRect = (RectTransform)state.transform;
+            stateRect.anchorMin = new Vector2(0f, 0f);
+            stateRect.anchorMax = new Vector2(1f, 0.3f);
+            stateRect.offsetMin = new Vector2(12f, 8f);
+            stateRect.offsetMax = new Vector2(-12f, 0f);
+
+            var view = go.AddComponent<CosmeticSlotView>();
+            view.Bind(name, price, state, button, background);
+            return view;
+        }
+
+        private TextMeshProUGUI BuildLabel(Transform parent, string name, float size, TextAlignmentOptions align)
+        {
+            var go = new GameObject(name, typeof(RectTransform));
+            go.transform.SetParent(parent, false);
+
+            var label = go.AddComponent<TextMeshProUGUI>();
+            label.fontSize = size;
+            label.color = Color.white;
+            label.alignment = align;
+            label.raycastTarget = false;
+
+            TMP_FontAsset font = ResolveFont();
+            if (font != null) label.font = font;
+
+            return label;
+        }
+
+        private static GameObject CreateColumn(Transform parent, string name, float height, float widthShare)
         {
             var go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
@@ -271,25 +344,13 @@ namespace CubeSmasher.UI.Skins
             layout.childForceExpandWidth = true;
             layout.childAlignment = TextAnchor.UpperCenter;
 
-            go.AddComponent<LayoutElement>();
-            return go;
-        }
-
-        private static void SetColumnWidth(GameObject column, float share)
-        {
-            var element = column.GetComponent<LayoutElement>();
-            if (element == null) element = column.AddComponent<LayoutElement>();
-            element.flexibleWidth = share;
-            element.minWidth = 0f;
-        }
-
-        private static void SetColumnHeight(GameObject column, float height)
-        {
-            var element = column.GetComponent<LayoutElement>();
-            if (element == null) element = column.AddComponent<LayoutElement>();
+            var element = go.AddComponent<LayoutElement>();
             element.preferredHeight = height;
             element.minHeight = height;
             element.flexibleHeight = 1f;
+            element.flexibleWidth = widthShare;
+
+            return go;
         }
 
         private void HandleSlotClicked(string key) => SlotClicked?.Invoke(key);
