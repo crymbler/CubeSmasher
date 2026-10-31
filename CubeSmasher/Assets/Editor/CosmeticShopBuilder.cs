@@ -95,19 +95,24 @@ public static class CosmeticShopBuilder
         // расставляет группы сам, отступами и высотами
         ScrollRect scroll = NewScroll(root.transform, "Scroll", out RectTransform content);
 
-        // Ссылки в компонент экрана
-        var so = new SerializedObject(view);
-        so.FindProperty("_font").objectReferenceValue = font;
-        so.FindProperty("_groupsContainer").objectReferenceValue = content;
-        so.FindProperty("_closeButton").objectReferenceValue = close;
-        so.FindProperty("_coinSlotPrefab").objectReferenceValue = coinSlot;
-        so.FindProperty("_premiumSlotPrefab").objectReferenceValue = premiumSlot;
-        so.FindProperty("_groupSpacing").floatValue = 32f;
-        so.FindProperty("_slotSpacing").floatValue = 16f;
-        so.FindProperty("_premiumSlotHeight").floatValue = 420f;
-        so.FindProperty("_titleHeight").floatValue = 64f;
-        so.FindProperty("_premiumOnRight").boolValue = true;
-        so.FindProperty("_buildTitleInCode").boolValue = true;
+        // Ссылки и значения в компонент экрана. Через SetObject/SetFloat/SetBool:
+        // FindProperty возвращает null, если поле переименовали или удалили,
+        // и прямое обращение к .objectReferenceValue падает NullReferenceException
+        SetObject(so, "_font", font);
+        SetObject(so, "_groupsContainer", content);
+        SetObject(so, "_closeButton", close);
+        SetObject(so, "_coinSlotPrefab", coinSlot);
+        SetObject(so, "_premiumSlotPrefab", premiumSlot);
+
+        SetFloat(so, "_premiumSlotHeight", 420f);
+        SetFloat(so, "_titleHeight", 72f);
+        SetFloat(so, "_groupSpacing", 40f);
+        SetFloat(so, "_slotSpacing", 16f);
+        SetFloat(so, "_contentPadding", 8f);
+        SetFloat(so, "_titleFontSize", 44f);
+        SetFloat(so, "_premiumShare", 0.55f);
+        SetBool(so, "_premiumOnRight", true);
+
         so.ApplyModifiedPropertiesWithoutUndo();
 
         return root;
@@ -165,12 +170,12 @@ public static class CosmeticShopBuilder
         stateRect.offsetMax = new Vector2(-20f, 80f);
 
         var so = new SerializedObject(view);
-        so.FindProperty("_nameText").objectReferenceValue = name;
-        so.FindProperty("_priceText").objectReferenceValue = price;
-        so.FindProperty("_stateText").objectReferenceValue = state;
-        so.FindProperty("_button").objectReferenceValue = button;
-        so.FindProperty("_background").objectReferenceValue = background;
-        so.FindProperty("_premiumBadge").objectReferenceValue = null;
+        SetObject(so, "_nameText", name);
+        SetObject(so, "_priceText", price);
+        SetObject(so, "_stateText", state);
+        SetObject(so, "_button", button);
+        SetObject(so, "_background", background);
+        SetObject(so, "_premiumBadge", null);
         so.ApplyModifiedPropertiesWithoutUndo();
 
         GameObject asset = PrefabUtility.SaveAsPrefabAsset(root, path);
@@ -272,6 +277,36 @@ public static class CosmeticShopBuilder
         content = contentRect;
         return scroll;
     }
+
+    /// <summary>
+    /// Записать значение в сериализованное поле по имени. FindProperty возвращает null,
+    /// если поле переименовали или удалили: без проверки сборщик падал
+    /// NullReferenceException на строке с boolValue.
+    /// </summary>
+    private static void SetFloat(SerializedObject so, string field, float value)
+    {
+        SerializedProperty prop = so.FindProperty(field);
+        if (prop == null) { WarnMissing(field); return; }
+        prop.floatValue = value;
+    }
+
+    private static void SetBool(SerializedObject so, string field, bool value)
+    {
+        SerializedProperty prop = so.FindProperty(field);
+        if (prop == null) { WarnMissing(field); return; }
+        prop.boolValue = value;
+    }
+
+    private static void SetObject(SerializedObject so, string field, Object value)
+    {
+        SerializedProperty prop = so.FindProperty(field);
+        if (prop == null) { WarnMissing(field); return; }
+        prop.objectReferenceValue = value;
+    }
+
+    private static void WarnMissing(string field) =>
+        Debug.LogWarning("[CosmeticShop] В CosmeticShopView нет поля " + field +
+                         ": значение пропущено. Поле переименовали?");
 
     private static void Stretch(RectTransform rt)
     {

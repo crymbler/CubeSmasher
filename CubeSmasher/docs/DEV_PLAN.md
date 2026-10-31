@@ -303,6 +303,13 @@
 - **Локализация.** Ключей `skins.*`, `shop.buy_coins`, `shop.buy_yan`, `hammer.*`, `dish.*` не было в таблице `UI` — отсюда «No translation found for 'shop.buy_coins'». Ключи добавлены в `Localisation/UI Shared Data.asset` и во все три локали (`UI_ru`, `UI_en`, `UI_tr`), id совпадают.
 - **`CSV` больше не источник правды.** `docs/localization/UI_new_keys.csv` — только выгрузка для чтения. Правки нужно вносить в таблицу `UI` в редакторе, иначе расходится с ассетами.
 
+### 28.10.2026, сборщик магазина падал на удалённом поле
+
+- **Симптом:** `NullReferenceException` в `CosmeticShopBuilder.BuildScreen`, строка 110.
+- **Причина:** строка 110 — `so.FindProperty("_buildTitleInCode").boolValue`. При переписывании раскладки я убрал поле `_buildTitleInCode` из `CosmeticShopView`, но сборщик продолжал к нему обращаться. `FindProperty` вернул `null`, обращение к `.boolValue` уронило инструмент.
+- **Исправлено:** все записи в сериализованные поля идут через `SetFloat` / `SetBool` / `SetObject`. Если поля нет — в Console уходит предупреждение с его именем, сборка продолжается.
+- **Проверено:** списки полей `CosmeticShopView` и `CosmeticSlotView` сверены с тем, что пишет сборщик. Лишних обращений нет.
+
 ### Следующие шаги
 
 1. K4, прокачка кубов и спавна (`RespawnDelay`, `MaxPartsPerWave`, `StatNameKey`).
