@@ -126,6 +126,62 @@ MonoBehaviour:
     m_Localized: Spor
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430413
+    m_Localized: "KAPLAMALAR"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430414
+    m_Localized: "\u00C7EK\u0130\u00C7LER"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430415
+    m_Localized: "TABAKLAR"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430416
+    m_Localized: "Ku\u015Fan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430417
+    m_Localized: "Ku\u015Fan\u0131ld\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430418
+    m_Localized: "Kullan\u0131lamaz"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430419
+    m_Localized: "{0} kar\u015F\u0131l\u0131\u011F\u0131 al"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430420
+    m_Localized: "{0} kar\u015F\u0131l\u0131\u011F\u0131 al"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430421
+    m_Localized: "S\u0131radan \u00E7eki\u00E7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430422
+    m_Localized: "A\u011F\u0131r \u00E7eki\u00E7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430423
+    m_Localized: "Neon \u00E7eki\u00E7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430424
+    m_Localized: "S\u0131radan tabak"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430425
+    m_Localized: "Mavi tabak"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430426
+    m_Localized: "Neon tabak"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

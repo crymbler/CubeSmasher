@@ -91,18 +91,9 @@ public static class CosmeticShopBuilder
         closeRect.anchoredPosition = new Vector2(-40f, -40f);
         closeRect.sizeDelta = new Vector2(96f, 96f);
 
-        // Скролл со списком групп
-        ScrollRect scroll = NewScroll(root.transform, "Scroll", out Transform content);
-
-        var layout = content.gameObject.AddComponent<VerticalLayoutGroup>();
-        layout.spacing = 24f;
-        layout.childControlHeight = false;
-        layout.childControlWidth = true;
-        layout.childForceExpandHeight = false;
-        layout.childForceExpandWidth = true;
-
-        var fitter = content.gameObject.AddComponent<ContentSizeFitter>();
-        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        // Скролл со списком групп. Никаких LayoutGroup в контенте: магазин
+        // расставляет группы сам, отступами и высотами
+        ScrollRect scroll = NewScroll(root.transform, "Scroll", out RectTransform content);
 
         // Ссылки в компонент экрана
         var so = new SerializedObject(view);
@@ -243,7 +234,7 @@ public static class CosmeticShopBuilder
         return button;
     }
 
-    private static ScrollRect NewScroll(Transform parent, string name, out Transform content)
+    private static ScrollRect NewScroll(Transform parent, string name, out RectTransform content)
     {
         GameObject go = NewUI(name, parent);
         var rootRect = (RectTransform)go.transform;
@@ -257,9 +248,11 @@ public static class CosmeticShopBuilder
         GameObject viewport = NewUI("Viewport", go.transform);
         var viewportRect = (RectTransform)viewport.transform;
         Stretch(viewportRect);
-        var mask = viewport.AddComponent<Image>();
-        mask.color = new Color(0f, 0f, 0f, 0.001f);
-        viewport.AddComponent<Mask>().showMaskGraphic = false;
+
+        // RectMask2D вместо Mask с почти прозрачной картинкой: Mask работает
+        // через стенсил и требует отрисовки графики, из-за чего содержимое
+        // могло не показываться вовсе. RectMask2D просто обрезает по прямоугольнику.
+        viewport.AddComponent<RectMask2D>();
 
         GameObject contentGo = NewUI("Content", viewport.transform);
         var contentRect = (RectTransform)contentGo.transform;
@@ -276,7 +269,7 @@ public static class CosmeticShopBuilder
         scroll.movementType = ScrollRect.MovementType.Elastic;
         scroll.scrollSensitivity = 30f;
 
-        content = contentGo.transform;
+        content = contentRect;
         return scroll;
     }
 

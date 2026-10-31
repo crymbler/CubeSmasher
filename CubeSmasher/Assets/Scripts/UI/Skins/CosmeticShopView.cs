@@ -8,21 +8,19 @@ namespace CubeSmasher.UI.Skins
     /// <summary>
     /// Экран магазина косметики.
     ///
-    /// Вёрстка по макету: группы идут списком, в каждой три слота —
-    /// два маленьких за монеты и один крупный премиальный. Внутри группы:
-    /// премиальный слот занимает колонку на всю высоту, два обычных делят
-    /// вторую колонку пополам.
+    /// Вёрстка по макету: группы идут списком, в каждой три слота — два маленьких
+    /// за монеты и один крупный премиальный.
     ///
-    /// Высоты заданы явно через LayoutElement, ContentSizeFitter стоит только
-    /// на контейнере групп. Причина: когда VerticalLayoutGroup с
-    /// childControlHeight управляет детьми, а на ребёнке ещё и ContentSizeFitter,
-    /// они пересчитывают друг друга и высота уходит в ноль. Здесь каждый уровень
-    /// объявляет свою высоту числом, и спорить не о чем.
+    /// Позиции и размеры считаются здесь числами и ставятся прямо в RectTransform.
+    /// Никаких LayoutGroup и ContentSizeFitter внутри экрана: при вложенных
+    /// группах с childControlHeight они пересчитывают друг друга, и высота детей
+    /// уходит в ноль — слоты получаются размером в пиксель. Ручная раскладка
+    /// предсказуема: что посчитали, то и стоит.
     /// </summary>
     public class CosmeticShopView : MonoBehaviour, ICosmeticShopView
     {
         [Header("Каркас")]
-        [SerializeField] private Transform _groupsContainer;
+        [SerializeField] private RectTransform _groupsContainer;
         [SerializeField] private Button _closeButton;
         [SerializeField] private GameObject[] _hideWhileOpen;
 
@@ -33,23 +31,24 @@ namespace CubeSmasher.UI.Skins
         [SerializeField] private CosmeticSlotView _premiumSlotPrefab;
 
         [Header("Шрифт")]
-        [Tooltip("Шрифт с кириллицей. Пусто — берётся Franklin из References, " +
-                 "а если его нет, TMP сам подставит свой")]
+        [Tooltip("Шрифт с кириллицей: Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset")]
         [SerializeField] private TMP_FontAsset _font;
 
-        [Header("Раскладка")]
+        [Header("Размеры")]
         [Tooltip("Высота крупного премиального слота. Она же высота ряда со слотами")]
-        [SerializeField, Min(120f)] private float _premiumSlotHeight = 420f;
+        [SerializeField, Min(160f)] private float _premiumSlotHeight = 420f;
         [Tooltip("Высота заголовка группы. 0 — без заголовков")]
-        [SerializeField, Min(0f)] private float _titleHeight = 64f;
+        [SerializeField, Min(0f)] private float _titleHeight = 72f;
         [Tooltip("Расстояние между группами")]
-        [SerializeField] private float _groupSpacing = 32f;
-        [Tooltip("Расстояние между заголовком и слотами, и между слотами в колонке")]
+        [SerializeField] private float _groupSpacing = 40f;
+        [Tooltip("Зазор между слотами и между заголовком и слотами")]
         [SerializeField] private float _slotSpacing = 16f;
         [Tooltip("Доля ширины ряда, которую занимает премиальная колонка")]
         [SerializeField, Range(0.3f, 0.7f)] private float _premiumShare = 0.55f;
         [Tooltip("С какой стороны крупный премиальный слот: true — справа")]
         [SerializeField] private bool _premiumOnRight = true;
+        [Tooltip("Отступ по краям контента")]
+        [SerializeField] private float _contentPadding = 8f;
 
         [Header("Заголовок группы")]
         [SerializeField] private float _titleFontSize = 44f;
@@ -59,6 +58,9 @@ namespace CubeSmasher.UI.Skins
 
         private readonly Dictionary<string, GroupUi> _groups = new Dictionary<string, GroupUi>();
         private readonly Dictionary<string, CosmeticSlotView> _slots = new Dictionary<string, CosmeticSlotView>();
+
+        private float _contentHeight;
+        private bool _fontWarned;
 
         private class GroupUi
         {
@@ -70,27 +72,6 @@ namespace CubeSmasher.UI.Skins
         {
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
         }
-
-        /// <summary>
-        /// Шрифт для текста, созданного кодом. В инспекторе задаётся шрифт
-        /// с кириллицей (Franklin из References). Если поле пустое, берётся
-        /// дефолтный шрифт TMP: он без кириллицы, и русский текст превратится
-        /// в квадраты — поэтому шрифт лучше назначать.
-        /// </summary>
-        private TMP_FontAsset ResolveFont()
-        {
-            if (_font != null) return _font;
-
-            if (_fontWarned) return null;
-            _fontWarned = true;
-
-            Debug.LogWarning("[CosmeticShop] Не назначен шрифт с кириллицей (_font). " +
-                             "Русские названия групп и слотов не отрисуются. " +
-                             "Назначьте Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset");
-            return null;
-        }
-
-        private bool _fontWarned;
 
         public void Open()
         {
@@ -111,6 +92,7 @@ namespace CubeSmasher.UI.Skins
             {
                 ui = CreateGroup(group);
                 _groups[group.GroupId] = ui;
+                UpdateContentHeight();
             }
 
             if (ui.Slots == null) return;
@@ -132,101 +114,86 @@ namespace CubeSmasher.UI.Skins
         private GroupUi CreateGroup(CosmeticGroupData group)
         {
             Transform parent = _groupsContainer != null ? _groupsContainer : transform;
-            float rowHeight = Mathf.Max(120f, _premiumSlotHeight);
 
-            float groupHeight = rowHeight + _slotSpacing;
-            if (_titleHeight > 0f) groupHeight += _titleHeight;
+            float rowHeight = Mathf.Max(160f, _premiumSlotHeight);
+            float titleHeight = Mathf.Max(0f, _titleHeight);
+            float titleBlock = titleHeight > 0f ? titleHeight + _slotSpacing : 0f;
+            float groupHeight = titleBlock + rowHeight;
 
-            // --- Группа ---
-            var root = new GameObject("Group_" + group.GroupId, typeof(RectTransform));
-            root.transform.SetParent(parent, false);
+            RectTransform root = NewRect("Group_" + group.GroupId, parent);
+            SetTopStretch(root, -_contentHeight, groupHeight);
 
-            var rootLayout = root.AddComponent<VerticalLayoutGroup>();
-            rootLayout.spacing = _slotSpacing;
-            rootLayout.padding = new RectOffset(0, 0, 0, 0);
-            rootLayout.childControlHeight = true;
-            rootLayout.childControlWidth = true;
-            rootLayout.childForceExpandHeight = false;
-            rootLayout.childForceExpandWidth = true;
-            rootLayout.childAlignment = TextAnchor.UpperCenter;
+            if (titleHeight > 0f)
+            {
+                CreateTitle(group.Title, root, titleHeight);
+            }
 
-            // Высота объявлена числом: родитель (контейнер групп) её прочитает
-            var rootElement = root.AddComponent<LayoutElement>();
-            rootElement.preferredHeight = groupHeight;
-            rootElement.minHeight = groupHeight;
-            rootElement.flexibleWidth = 1f;
+            RectTransform row = NewRect("Slots", root);
+            SetTopStretch(row, -titleBlock, rowHeight);
 
-            if (_titleHeight > 0f) CreateTitle(group.Title, root.transform);
+            List<CosmeticSlotData> coins = new List<CosmeticSlotData>();
+            List<CosmeticSlotData> premium = new List<CosmeticSlotData>();
 
-            // --- Ряд со слотами ---
-            var row = new GameObject("Slots", typeof(RectTransform));
-            row.transform.SetParent(root.transform, false);
-
-            var rowLayout = row.AddComponent<HorizontalLayoutGroup>();
-            rowLayout.spacing = _slotSpacing;
-            rowLayout.childControlWidth = true;
-            rowLayout.childControlHeight = true;
-            rowLayout.childForceExpandWidth = true;
-            rowLayout.childForceExpandHeight = true;
-            rowLayout.childAlignment = TextAnchor.MiddleCenter;
-
-            var rowElement = row.AddComponent<LayoutElement>();
-            rowElement.preferredHeight = rowHeight;
-            rowElement.minHeight = rowHeight;
-            rowElement.flexibleWidth = 1f;
-
+            // Премиальный определяем по флагу конфига, а не по состоянию:
+            // купленный премиальный предмет остаётся крупной карточкой
             CosmeticSlotData[] slots = group.Slots ?? new CosmeticSlotData[0];
-
-            // Премиальный слот определяем по флагу из конфига, а не по состоянию:
-            // купленный премиальный предмет остаётся крупным, меняется только подпись
-            var coins = new List<CosmeticSlotData>();
-            var premium = new List<CosmeticSlotData>();
-
             for (int i = 0; i < slots.Length; i++)
             {
                 if (slots[i].IsPremium) premium.Add(slots[i]);
                 else coins.Add(slots[i]);
             }
 
-            GameObject coinColumn = CreateColumn(row.transform, "CoinColumn", rowHeight, 1f - _premiumShare);
-            GameObject premiumColumn = CreateColumn(row.transform, "PremiumColumn", rowHeight, _premiumShare);
+            float coinShare = 1f - _premiumShare;
+            float half = _slotSpacing * 0.5f;
 
-            // Порядок в ряду задаёт сторону премиального слота
+            // Колонки задаются долями ширины ряда
+            RectTransform coinColumn = NewRect("CoinColumn", row);
+            RectTransform premiumColumn = NewRect("PremiumColumn", row);
+
             if (_premiumOnRight)
             {
-                coinColumn.transform.SetSiblingIndex(0);
-                premiumColumn.transform.SetSiblingIndex(1);
+                SetColumn(coinColumn, 0f, coinShare, -half);
+                SetColumn(premiumColumn, coinShare, 1f, half);
             }
             else
             {
-                premiumColumn.transform.SetSiblingIndex(0);
-                coinColumn.transform.SetSiblingIndex(1);
+                SetColumn(premiumColumn, 0f, _premiumShare, -half);
+                SetColumn(coinColumn, _premiumShare, 0f, half);
             }
 
             var created = new List<CosmeticSlotView>();
 
-            for (int i = 0; i < coins.Count; i++)
+            // Обычные слоты: делят высоту колонки поровну
+            int coinCount = coins.Count;
+            float coinHeight = coinCount > 0
+                ? (rowHeight - _slotSpacing * (coinCount - 1)) / coinCount
+                : rowHeight;
+
+            for (int i = 0; i < coinCount; i++)
             {
-                CosmeticSlotView view = CreateSlot(coins[i], _coinSlotPrefab, coinColumn.transform);
+                float y = -i * (coinHeight + _slotSpacing);
+                CosmeticSlotView view = CreateSlot(coins[i], _coinSlotPrefab, coinColumn, y, coinHeight);
                 if (view != null) created.Add(view);
             }
 
             CosmeticSlotView premiumPrefab = _premiumSlotPrefab != null ? _premiumSlotPrefab : _coinSlotPrefab;
             for (int i = 0; i < premium.Count; i++)
             {
-                CosmeticSlotView view = CreateSlot(premium[i], premiumPrefab, premiumColumn.transform);
+                float y = -i * (rowHeight + _slotSpacing);
+                CosmeticSlotView view = CreateSlot(premium[i], premiumPrefab, premiumColumn, y, rowHeight);
                 if (view != null) created.Add(view);
             }
 
-            return new GroupUi { Root = root, Slots = created.ToArray() };
+            _contentHeight += groupHeight + _groupSpacing;
+            return new GroupUi { Root = root.gameObject, Slots = created.ToArray() };
         }
 
-        private void CreateTitle(string text, Transform parent)
+        private void CreateTitle(string text, RectTransform parent, float height)
         {
-            var go = new GameObject("Title", typeof(RectTransform));
-            go.transform.SetParent(parent, false);
+            RectTransform rect = NewRect("Title", parent);
+            SetTopStretch(rect, 0f, height);
 
-            var label = go.AddComponent<TextMeshProUGUI>();
+            var label = rect.gameObject.AddComponent<TextMeshProUGUI>();
             label.text = text;
             label.fontSize = _titleFontSize;
             label.fontStyle = FontStyles.Bold;
@@ -236,39 +203,23 @@ namespace CubeSmasher.UI.Skins
 
             TMP_FontAsset font = ResolveFont();
             if (font != null) label.font = font;
-
-            var element = go.AddComponent<LayoutElement>();
-            element.preferredHeight = _titleHeight;
-            element.minHeight = _titleHeight;
-            element.flexibleWidth = 1f;
         }
 
-        private CosmeticSlotView CreateSlot(CosmeticSlotData data, CosmeticSlotView prefab, Transform parent)
+        private CosmeticSlotView CreateSlot(CosmeticSlotData data, CosmeticSlotView prefab,
+                                            RectTransform parent, float top, float height)
         {
             CosmeticSlotView view;
 
-            if (prefab != null)
-            {
-                view = Instantiate(prefab, parent);
-            }
-            else
-            {
-                // Префаб не назначен: собираем слот кодом, чтобы магазин всё равно работал
-                view = BuildSlotInCode(parent);
-            }
+            if (prefab != null) view = Instantiate(prefab, parent);
+            else view = BuildSlotInCode(parent);
 
             if (view == null) return null;
 
+            var rect = (RectTransform)view.transform;
+            SetTopStretch(rect, top, height);
+
             view.Initialize(SlotKey(data));
             view.Clicked += HandleSlotClicked;
-
-            // Слот делит высоту колонки: своей preferredHeight у него нет
-            var element = view.GetComponent<LayoutElement>();
-            if (element == null) element = view.gameObject.AddComponent<LayoutElement>();
-            element.flexibleHeight = 1f;
-            element.flexibleWidth = 1f;
-            element.minHeight = 80f;
-
             view.Render(data);
 
             _slots[SlotKey(data)] = view;
@@ -276,50 +227,41 @@ namespace CubeSmasher.UI.Skins
         }
 
         /// <summary>Запасной слот: используется, если префаб не назначен в инспекторе.</summary>
-        private CosmeticSlotView BuildSlotInCode(Transform parent)
+        private CosmeticSlotView BuildSlotInCode(RectTransform parent)
         {
-            var go = new GameObject("Slot", typeof(RectTransform));
-            go.transform.SetParent(parent, false);
+            RectTransform root = NewRect("Slot", parent);
 
-            var background = go.AddComponent<Image>();
+            var background = root.gameObject.AddComponent<Image>();
             background.color = new Color(0.36f, 0.55f, 0.22f);
 
-            var button = go.AddComponent<Button>();
+            var button = root.gameObject.AddComponent<Button>();
             button.targetGraphic = background;
 
-            TextMeshProUGUI name = BuildLabel(go.transform, "Name", 30f, TextAlignmentOptions.Top);
-            TextMeshProUGUI price = BuildLabel(go.transform, "Price", 36f, TextAlignmentOptions.Center);
-            TextMeshProUGUI state = BuildLabel(go.transform, "State", 28f, TextAlignmentOptions.Bottom);
+            TextMeshProUGUI name = BuildLabel(root, "Name", 30f, TextAlignmentOptions.Top, 0.62f, 1f);
+            TextMeshProUGUI price = BuildLabel(root, "Price", 36f, TextAlignmentOptions.Center, 0.32f, 0.62f);
+            TextMeshProUGUI state = BuildLabel(root, "State", 28f, TextAlignmentOptions.Bottom, 0f, 0.32f);
 
-            var nameRect = (RectTransform)name.transform;
-            nameRect.anchorMin = new Vector2(0f, 0.62f);
-            nameRect.anchorMax = new Vector2(1f, 1f);
-            nameRect.offsetMin = new Vector2(12f, 0f);
-            nameRect.offsetMax = new Vector2(-12f, -8f);
-
-            var priceRect = (RectTransform)price.transform;
-            priceRect.anchorMin = new Vector2(0f, 0.3f);
-            priceRect.anchorMax = new Vector2(1f, 0.62f);
-            priceRect.offsetMin = new Vector2(12f, 0f);
-            priceRect.offsetMax = new Vector2(-12f, 0f);
-
-            var stateRect = (RectTransform)state.transform;
-            stateRect.anchorMin = new Vector2(0f, 0f);
-            stateRect.anchorMax = new Vector2(1f, 0.3f);
-            stateRect.offsetMin = new Vector2(12f, 8f);
-            stateRect.offsetMax = new Vector2(-12f, 0f);
-
-            var view = go.AddComponent<CosmeticSlotView>();
+            var view = root.gameObject.AddComponent<CosmeticSlotView>();
             view.Bind(name, price, state, button, background);
             return view;
         }
 
-        private TextMeshProUGUI BuildLabel(Transform parent, string name, float size, TextAlignmentOptions align)
+        /// <summary>
+        /// Подпись внутри слота. Полоса задаётся парой долей по вертикали:
+        /// 0 — низ слота, 1 — верх. Название занимает верх, цена середину,
+        /// состояние низ.
+        /// </summary>
+        private TextMeshProUGUI BuildLabel(RectTransform parent, string name, float size,
+                                          TextAlignmentOptions align, float fromY, float toY)
         {
-            var go = new GameObject(name, typeof(RectTransform));
-            go.transform.SetParent(parent, false);
+            RectTransform rect = NewRect(name, parent);
 
-            var label = go.AddComponent<TextMeshProUGUI>();
+            rect.anchorMin = new Vector2(0f, fromY);
+            rect.anchorMax = new Vector2(1f, toY);
+            rect.offsetMin = new Vector2(12f, 6f);
+            rect.offsetMax = new Vector2(-12f, -6f);
+
+            var label = rect.gameObject.AddComponent<TextMeshProUGUI>();
             label.fontSize = size;
             label.color = Color.white;
             label.alignment = align;
@@ -331,26 +273,54 @@ namespace CubeSmasher.UI.Skins
             return label;
         }
 
-        private static GameObject CreateColumn(Transform parent, string name, float height, float widthShare)
+        private TMP_FontAsset ResolveFont()
+        {
+            if (_font != null) return _font;
+
+            if (_fontWarned) return null;
+            _fontWarned = true;
+
+            Debug.LogWarning("[CosmeticShop] Не назначен шрифт с кириллицей (_font). " +
+                             "Русский текст не отрисуется. Назначьте " +
+                             "Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset");
+            return null;
+        }
+
+        /// <summary>Высота контента: по ней ScrollRect понимает, куда можно прокрутить.</summary>
+        private void UpdateContentHeight()
+        {
+            if (_groupsContainer == null) return;
+
+            _groupsContainer.sizeDelta = new Vector2(_groupsContainer.sizeDelta.x,
+                                                     Mathf.Max(0f, _contentHeight));
+        }
+
+        private static RectTransform NewRect(string name, Transform parent)
         {
             var go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
+            go.layer = parent.gameObject.layer;
+            return (RectTransform)go.transform;
+        }
 
-            var layout = go.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 16f;
-            layout.childControlHeight = true;
-            layout.childControlWidth = true;
-            layout.childForceExpandHeight = true;
-            layout.childForceExpandWidth = true;
-            layout.childAlignment = TextAnchor.UpperCenter;
+        /// <summary>Растянуть по ширине родителя и поставить сверху с отступом top и высотой height.</summary>
+        private static void SetTopStretch(RectTransform rect, float top, float height)
+        {
+            rect.anchorMin = new Vector2(0f, 1f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0f, top);
+            rect.sizeDelta = new Vector2(0f, height);
+        }
 
-            var element = go.AddComponent<LayoutElement>();
-            element.preferredHeight = height;
-            element.minHeight = height;
-            element.flexibleHeight = 1f;
-            element.flexibleWidth = widthShare;
-
-            return go;
+        /// <summary>Колонка внутри ряда: доля ширины от from до to, вся высота ряда.</summary>
+        private static void SetColumn(RectTransform rect, float from, float to, float sideOffset)
+        {
+            rect.anchorMin = new Vector2(from, 0f);
+            rect.anchorMax = new Vector2(to, 1f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.offsetMin = new Vector2(sideOffset, 0f);
+            rect.offsetMax = new Vector2(sideOffset, 0f);
         }
 
         private void HandleSlotClicked(string key) => SlotClicked?.Invoke(key);

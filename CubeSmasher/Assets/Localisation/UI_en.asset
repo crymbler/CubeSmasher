@@ -126,6 +126,62 @@ MonoBehaviour:
     m_Localized: Sport
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430413
+    m_Localized: "SKINS"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430414
+    m_Localized: "HAMMERS"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430415
+    m_Localized: "PLATES"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430416
+    m_Localized: "Equip"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430417
+    m_Localized: "Equipped"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430418
+    m_Localized: "Unavailable"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430419
+    m_Localized: "Buy for {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430420
+    m_Localized: "Buy for {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430421
+    m_Localized: "Common hammer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430422
+    m_Localized: "Heavy hammer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430423
+    m_Localized: "Neon hammer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430424
+    m_Localized: "Common plate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430425
+    m_Localized: "Blue plate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430426
+    m_Localized: "Neon plate"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

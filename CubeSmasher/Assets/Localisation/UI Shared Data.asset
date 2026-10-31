@@ -123,6 +123,62 @@ MonoBehaviour:
     m_Key: gar.income.none
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430413
+    m_Key: skins.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430414
+    m_Key: skins.hammers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430415
+    m_Key: skins.dishes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430416
+    m_Key: skins.equip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430417
+    m_Key: skins.equipped
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430418
+    m_Key: skins.unavailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430419
+    m_Key: shop.buy_coins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430420
+    m_Key: shop.buy_yan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430421
+    m_Key: hammer.default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430422
+    m_Key: hammer.mid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430423
+    m_Key: hammer.premium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430424
+    m_Key: dish.default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430425
+    m_Key: dish.mid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430426
+    m_Key: dish.premium
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
