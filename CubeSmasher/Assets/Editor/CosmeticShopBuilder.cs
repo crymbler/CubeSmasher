@@ -98,6 +98,8 @@ public static class CosmeticShopBuilder
         // Ссылки и значения в компонент экрана. Через SetObject/SetFloat/SetBool:
         // FindProperty возвращает null, если поле переименовали или удалили,
         // и прямое обращение к .objectReferenceValue падает NullReferenceException
+        var so = new SerializedObject(view);
+
         SetObject(so, "_font", font);
         SetObject(so, "_groupsContainer", content);
         SetObject(so, "_closeButton", close);
