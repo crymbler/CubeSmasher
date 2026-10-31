@@ -100,7 +100,12 @@ public static class CosmeticShopBuilder
         so.FindProperty("_closeButton").objectReferenceValue = close;
         so.FindProperty("_coinSlotPrefab").objectReferenceValue = coinSlot;
         so.FindProperty("_premiumSlotPrefab").objectReferenceValue = premiumSlot;
-        so.FindProperty("_groupTitlePrefab").objectReferenceValue = null;
+        so.FindProperty("_groupSpacing").floatValue = 32f;
+        so.FindProperty("_slotSpacing").floatValue = 16f;
+        so.FindProperty("_premiumSlotHeight").floatValue = 420f;
+        so.FindProperty("_titleHeight").floatValue = 64f;
+        so.FindProperty("_premiumOnRight").boolValue = true;
+        so.FindProperty("_buildTitleInCode").boolValue = true;
         so.ApplyModifiedPropertiesWithoutUndo();
 
         return root;
@@ -122,6 +127,13 @@ public static class CosmeticShopBuilder
         button.targetGraphic = background;
 
         var view = root.AddComponent<CosmeticSlotView>();
+
+        // LayoutElement обязателен: без него VerticalLayoutGroup с childControlHeight
+        // считает preferredHeight слота нулевым, и карточка схлопывается в пиксель
+        var element = root.AddComponent<LayoutElement>();
+        element.preferredHeight = premium ? 420f : 200f;
+        element.minHeight = 120f;
+        element.flexibleWidth = 1f;
 
         // Название
         TextMeshProUGUI name = NewText(root.transform, "Name", "Name", 32, Color.white);

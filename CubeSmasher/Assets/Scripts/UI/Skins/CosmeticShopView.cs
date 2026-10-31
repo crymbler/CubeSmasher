@@ -9,13 +9,16 @@ namespace CubeSmasher.UI.Skins
     /// Экран магазина косметики.
     ///
     /// Вёрстка по макету: группы идут списком, в каждой три слота —
-    /// два маленьких за монеты и один крупный премиальный. Раскладка внутри
-    /// группы: премиальный слот с одной стороны на всю высоту, два обычных
-    /// друг под другом с другой. Сторона премиального задаётся флагом,
+    /// два маленьких за монеты и один крупный премиальный. Внутри группы:
+    /// премиальный слот занимает колонку на всю высоту, два обычных делят
+    /// вторую колонку пополам. Сторона премиального задаётся флагом,
     /// поэтому группу можно зеркалить как на картинке.
     ///
-    /// Слоты создаются кодом из двух префабов: обычного и премиального.
-    /// Пока макета нет, размеры и цвета берутся из UITheme.
+    /// Высоты задаются здесь числами, а не берутся из префабов. Причина:
+    /// когда высотой управляет VerticalLayoutGroup с childControlHeight,
+    /// он спрашивает у ребёнка preferredHeight, а у слота без LayoutElement
+    /// он равен нулю — слоты схлопывались в пиксель. Теперь размеры
+    /// выставляются явно через LayoutElement на каждом уровне.
     /// </summary>
     public class CosmeticShopView : MonoBehaviour, ICosmeticShopView
     {
@@ -29,18 +32,25 @@ namespace CubeSmasher.UI.Skins
         [SerializeField] private CosmeticSlotView _coinSlotPrefab;
         [Tooltip("Крупный премиальный слот за яны")]
         [SerializeField] private CosmeticSlotView _premiumSlotPrefab;
-        [Tooltip("Заголовок группы. Можно оставить пустым — создастся кодом")]
-        [SerializeField] private TextMeshProUGUI _groupTitlePrefab;
 
         [Header("Раскладка")]
+        [Tooltip("Высота крупного премиального слота. Она же высота всей группы со слотами")]
+        [SerializeField, Min(120f)] private float _premiumSlotHeight = 420f;
+        [Tooltip("Высота заголовка группы")]
+        [SerializeField, Min(0f)] private float _titleHeight = 64f;
         [Tooltip("Расстояние между группами")]
-        [SerializeField] private float _groupSpacing = 24f;
+        [SerializeField] private float _groupSpacing = 32f;
         [Tooltip("Расстояние между слотами внутри группы")]
-        [SerializeField] private float _slotSpacing = 12f;
-        [Tooltip("Доля ширины и высоты, которую занимает премиальный слот")]
-        [SerializeField, Range(0.4f, 0.7f)] private float _premiumShare = 0.55f;
+        [SerializeField] private float _slotSpacing = 16f;
+        [Tooltip("Доля ширины ряда, которую занимает премиальная колонка")]
+        [SerializeField, Range(0.3f, 0.7f)] private float _premiumShare = 0.55f;
         [Tooltip("С какой стороны крупный премиальный слот: true — справа")]
         [SerializeField] private bool _premiumOnRight = true;
+
+        [Header("Заголовок группы")]
+        [Tooltip("Создать заголовок кодом, если префаб не назначен")]
+        [SerializeField] private bool _buildTitleInCode = true;
+        [SerializeField] private float _titleFontSize = 44f;
 
         public event System.Action<string> SlotClicked;
         public event System.Action Closed;
@@ -68,6 +78,7 @@ namespace CubeSmasher.UI.Skins
         public void Close()
         {
             gameObject.SetActive(false);
+            SetHidden(false);
             Closed?.Invoke();
         }
 
@@ -81,54 +92,59 @@ namespace CubeSmasher.UI.Skins
 
             if (ui.Slots == null) return;
 
-            // Слотов ровно три по макету, но вёрстка не должна падать,
-            // если в конфиге окажется другое число
             int count = Mathf.Min(ui.Slots.Length, group.Slots != null ? group.Slots.Length : 0);
             for (int i = 0; i < count; i++)
             {
+                if (ui.Slots[i] == null) continue;
                 ui.Slots[i].Render(group.Slots[i]);
             }
         }
 
         public void UpdateSlot(CosmeticSlotData slot)
         {
-            if (!_slots.TryGetValue(SlotKey(slot), out CosmeticSlotView view)) return;
+            if (!_slots.TryGetValue(SlotKey(slot), out CosmeticSlotView view) || view == null) return;
             view.Render(slot);
         }
 
         private GroupUi CreateGroup(CosmeticGroupData group)
         {
+            Transform parent = _groupsContainer != null ? _groupsContainer : transform;
+
             var root = new GameObject("Group_" + group.GroupId, typeof(RectTransform));
-            root.transform.SetParent(_groupsContainer != null ? _groupsContainer : transform, false);
+            root.transform.SetParent(parent, false);
 
             var rootRect = (RectTransform)root.transform;
             rootRect.anchorMin = new Vector2(0f, 1f);
             rootRect.anchorMax = new Vector2(1f, 1f);
             rootRect.pivot = new Vector2(0.5f, 1f);
 
-            var layout = root.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = _slotSpacing;
-            layout.childControlHeight = false;
-            layout.childControlWidth = true;
-            layout.childForceExpandHeight = false;
-            layout.childForceExpandWidth = true;
+            var rootLayout = root.AddComponent<VerticalLayoutGroup>();
+            rootLayout.spacing = _groupSpacing;
+            rootLayout.childControlHeight = true;
+            rootLayout.childControlWidth = true;
+            rootLayout.childForceExpandHeight = false;
+            rootLayout.childForceExpandWidth = true;
+            rootLayout.childAlignment = TextAnchor.UpperCenter;
+
+            float rowHeight = Mathf.Max(120f, _premiumSlotHeight);
+            float groupHeight = rowHeight + (_titleHeight > 0f ? _titleHeight + _groupSpacing : 0f);
+
+            var rootElement = root.AddComponent<LayoutElement>();
+            rootElement.preferredHeight = groupHeight;
+            rootElement.minHeight = groupHeight;
 
             var fitter = root.AddComponent<ContentSizeFitter>();
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            if (_groupTitlePrefab != null)
+            // Заголовок группы
+            if (_titleHeight > 0f)
             {
-                TextMeshProUGUI title = Instantiate(_groupTitlePrefab, root.transform);
-                title.text = group.Title;
+                CreateTitle(group.Title, root.transform);
             }
 
-            // Ряд со слотами: премиальный крупный и колонка из двух обычных
+            // Ряд со слотами
             var row = new GameObject("Slots", typeof(RectTransform));
             row.transform.SetParent(root.transform, false);
-
-            var rowRect = (RectTransform)row.transform;
-            rowRect.anchorMin = new Vector2(0f, 1f);
-            rowRect.anchorMax = new Vector2(1f, 1f);
 
             var rowLayout = row.AddComponent<HorizontalLayoutGroup>();
             rowLayout.spacing = _slotSpacing;
@@ -136,33 +152,30 @@ namespace CubeSmasher.UI.Skins
             rowLayout.childControlHeight = true;
             rowLayout.childForceExpandWidth = true;
             rowLayout.childForceExpandHeight = true;
+            rowLayout.childAlignment = TextAnchor.UpperCenter;
 
-            var rowFitter = row.AddComponent<ContentSizeFitter>();
-            rowFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            var rowElement = row.AddComponent<LayoutElement>();
+            rowElement.preferredHeight = rowHeight;
+            rowElement.minHeight = rowHeight;
+            rowElement.flexibleWidth = 1f;
 
             CosmeticSlotData[] slots = group.Slots ?? new CosmeticSlotData[0];
 
-            // Разделяем: премиальные и обычные. По макету премиальный один и крупный
+            // Премиальный слот определяем по флагу из конфига, а не по состоянию:
+            // купленный премиальный предмет остаётся крупным, меняется только подпись
             var coins = new List<CosmeticSlotData>();
             var premium = new List<CosmeticSlotData>();
 
             for (int i = 0; i < slots.Length; i++)
             {
-                if (slots[i].IsPremium || slots[i].State == CosmeticSlotState.ForYan
-                    || slots[i].State == CosmeticSlotState.Unavailable)
-                {
-                    premium.Add(slots[i]);
-                }
-                else
-                {
-                    coins.Add(slots[i]);
-                }
+                if (slots[i].IsPremium) premium.Add(slots[i]);
+                else coins.Add(slots[i]);
             }
 
             GameObject coinColumn = CreateColumn(row.transform, "CoinColumn");
             GameObject premiumColumn = CreateColumn(row.transform, "PremiumColumn");
 
-            // Порядок колонок в ряду задаёт сторону премиального слота
+            // Порядок в ряду задаёт сторону премиального слота
             if (_premiumOnRight)
             {
                 coinColumn.transform.SetSiblingIndex(0);
@@ -174,23 +187,49 @@ namespace CubeSmasher.UI.Skins
                 coinColumn.transform.SetSiblingIndex(1);
             }
 
-            SetFlexible(premiumColumn, _premiumShare);
-            SetFlexible(coinColumn, 1f - _premiumShare);
+            SetColumnWidth(premiumColumn, _premiumShare);
+            SetColumnWidth(coinColumn, 1f - _premiumShare);
+
+            SetColumnHeight(coinColumn, rowHeight);
+            SetColumnHeight(premiumColumn, rowHeight);
 
             var created = new List<CosmeticSlotView>();
 
             for (int i = 0; i < coins.Count; i++)
             {
-                created.Add(CreateSlot(coins[i], _coinSlotPrefab, coinColumn.transform));
+                CosmeticSlotView view = CreateSlot(coins[i], _coinSlotPrefab, coinColumn.transform);
+                if (view != null) created.Add(view);
             }
 
+            CosmeticSlotView premiumPrefab = _premiumSlotPrefab != null ? _premiumSlotPrefab : _coinSlotPrefab;
             for (int i = 0; i < premium.Count; i++)
             {
-                created.Add(CreateSlot(premium[i], _premiumSlotPrefab != null ? _premiumSlotPrefab : _coinSlotPrefab,
-                                       premiumColumn.transform));
+                CosmeticSlotView view = CreateSlot(premium[i], premiumPrefab, premiumColumn.transform);
+                if (view != null) created.Add(view);
             }
 
             return new GroupUi { Root = root, Slots = created.ToArray() };
+        }
+
+        /// <summary>Заголовок группы: готовый префаб или простой текст, созданный кодом.</summary>
+        private void CreateTitle(string text, Transform parent)
+        {
+            if (!_buildTitleInCode) return;
+
+            var go = new GameObject("Title", typeof(RectTransform));
+            go.transform.SetParent(parent, false);
+
+            var label = go.AddComponent<TextMeshProUGUI>();
+            label.text = text;
+            label.fontSize = _titleFontSize;
+            label.color = UITheme.NeonGreen;
+            label.alignment = TextAlignmentOptions.Left;
+            label.raycastTarget = false;
+
+            var element = go.AddComponent<LayoutElement>();
+            element.preferredHeight = _titleHeight;
+            element.minHeight = _titleHeight;
+            element.flexibleWidth = 1f;
         }
 
         private CosmeticSlotView CreateSlot(CosmeticSlotData data, CosmeticSlotView prefab, Transform parent)
@@ -204,6 +243,15 @@ namespace CubeSmasher.UI.Skins
             CosmeticSlotView view = Instantiate(prefab, parent);
             view.Initialize(SlotKey(data));
             view.Clicked += HandleSlotClicked;
+
+            // Слоты делят высоту колонки: у слота нет своей preferredHeight,
+            // он растягивается на всё, что дал родитель
+            var element = view.GetComponent<LayoutElement>();
+            if (element == null) element = view.gameObject.AddComponent<LayoutElement>();
+            element.flexibleHeight = 1f;
+            element.flexibleWidth = 1f;
+            element.minHeight = 80f;
+
             view.Render(data);
 
             _slots[SlotKey(data)] = view;
@@ -216,20 +264,32 @@ namespace CubeSmasher.UI.Skins
             go.transform.SetParent(parent, false);
 
             var layout = go.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 12f;
+            layout.spacing = 16f;
             layout.childControlHeight = true;
             layout.childControlWidth = true;
             layout.childForceExpandHeight = true;
             layout.childForceExpandWidth = true;
+            layout.childAlignment = TextAnchor.UpperCenter;
 
+            go.AddComponent<LayoutElement>();
             return go;
         }
 
-        private static void SetFlexible(GameObject go, float width)
+        private static void SetColumnWidth(GameObject column, float share)
         {
-            var element = go.GetComponent<LayoutElement>();
-            if (element == null) element = go.AddComponent<LayoutElement>();
-            element.flexibleWidth = width;
+            var element = column.GetComponent<LayoutElement>();
+            if (element == null) element = column.AddComponent<LayoutElement>();
+            element.flexibleWidth = share;
+            element.minWidth = 0f;
+        }
+
+        private static void SetColumnHeight(GameObject column, float height)
+        {
+            var element = column.GetComponent<LayoutElement>();
+            if (element == null) element = column.AddComponent<LayoutElement>();
+            element.preferredHeight = height;
+            element.minHeight = height;
+            element.flexibleHeight = 1f;
         }
 
         private void HandleSlotClicked(string key) => SlotClicked?.Invoke(key);
