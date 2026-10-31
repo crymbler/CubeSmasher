@@ -1,10 +1,10 @@
 {
-    "idSave": 671,
-    "lastSaveTime": 1793408002,
+    "idSave": 677,
+    "lastSaveTime": 1793454711,
     "bestScore": 0,
     "isAdsRemoved": false,
     "level": 4,
-    "stageDetails": 1,
+    "stageDetails": 6,
     "hasPendingLocalSave": true,
     "lastGarageCarIndex": 4,
     "openedGarageCars": [
@@ -13,15 +13,14 @@
         1
     ],
     "garageOpenMigrated": true,
-    "balance": 147336.93531227113,
+    "balance": 193998.43531155587,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 0.5,
     "musicVolume": 0.5,
-    "hardCurrency": 0,
-    "selectedSkinId": "",
-    "ownedSkins": [],
-    "skinGranted": false,
+    "ownedCosmetics": [],
+    "equippedHammer": "",
+    "equippedDish": "dish_3",
     "passiveUpgrades": [],
     "tapUpgrades": [
         {

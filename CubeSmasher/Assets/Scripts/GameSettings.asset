@@ -15,3 +15,4 @@ MonoBehaviour:
   Economy: {fileID: 11400000, guid: 3fcce50bad6245609e0c6e516c944eee, type: 2}
   Physics: {fileID: 11400000, guid: 3722172edd404888969e2bbd61445789, type: 2}
   Garage: {fileID: 11400000, guid: cddfe9c6cc994af49e3476a6f160ce24, type: 2}
+  Cosmetics: {fileID: 11400000, guid: 24c2c141d17a48b4fbe1770dc65e9c4e, type: 2}

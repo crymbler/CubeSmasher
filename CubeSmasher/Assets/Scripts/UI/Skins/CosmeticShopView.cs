@@ -68,7 +68,6 @@ namespace CubeSmasher.UI.Skins
         public void Close()
         {
             gameObject.SetActive(false);
-            SetHidden(false);
             Closed?.Invoke();
         }
 
