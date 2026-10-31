@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3549809105510466697}
   - component: {fileID: 838652024763413371}
   - component: {fileID: 1180619614530464641}
+  - component: {fileID: 9086375325396583521}
   m_Layer: 0
   m_Name: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439"
   m_TagString: Untagged
@@ -142,6 +143,19 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &9086375325396583521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429038250304797044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 309af5cb1a3c4f3d9679e53d2669503f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clip: {fileID: 0}
 --- !u!1 &3838627675003218989
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,6 +169,7 @@ GameObject:
   - component: {fileID: 8496983135883328949}
   - component: {fileID: 7657636951499880186}
   - component: {fileID: 7386858341470736182}
+  - component: {fileID: 8327620068241699851}
   m_Layer: 0
   m_Name: "T\xFCrk\xE7e"
   m_TagString: Untagged
@@ -284,6 +299,19 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &8327620068241699851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3838627675003218989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 309af5cb1a3c4f3d9679e53d2669503f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clip: {fileID: 0}
 --- !u!1 &5429109258796402811
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,6 +852,7 @@ GameObject:
   - component: {fileID: 1569503582992301504}
   - component: {fileID: 939264250238564706}
   - component: {fileID: 6567706288613245899}
+  - component: {fileID: 2681688808141689980}
   m_Layer: 0
   m_Name: English
   m_TagString: Untagged
@@ -953,3 +982,16 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &2681688808141689980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9117151427753216262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 309af5cb1a3c4f3d9679e53d2669503f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clip: {fileID: 0}
