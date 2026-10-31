@@ -12,3 +12,17 @@ car.hatchback,Хэтчбэк,Hatchback,Hatchback
 car.sedan,Седан,Sedan,Sedan
 car.minivan,Минивэн,Minivan,Minivan
 car.sport,Спорт,Sport,Spor
+skins.title,СКИНЫ,SKINS,KAPLAMALAR
+skins.hammers,МОЛОТЫ,HAMMERS,ÇEKİÇLER
+skins.dishes,ТАРЕЛКИ,PLATES,TABAKLAR
+skins.equip,Надеть,Equip,Kuşan
+skins.equipped,Надето,Equipped,Kuşanıldı
+skins.unavailable,Недоступно,Unavailable,Kullanılamaz
+shop.buy_coins,Купить за {0},Buy for {0},{0} karşılığı al
+shop.buy_yan,Купить за {0},Buy for {0},{0} karşılığı al
+hammer.default,Обычный молот,Common hammer,Sıradan çekiç
+hammer.mid,Тяжёлый молот,Heavy hammer,Ağır çekiç
+hammer.premium,Неоновый молот,Neon hammer,Neon çekiç
+dish.default,Обычная тарелка,Common plate,Sıradan tabak
+dish.mid,Синяя тарелка,Blue plate,Mavi tabak
+dish.premium,Неоновая тарелка,Neon plate,Neon tabak

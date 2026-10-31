@@ -19,11 +19,17 @@ namespace CubeSmasher.Infrastructure.Initializers
         private readonly Button _openShopButton;
         private readonly Button _openGarageButton;
         private readonly List<UpgradeConfig> _upgradeConfigs;
+        private readonly CubeSmasher.UI.Skins.CosmeticShopView _cosmeticShopView;
+        private readonly Button _openSkinsButton;
 
         public UIWiringInitializer(TopHudView topHudView, ShopView shopView, GarageView garageView,
                                    Button openShopButton, Button openGarageButton,
-                                   List<UpgradeConfig> upgradeConfigs)
+                                   List<UpgradeConfig> upgradeConfigs,
+                                   CubeSmasher.UI.Skins.CosmeticShopView cosmeticShopView,
+                                   Button openSkinsButton)
         {
+            _cosmeticShopView = cosmeticShopView;
+            _openSkinsButton = openSkinsButton;
             _topHudView = topHudView;
             _shopView = shopView;
             _garageView = garageView;
@@ -86,6 +92,29 @@ namespace CubeSmasher.Infrastructure.Initializers
             if (_openGarageButton != null && _garageView != null)
             {
                 _openGarageButton.onClick.AddListener(_garageView.Open);
+            }
+
+            // Магазин косметики: молоты и тарелки. Без конфига сервиса нет,
+            // экран не создаётся и кнопка скинов остаётся без обработчика
+            if (services.TryGet(out ICosmeticService cosmetics) && _cosmeticShopView != null)
+            {
+                var cosmeticPresenter = new CubeSmasher.UI.Skins.CosmeticShopPresenter(
+                    cosmetics, _cosmeticShopView, wallet, stageModel);
+                services.Register(cosmeticPresenter);
+
+                _cosmeticShopView.Closed += gamePause.Disable;
+                _cosmeticShopView.Closed += cursorHider.Hide;
+
+                if (_openSkinsButton != null)
+                {
+                    _openSkinsButton.onClick.AddListener(() =>
+                    {
+                        gamePause.Enable();
+                        cursorHider.Show();
+                        _cosmeticShopView.Open();
+                        cosmeticPresenter.RefreshAll();
+                    });
+                }
             }
 
             // Красные кружки: гараж ждёт открытия машины, магазин — доступной покупки

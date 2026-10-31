@@ -13,15 +13,7 @@ public class ColorChanger : MonoBehaviour
 
     public void ApplyAcidColor()
     {
-        // Если выбран скин, он задаёт свой диапазон оттенков (см. SkinPalette).
-        // Иначе остаётся прежняя кислотная палитра из GDD.
-        CubeSmasher.Gameplay.SkinPalette? skin = CubeSmasher.Gameplay.SkinPaletteState.Current;
-        if (skin.HasValue)
-        {
-            _material.color = skin.Value.Sample();
-            return;
-        }
-
+        // Генерация "леденцовых" цветов по GDD
         float randomHue = Random.Range(0f, 1f);
         float fixedSaturation = Random.Range(0.8f, 1.0f);
         float fixedValue = Random.Range(0.85f, 1.0f);

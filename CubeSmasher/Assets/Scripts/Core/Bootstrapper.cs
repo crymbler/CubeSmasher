@@ -48,6 +48,11 @@ public class Bootstrapper : MonoBehaviour
     [Tooltip("«вук раскола детали на осколки")]
     [SerializeField] private AudioClip _splitClip;
 
+    [Header("UI - —кины")]
+    [Tooltip("Ёкран косметики: молоты и тарелки. ѕусто Ч кнопка скинов не работает")]
+    [SerializeField] private CubeSmasher.UI.Skins.CosmeticShopView _cosmeticShopView;
+    [SerializeField] private Button _openSkinsButton;
+
     [Header("UI - √араж")]
     [SerializeField] private GarageView _garageView;
     [SerializeField] private Button _openGarageButton;
@@ -94,7 +99,8 @@ public class Bootstrapper : MonoBehaviour
             new WeaponInitializer(_hammerCaster),
             new AudioInitializer(_audioMixer, _musicClip, _clickClip, _hammerHitClip, _unlockClip, _splitClip),
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
-                                    _openShopButton, _openGarageButton, _upgradeConfigs)
+                                    _openShopButton, _openGarageButton, _upgradeConfigs,
+                                    _cosmeticShopView, _openSkinsButton)
         };
 
         foreach (IGameInitializer initializer in initializers)
@@ -136,6 +142,13 @@ public class Bootstrapper : MonoBehaviour
 
     private void OnDestroy()
     {
+        // ќтписка от событий YG2: они статические и переживают смену сцены,
+        // иначе после перезапуска сервис получал бы чужие покупки
+        if (_services != null && _services.TryGet(out CosmeticService cosmetics))
+        {
+            cosmetics.Dispose();
+        }
+
         // —начала снимаем подписки UI (в обратном пор€дке), затем презентеры и контейнер
         _subscriptions?.Dispose();
 
