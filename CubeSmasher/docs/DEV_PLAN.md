@@ -20,8 +20,8 @@
 | K5 | Локализация с аргументами | **готово в коде, не проверено в Unity** (таблица `UI`, `UiText.Get`, `YG2LocaleBridge`; старый `Localization.cs` удалён) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | **готово в коде, не проверено в Unity** (`UI/SafeAreaFitter.cs`, установщик `Tools → CubeSmasher → Install SafeArea Fitter`) | `UI/SafeAreaFitter.cs` |
 | K7 | Звук | **готово в коде, не проверено в Unity** (`AudioService` с пулом источников и питчем; клики, удар молота и тики слайдера подключены; установщик `Tools → CubeSmasher → Setup Audio`) | `Infrastructure/AudioService.cs`, `UI/ButtonClickSound.cs`, `UI/SliderTickSound.cs` |
-| K8 | Скины и донат-валюта | не начато | `Data/Configs/SkinConfig.cs` (нет) |
-| K9 | Частицы | не начато | `UI/ProgressBarShine.cs` (нет) |
+| K8 | Косметика и донат | **готово в коде, не проверено в Unity** (3 молота и 3 тарелки по группам; монеты через `IWallet`, яны через `YG2.BuyPayments` с выдачей по `onPurchaseSuccess`; экран по макету; установщик `Tools → CubeSmasher → Build Cosmetic Shop`) | `Data/Configs/CosmeticConfig.cs`, `Economy/CosmeticService.cs`, `UI/Skins/` |
+| K9 | Частицы | **готово в коде, не проверено в Unity** (блик и искры в `AnimatedProgressBar`, искры создаются кодом) | `UI/AnimatedProgressBar.cs` |
 | K10 | Экран загрузки | **готово в коде, не проверено в Unity** (HSV-цвет и размер 0.6–1.4, спавн в объёме, физика у кубов отключена, градиентный фон, установщик `Tools → CubeSmasher → Setup Boot Scene`) | `Core/BootScreen.cs`, `UI/GradientBackground.cs` |
 
 Проверено по дереву `origin/main`: `SafeAreaFitter`, `AudioService`, `SkinConfig`, `SkinService`, `SkinShopView`, `BottomNavView`, `ProgressBarShine` отсутствуют. В `PhysicsConfig` нет `RespawnDelay` и `MaxPartsPerWave`. В `UpgradeConfig` нет `StatNameKey`. В `Localizer` нет `SetArgs`. В `BootScreen` нет окраски кубов.
@@ -265,6 +265,20 @@
 - **Блик** — полоска 8 px на кромке, видна только во время роста, после анимации скрывается.
 - **Используется в:** HUD (`TopHudView`) и карточках магазина (`UpgradeItemView`).
 - Не проверено в Unity: положение блика в карточках с другим размером, и не слишком ли много искр при быстром росте.
+
+### 28.10.2026, K8 переделан: косметика вместо расцветок
+
+- **Откат ошибки.** В первой версии K8 «скин» был расцветкой деталей через `ColorChanger`. Нужны разные модели молота и тарелки, а не цвет. `ColorChanger` возвращён к исходному виду, `SkinConfig`/`SkinService`/`SkinPalette` удалены полностью.
+- **`CosmeticConfig` / `CosmeticItem`.** Группы по три предмета. Предмет несёт либо `ModelPrefab` (молот — своя модель), либо только `Material` (тарелка — тот же меш, другой материал). Поэтому тестовые тарелки не требуют новых моделей.
+- **`CosmeticService`.** Монеты списываются через `IWallet` сразу и предмет выдаётся тут же. Яны — реальный платёж `YG2.BuyPayments(PurchaseId)`, предмет выдаётся только в `onPurchaseSuccess`. Иначе товар достался бы без оплаты.
+- **Ожидания покупок.** Словарь `PurchaseId -> "группа/предмет"`: платформа возвращает только id товара. При `onPurchaseFailed` ожидание снимается, иначе повторная покупка выдала бы предмет дважды.
+- **`CosmeticApplier`.** Вешается на `SwingPivot` и на `Dish`. Не удаляет модели со сцены (на `SwingPivot` уже лежат три молота), а включает нужную и выключает остальные. Отсутствующая создаётся из префаба.
+- **Экран магазина (`UI/Skins/`).** Презентер, вью, слот. По макету: две маленькие карточки за монеты и одна крупная премиальная; сторона премиальной задаётся `_premiumOnRight`.
+- **Шесть состояний слота:** за монеты, за яны, куплено, надето, закрыто стадией, недоступно.
+- **Сборка экрана:** `Tools → CubeSmasher → Build Cosmetic Shop` создаёт `Cosmetic_Shop.prefab` и два префаба слотов.
+- **Сохранение:** `ownedCosmetics`, `equippedHammer`, `equippedDish`.
+- **Чего нет:** товаров в консоли Яндекс.Игр. Пока `PurchaseId` пуст, премиальный слот показывает «Недоступно».
+- Не проверено в Unity.
 
 ### Следующие шаги
 
