@@ -40,6 +40,9 @@ namespace CubeSmasher.UI.Skins
 
         public int UnlockStage;
         public bool IsPremium;
+
+        /// <summary>Готовая картинка модели. Пусто — в слоте будет только текст.</summary>
+        public UnityEngine.Sprite Preview;
     }
 
     /// <summary>Одна группа в магазине: заголовок и три слота.</summary>

@@ -198,8 +198,13 @@ namespace CubeSmasher.UI.Skins
             label.fontSize = _titleFontSize;
             label.fontStyle = FontStyles.Bold;
             label.color = UITheme.NeonGreen;
-            label.alignment = TextAlignmentOptions.Left;
+            label.alignment = TextAlignmentOptions.MidlineLeft;
             label.raycastTarget = false;
+
+            // Мягкая тень под заголовком: без неё текст сливается с тёмным фоном
+            label.fontMaterial.EnableKeyword("OUTLINE_ON");
+            label.outlineWidth = 0.18f;
+            label.outlineColor = UITheme.MetalDarkest;
 
             TMP_FontAsset font = ResolveFont();
             if (font != null) label.font = font;
@@ -232,17 +237,42 @@ namespace CubeSmasher.UI.Skins
             RectTransform root = NewRect("Slot", parent);
 
             var background = root.gameObject.AddComponent<Image>();
-            background.color = new Color(0.36f, 0.55f, 0.22f);
+            background.color = UITheme.MetalDark;
 
             var button = root.gameObject.AddComponent<Button>();
             button.targetGraphic = background;
 
-            TextMeshProUGUI name = BuildLabel(root, "Name", 30f, TextAlignmentOptions.Top, 0.62f, 1f);
-            TextMeshProUGUI price = BuildLabel(root, "Price", 36f, TextAlignmentOptions.Center, 0.32f, 0.62f);
-            TextMeshProUGUI state = BuildLabel(root, "State", 28f, TextAlignmentOptions.Bottom, 0f, 0.32f);
+            // Картинка модели. Лежит в верхней половине карточки, с отступом,
+            // чтобы воксельный молот не прилипал к краям
+            RectTransform previewRect = NewRect("Preview", root);
+            previewRect.anchorMin = new Vector2(0.12f, 0.42f);
+            previewRect.anchorMax = new Vector2(0.88f, 0.94f);
+            previewRect.offsetMin = Vector2.zero;
+            previewRect.offsetMax = Vector2.zero;
+
+            var preview = previewRect.gameObject.AddComponent<Image>();
+            preview.preserveAspect = true;
+            preview.raycastTarget = false;
+            preview.enabled = false;
+
+            // Акцентная полоска сверху: цвет говорит о состоянии карточки
+            RectTransform accentRect = NewRect("Accent", root);
+            accentRect.anchorMin = new Vector2(0f, 1f);
+            accentRect.anchorMax = new Vector2(1f, 1f);
+            accentRect.pivot = new Vector2(0.5f, 1f);
+            accentRect.anchoredPosition = Vector2.zero;
+            accentRect.sizeDelta = new Vector2(0f, 6f);
+
+            var accent = accentRect.gameObject.AddComponent<Image>();
+            accent.color = UITheme.NeonGreen;
+            accent.raycastTarget = false;
+
+            TextMeshProUGUI name = BuildLabel(root, "Name", 30f, TextAlignmentOptions.Center, 0.30f, 0.42f);
+            TextMeshProUGUI price = BuildLabel(root, "Price", 34f, TextAlignmentOptions.Center, 0.12f, 0.30f);
+            TextMeshProUGUI state = BuildLabel(root, "State", 26f, TextAlignmentOptions.Center, 0f, 0.12f);
 
             var view = root.gameObject.AddComponent<CosmeticSlotView>();
-            view.Bind(name, price, state, button, background);
+            view.Bind(name, price, state, button, background, preview, accent, null);
             return view;
         }
 

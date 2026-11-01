@@ -124,8 +124,21 @@ namespace CubeSmasher.UI.Skins
                 CoinPrice = item.SoftPrice,
                 YanPrice = GetYanPrice(item.PurchaseId),
                 UnlockStage = item.UnlockStage,
-                IsPremium = item.IsPremium
+                IsPremium = item.IsPremium,
+                Preview = CosmeticThumbnailBaker.Get(
+                    ThumbnailKey(groupId, item), item.ModelPrefab, item.Material)
             };
+        }
+
+        /// <summary>
+        /// Ключ кэша картинок. Учитывает и модель, и материал: тарелки отличаются
+        /// только материалом, и без этого у них была бы одна картинка на всех.
+        /// </summary>
+        private static string ThumbnailKey(string groupId, CosmeticItem item)
+        {
+            string model = item.ModelPrefab != null ? item.ModelPrefab.name : "none";
+            string material = item.Material != null ? item.Material.name : "none";
+            return groupId + "/" + item.Id + "/" + model + "/" + material;
         }
 
         /// <summary>Цена в янах из данных платформы: "25 YAN". Пусто, если товар не загружен.</summary>

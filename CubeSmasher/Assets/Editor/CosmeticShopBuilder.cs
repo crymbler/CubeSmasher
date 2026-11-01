@@ -68,13 +68,17 @@ public static class CosmeticShopBuilder
         var rootRect = (RectTransform)root.transform;
         Stretch(rootRect);
 
+        // Фон: тёмный металл с прозрачностью, чтобы под ним читалась сцена
         var background = root.AddComponent<Image>();
-        background.color = new Color(0.05f, 0.07f, 0.13f, 0.96f);
+        background.color = UITheme.WithAlpha(UITheme.MetalDarkest, 245);
 
         var view = root.AddComponent<CosmeticShopView>();
 
         // Заголовок
-        TextMeshProUGUI title = NewText(root.transform, "Title", UiText.Get("skins.title"), 64, UITheme.NeonGreen);
+        TextMeshProUGUI title = NewText(root.transform, "Title", UiText.Get("skins.title"), 72, UITheme.NeonGreen);
+        title.fontStyle = FontStyles.Bold;
+        title.outlineWidth = 0.2f;
+        title.outlineColor = UITheme.NeonGreenDark;
         var titleRect = (RectTransform)title.transform;
         titleRect.anchorMin = new Vector2(0f, 1f);
         titleRect.anchorMax = new Vector2(1f, 1f);
@@ -121,6 +125,10 @@ public static class CosmeticShopBuilder
     }
 
     /// <summary>Слот: фон, название, цена, состояние, кнопка на весь слот.</summary>
+    /// <summary>
+    /// Слот: подложка, акцентная полоска, картинка модели, название, цена, состояние.
+    /// Кнопка на весь слот. Цвета из UITheme — те же, что в игре.
+    /// </summary>
     private static GameObject BuildSlot(string path, bool premium, TMP_FontAsset font)
     {
         var root = NewUI(premium ? "CosmeticSlot_Premium" : "CosmeticSlot_Coin", null);
@@ -128,48 +136,61 @@ public static class CosmeticShopBuilder
         rect.sizeDelta = new Vector2(400f, premium ? 420f : 200f);
 
         var background = root.AddComponent<Image>();
-        background.color = premium
-            ? new Color(0.63f, 0.20f, 0.63f)
-            : new Color(0.36f, 0.55f, 0.22f);
+        background.color = UITheme.MetalDark;
 
         var button = root.AddComponent<Button>();
         button.targetGraphic = background;
 
         var view = root.AddComponent<CosmeticSlotView>();
 
-        // LayoutElement обязателен: без него VerticalLayoutGroup с childControlHeight
-        // считает preferredHeight слота нулевым, и карточка схлопывается в пиксель
-        var element = root.AddComponent<LayoutElement>();
-        element.preferredHeight = premium ? 420f : 200f;
-        element.minHeight = 120f;
-        element.flexibleWidth = 1f;
+        // Акцентная полоска сверху: цвет ставится по состоянию в рантайме
+        RectTransform accentRect = NewRect("Accent", root.transform);
+        accentRect.anchorMin = new Vector2(0f, 1f);
+        accentRect.anchorMax = new Vector2(1f, 1f);
+        accentRect.pivot = new Vector2(0.5f, 1f);
+        accentRect.anchoredPosition = Vector2.zero;
+        accentRect.sizeDelta = new Vector2(0f, 6f);
+
+        var accent = accentRect.gameObject.AddComponent<Image>();
+        accent.color = premium ? UITheme.NeonPurple : UITheme.NeonGreen;
+        accent.raycastTarget = false;
+
+        // Картинка модели: сюда рантайм кладёт спрайт, отрендеренный из префаба
+        RectTransform previewRect = NewRect("Preview", root.transform);
+        previewRect.anchorMin = new Vector2(0.12f, 0.42f);
+        previewRect.anchorMax = new Vector2(0.88f, 0.94f);
+        previewRect.offsetMin = Vector2.zero;
+        previewRect.offsetMax = Vector2.zero;
+
+        var preview = previewRect.gameObject.AddComponent<Image>();
+        preview.preserveAspect = true;
+        preview.raycastTarget = false;
+        preview.enabled = false;
 
         // Название
-        TextMeshProUGUI name = NewText(root.transform, "Name", "Name", 32, Color.white);
+        TextMeshProUGUI name = NewText(root.transform, "Name", "Name", 30, UITheme.TextPrimary);
         var nameRect = (RectTransform)name.transform;
-        nameRect.anchorMin = new Vector2(0f, 1f);
-        nameRect.anchorMax = new Vector2(1f, 1f);
-        nameRect.pivot = new Vector2(0.5f, 1f);
-        nameRect.offsetMin = new Vector2(20f, -96f);
-        nameRect.offsetMax = new Vector2(-20f, -16f);
-        name.alignment = TextAlignmentOptions.Top;
+        nameRect.anchorMin = new Vector2(0f, 0.30f);
+        nameRect.anchorMax = new Vector2(1f, 0.42f);
+        nameRect.offsetMin = new Vector2(16f, 0f);
+        nameRect.offsetMax = new Vector2(-16f, 0f);
+        name.alignment = TextAlignmentOptions.Center;
 
         // Цена
-        TextMeshProUGUI price = NewText(root.transform, "Price", "0", 40, Color.white);
+        TextMeshProUGUI price = NewText(root.transform, "Price", "0", 34, UITheme.TextPrimary);
         var priceRect = (RectTransform)price.transform;
-        priceRect.anchorMin = new Vector2(0f, 0.5f);
-        priceRect.anchorMax = new Vector2(1f, 0.5f);
-        priceRect.offsetMin = new Vector2(20f, -70f);
-        priceRect.offsetMax = new Vector2(-20f, 20f);
+        priceRect.anchorMin = new Vector2(0f, 0.12f);
+        priceRect.anchorMax = new Vector2(1f, 0.30f);
+        priceRect.offsetMin = new Vector2(16f, 0f);
+        priceRect.offsetMax = new Vector2(-16f, 0f);
 
-        // Состояние / кнопка
-        TextMeshProUGUI state = NewText(root.transform, "State", "Купить", 30, Color.white);
+        // Состояние: «Купить», «Надеть», «Надето»
+        TextMeshProUGUI state = NewText(root.transform, "State", "Купить", 26, UITheme.TextSecondary);
         var stateRect = (RectTransform)state.transform;
         stateRect.anchorMin = new Vector2(0f, 0f);
-        stateRect.anchorMax = new Vector2(1f, 0f);
-        stateRect.pivot = new Vector2(0.5f, 0f);
-        stateRect.offsetMin = new Vector2(20f, 16f);
-        stateRect.offsetMax = new Vector2(-20f, 80f);
+        stateRect.anchorMax = new Vector2(1f, 0.12f);
+        stateRect.offsetMin = new Vector2(16f, 8f);
+        stateRect.offsetMax = new Vector2(-16f, 0f);
 
         var so = new SerializedObject(view);
         SetObject(so, "_nameText", name);
@@ -177,7 +198,9 @@ public static class CosmeticShopBuilder
         SetObject(so, "_stateText", state);
         SetObject(so, "_button", button);
         SetObject(so, "_background", background);
-        SetObject(so, "_premiumBadge", null);
+        SetObject(so, "_previewImage", preview);
+        SetObject(so, "_accent", accent);
+        SetObject(so, "_frame", null);
         so.ApplyModifiedPropertiesWithoutUndo();
 
         GameObject asset = PrefabUtility.SaveAsPrefabAsset(root, path);
@@ -190,6 +213,12 @@ public static class CosmeticShopBuilder
         var go = new GameObject(name, typeof(RectTransform));
         if (parent != null) go.transform.SetParent(parent, false);
         return go;
+    }
+
+    private static RectTransform NewRect(string name, Transform parent)
+    {
+        GameObject go = NewUI(name, parent);
+        return (RectTransform)go.transform;
     }
 
     private static TextMeshProUGUI NewText(Transform parent, string name, string text, float size, Color color)

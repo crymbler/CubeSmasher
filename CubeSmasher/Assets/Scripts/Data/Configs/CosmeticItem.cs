@@ -1,9 +1,18 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace CubeSmasher.Data.Configs
 {
     /// <summary>
     /// Один вариант косметики: молот или тарелка.
+    ///
+    /// Название задаётся ДВУМЯ полями, и это главное, что нужно понять:
+    ///  - LocalizedName — пикер ключа из таблицы UI. Выбирается мышкой в инспекторе,
+    ///    и название само переводится на язык игрока;
+    ///  - Name — обычный текст, показывается, если ключ не выбран.
+    ///
+    /// Так же сделано в GarageCarData: сначала переводимое, потом запасной текст.
+    /// В LocalizedName НЕЛЬЗЯ писать сам текст — только выбирать ключ из списка.
     ///
     /// Молоты различаются моделью (свой префаб), тарелки — тем же мешем
     /// с другим материалом. Поэтому здесь есть и ModelPrefab, и Material:
@@ -16,8 +25,12 @@ namespace CubeSmasher.Data.Configs
         [Tooltip("Идентификатор для сохранения. Менять нельзя: по нему ищется купленное")]
         public string Id;
 
-        [Tooltip("Ключ названия из String Table UI")]
-        public string NameKey;
+        [Header("Название")]
+        [Tooltip("Ключ из таблицы UI. Выберите из выпадающего списка — переведётся сам")]
+        public LocalizedString LocalizedName;
+
+        [Tooltip("Текст, если ключ не выбран. На других языках переводиться не будет")]
+        public string Name;
 
         [Header("Внешний вид")]
         [Tooltip("Префаб модели. Для тарелок можно оставить пустым и задать только Material")]
@@ -47,9 +60,20 @@ namespace CubeSmasher.Data.Configs
         [Tooltip("Премиальный предмет: покупается только за яны")]
         public bool IsPremium;
 
-        /// <summary>Название на текущем языке.</summary>
-        public string GetName() =>
-            string.IsNullOrEmpty(NameKey) ? Id : UiText.Get(NameKey);
+        /// <summary>
+        /// Название на текущем языке. Порядок: ключ перевода, потом обычный текст,
+        /// потом Id — чтобы в магазине никогда не было пустой карточки.
+        /// </summary>
+        public string GetName()
+        {
+            if (LocalizedName != null && !LocalizedName.IsEmpty)
+            {
+                string translated = LocalizedName.GetLocalizedString();
+                if (!string.IsNullOrEmpty(translated)) return translated;
+            }
+
+            return string.IsNullOrEmpty(Name) ? Id : Name;
+        }
     }
 
     /// <summary>
@@ -62,13 +86,25 @@ namespace CubeSmasher.Data.Configs
         [Tooltip("Идентификатор группы для сохранения: hammer, dish")]
         public string Id;
 
-        [Tooltip("Ключ названия группы из String Table UI")]
-        public string TitleKey;
+        [Header("Название")]
+        [Tooltip("Ключ из таблицы UI. Выберите из выпадающего списка")]
+        public LocalizedString LocalizedTitle;
+
+        [Tooltip("Текст, если ключ не выбран")]
+        public string Title;
 
         [Tooltip("Ровно три варианта: два за монеты, один премиальный")]
         public CosmeticItem[] Items;
 
-        public string GetTitle() =>
-            string.IsNullOrEmpty(TitleKey) ? Id : UiText.Get(TitleKey);
+        public string GetTitle()
+        {
+            if (LocalizedTitle != null && !LocalizedTitle.IsEmpty)
+            {
+                string translated = LocalizedTitle.GetLocalizedString();
+                if (!string.IsNullOrEmpty(translated)) return translated;
+            }
+
+            return string.IsNullOrEmpty(Title) ? Id : Title;
+        }
     }
 }

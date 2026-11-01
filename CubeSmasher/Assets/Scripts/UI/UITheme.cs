@@ -28,6 +28,12 @@ namespace CubeSmasher.UI
         public static readonly Color NeonPinkLight = C(0xFF9BFA);
         public static readonly Color NeonPinkDark = C(0xA832A8);
 
+        // Фиолетовый: третий неон, нужен для премиальных предметов и акцентов.
+        // Раньше в палитре был только розовый, и премиум выглядел как ошибка.
+        public static readonly Color NeonPurple = C(0x9B5CFF);
+        public static readonly Color NeonPurpleLight = C(0xC4A0FF);
+        public static readonly Color NeonPurpleDark = C(0x5E2FA8);
+
         // --- Фон сцены ---
         public static readonly Color SkyTop = C(0x8FD3FF);
         public static readonly Color SkyBottom = C(0xE8F6FF);
