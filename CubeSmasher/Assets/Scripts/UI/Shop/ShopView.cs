@@ -53,12 +53,18 @@ public class ShopView : MonoBehaviour, IShopView
     /// <summary>ѕр€чет HUD и нижнюю панель, пока открыт магазин, и возвращает как было.</summary>
     private void SetHidden(bool hide)
     {
-        if (_hideWhileOpen == null) return;
-
-        foreach (GameObject go in _hideWhileOpen)
+        if (_hideWhileOpen != null && _hideWhileOpen.Length > 0)
         {
-            if (go != null) go.SetActive(!hide);
+            foreach (GameObject go in _hideWhileOpen)
+            {
+                if (go != null) go.SetActive(!hide);
+            }
+            return;
         }
+
+        // явный список не заполнен: скрываем верхнюю панель и нижнее меню.
+        // —чЄтчик внутри не даст двум открытым окнам показать HUD раньше времени.
+        CubeSmasher.UI.HudVisibility.Toggle(hide);
     }
 
     public void Render(string id, UpgradeRowData row)

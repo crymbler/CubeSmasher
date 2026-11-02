@@ -386,12 +386,18 @@ namespace CubeSmasher.UI.Skins
 
         private void SetHidden(bool hide)
         {
-            if (_hideWhileOpen == null) return;
-
-            foreach (GameObject go in _hideWhileOpen)
+            if (_hideWhileOpen != null && _hideWhileOpen.Length > 0)
             {
-                if (go != null) go.SetActive(!hide);
+                foreach (GameObject go in _hideWhileOpen)
+                {
+                    if (go != null) go.SetActive(!hide);
+                }
+                return;
             }
+
+            // Явный список не заполнен: скрываем верхнюю панель и нижнее меню.
+            // Счётчик внутри не даст двум открытым окнам показать HUD раньше времени.
+            HudVisibility.Toggle(hide);
         }
 
         private void OnDestroy()
