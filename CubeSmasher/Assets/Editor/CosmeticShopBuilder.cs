@@ -77,8 +77,12 @@ public static class CosmeticShopBuilder
         // Заголовок
         TextMeshProUGUI title = NewText(root.transform, "Title", UiText.Get("skins.title"), 72, UITheme.NeonGreen);
         title.fontStyle = FontStyles.Bold;
-        title.outlineWidth = 0.2f;
-        title.outlineColor = UITheme.NeonGreenDark;
+
+        // Тень через UGUI Shadow: не зависит от материала TMP и не падает,
+        // если шрифт не загрузился
+        var titleShadow = title.gameObject.AddComponent<Shadow>();
+        titleShadow.effectColor = UITheme.NeonGreenDark;
+        titleShadow.effectDistance = new Vector2(3f, -3f);
         var titleRect = (RectTransform)title.transform;
         titleRect.anchorMin = new Vector2(0f, 1f);
         titleRect.anchorMax = new Vector2(1f, 1f);
