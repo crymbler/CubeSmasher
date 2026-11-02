@@ -194,6 +194,13 @@ namespace CubeSmasher.UI.Skins
             SetTopStretch(rect, 0f, height);
 
             var label = rect.gameObject.AddComponent<TextMeshProUGUI>();
+
+            // Шрифт назначается ПЕРВЫМ. Обращение к label.fontMaterial до этого
+            // бросает ArgumentNullException: у материала ещё нет источника,
+            // и TMP_Text.CreateMaterialInstance получает null на входе.
+            TMP_FontAsset font = ResolveFont();
+            if (font != null) label.font = font;
+
             label.text = text;
             label.fontSize = _titleFontSize;
             label.fontStyle = FontStyles.Bold;
@@ -201,13 +208,11 @@ namespace CubeSmasher.UI.Skins
             label.alignment = TextAlignmentOptions.MidlineLeft;
             label.raycastTarget = false;
 
-            // Мягкая тень под заголовком: без неё текст сливается с тёмным фоном
-            label.fontMaterial.EnableKeyword("OUTLINE_ON");
-            label.outlineWidth = 0.18f;
-            label.outlineColor = UITheme.MetalDarkest;
-
-            TMP_FontAsset font = ResolveFont();
-            if (font != null) label.font = font;
+            // Тень через компонент UGUI Shadow, а не через материал TMP:
+            // он не зависит от того, загружен ли шрифт, и не падает
+            var shadow = rect.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = UITheme.MetalDarkest;
+            shadow.effectDistance = new Vector2(3f, -3f);
         }
 
         private CosmeticSlotView CreateSlot(CosmeticSlotData data, CosmeticSlotView prefab,
@@ -307,13 +312,35 @@ namespace CubeSmasher.UI.Skins
         {
             if (_font != null) return _font;
 
-            if (_fontWarned) return null;
+            // Поле могли оставить пустым: берём шрифт проекта, чтобы текст
+            // хотя бы появился и не превращался в квадраты
+            _font = TMP_Settings.defaultFontAsset;
+
+            if (_fontWarned) return _font;
             _fontWarned = true;
 
-            Debug.LogWarning("[CosmeticShop] Не назначен шрифт с кириллицей (_font). " +
-                             "Русский текст не отрисуется. Назначьте " +
-                             "Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset");
-            return null;
+            if (_font != null && !HasCyrillic(_font))
+            {
+                Debug.LogWarning("[CosmeticShop] В TMP Settings стоит шрифт без кириллицы. " +
+                                 "Назначьте Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset " +
+                                 "в поле _font на Cosmetic_Shop.");
+            }
+            else if (_font == null)
+            {
+                Debug.LogWarning("[CosmeticShop] Шрифт не задан ни в _font, ни в TMP Settings: " +
+                                 "текст не отрисуется.");
+            }
+
+            return _font;
+        }
+
+        /// <summary>
+        /// Есть ли в шрифте русская буква. Дешёвая проверка по таблице символов:
+        /// если «Ы» нет, весь русский текст превратится в квадраты.
+        /// </summary>
+        private static bool HasCyrillic(TMP_FontAsset font)
+        {
+            return font != null && font.HasCharacter('Ы');
         }
 
         /// <summary>Высота контента: по ней ScrollRect понимает, куда можно прокрутить.</summary>

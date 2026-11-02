@@ -338,6 +338,14 @@
 - **Добавлен фиолетовый** `NeonPurple` / `NeonPurpleLight` / `NeonPurpleDark`: в палитре был только розовый, и премиум выглядел случайным цветом.
 - **Состояния различаются цветом акцентной полоски:** монеты — зелёный, премиум — фиолетовый, надето — синий металл, закрыто — серый.
 
+### 01.11.2026, ArgumentNullException в заголовке группы
+
+- **Симптом:** `ArgumentNullException: Value cannot be null. Parameter name: source` в `CosmeticShopView.CreateTitle`, строка 205, плюс квадраты вместо «МОЛОТЫ».
+- **Причина:** `label.fontMaterial` вызывался ДО `label.font = ...`. `fontMaterial` идёт в `TMP_Text.CreateMaterialInstance(source)`, а источник — `font.material`. Шрифт ещё не назначен, `source` равен null → исключение. Из-за исключения строка с назначением шрифта не выполнялась, и текст оставался на `LiberationSans` без кириллицы.
+- **Исправлено:** шрифт назначается первым, до любого обращения к материалу. Тень переведена с `fontMaterial` + `outlineWidth` на компонент UGUI `Shadow` — он работает на уровне вершин и не зависит от материала TMP.
+- **Страховка:** если `_font` пуст, `ResolveFont` берёт `TMP_Settings.defaultFontAsset`, а не возвращает null. Добавлена проверка `HasCyrillic` по символу «Ы»: предупреждение прямо говорит, что шрифт без кириллицы.
+- **`TMP Settings`:** Franklin добавлен в `m_fallbackFontAssets`. Теперь кириллица работает во всех текстах проекта, а не только в магазине.
+
 ### Следующие шаги
 
 1. K4, прокачка кубов и спавна (`RespawnDelay`, `MaxPartsPerWave`, `StatNameKey`).
