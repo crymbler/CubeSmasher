@@ -226,6 +226,27 @@ public static class CosmeticShopBuilder
         SetObject(so, "_previewImage", preview);
         SetObject(so, "_accent", accent);
         SetObject(so, "_frame", null);
+
+        // Стартовые цвета. Задаются ОДИН раз при создании префаба, дальше
+        // правятся в инспекторе и кодом не перезаписываются.
+        Color coinAccent = UITheme.NeonGreen;
+        Color premiumAccent = UITheme.NeonPurple;
+
+        SetColor(so, "_coinBackground", UITheme.MetalDark);
+        SetColor(so, "_coinAccent", coinAccent);
+        SetColor(so, "_premiumBackground", UITheme.MetalDark);
+        SetColor(so, "_premiumAccent", premiumAccent);
+        SetColor(so, "_ownedBackground", UITheme.MetalDarkest);
+        SetColor(so, "_ownedAccent", UITheme.MetalLight);
+        SetColor(so, "_equippedBackground", UITheme.MetalDarkest);
+        SetColor(so, "_equippedAccent", UITheme.MetalSheen);
+        SetColor(so, "_lockedBackground", UITheme.MetalDarkest);
+        SetColor(so, "_lockedAccent", UITheme.TextMuted);
+        SetColor(so, "_nameColor", UITheme.TextPrimary);
+        SetColor(so, "_priceColor", UITheme.TextPrimary);
+        SetColor(so, "_stateColor", UITheme.TextSecondary);
+        SetColor(so, "_stateColorEquipped", UITheme.NeonGreen);
+
         so.ApplyModifiedPropertiesWithoutUndo();
 
         GameObject asset = PrefabUtility.SaveAsPrefabAsset(root, path);
@@ -344,6 +365,13 @@ public static class CosmeticShopBuilder
         SerializedProperty prop = so.FindProperty(field);
         if (prop == null) { WarnMissing(field); return; }
         prop.floatValue = value;
+    }
+
+    private static void SetColor(SerializedObject so, string field, Color value)
+    {
+        SerializedProperty prop = so.FindProperty(field);
+        if (prop == null) { WarnMissing(field); return; }
+        prop.colorValue = value;
     }
 
     private static void SetBool(SerializedObject so, string field, bool value)
