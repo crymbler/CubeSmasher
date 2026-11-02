@@ -36,6 +36,13 @@ namespace CubeSmasher.UI.Skins
         private static readonly Dictionary<string, Sprite> Cache = new Dictionary<string, Sprite>();
 
         /// <summary>
+        /// Номер текущей съёмки. Каждая модель ставится в свою точку, иначе
+        /// при нескольких выпечках подряд они оказываются в одном месте
+        /// и попадают в кадр друг друга.
+        /// </summary>
+        private static int _bakeIndex;
+
+        /// <summary>
         /// Спрайт предмета. Ключ кэша — модель плюс материал: одна и та же модель
         /// с разными материалами (тарелки) даёт разные картинки.
         /// </summary>
@@ -65,7 +72,10 @@ namespace CubeSmasher.UI.Skins
         {
             if (modelPrefab == null) return null;
 
-            Vector3 origin = new Vector3(0f, -DistanceFromScene, 0f);
+            // Своя точка на каждую модель: даже если предыдущая ещё жива
+            // до конца кадра, она не попадёт в кадр этой камеры
+            _bakeIndex++;
+            Vector3 origin = new Vector3(0f, -DistanceFromScene - _bakeIndex * 100f, 0f);
 
             GameObject instance = Object.Instantiate(modelPrefab, origin, Quaternion.identity);
             instance.name = "ThumbnailSource";
@@ -122,9 +132,16 @@ namespace CubeSmasher.UI.Skins
             }
             finally
             {
+                // Object.Destroy откладывается до конца кадра. Пока объекты живы,
+                // следующая выпечка видит их в кадре и получает наложенные модели.
+                // Поэтому гасим немедленно, а удаляем как обычно.
+                if (rig != null) rig.SetActive(false);
+                if (instance != null) instance.SetActive(false);
+
                 if (camera != null)
                 {
                     camera.targetTexture = null;
+                    camera.enabled = false;
                     Object.Destroy(camera.gameObject);
                 }
 
@@ -154,15 +171,24 @@ namespace CubeSmasher.UI.Skins
             camera.backgroundColor = new Color(0f, 0f, 0f, 0f);
             camera.fieldOfView = Fov;
             camera.nearClipPlane = 0.01f;
-            camera.farClipPlane = DistanceFromScene * 2f;
-            camera.allowHDR = false;
-            camera.allowMSAA = true;
-            camera.enabled = false; // рисуем вручную через Render()
 
             // Наклон сверху-сбоку: так у молота видно и ручку, и боёк
             Vector3 direction = new Vector3(0.55f, 0.45f, -1f).normalized;
             float radius = Mathf.Max(0.01f, bounds.extents.magnitude);
             float distance = radius / Mathf.Sin(Fov * 0.5f * Mathf.Deg2Rad) * 1.15f;
+
+            // Дальняя плоскость строго вокруг модели. Раньше здесь стояло
+            // DistanceFromScene * 2f = 40000, и камера добивала до самой игровой
+            // сцены: в картинку попадали настоящие молоты со SwingPivot.
+            camera.farClipPlane = distance * 2f + radius * 2f;
+
+            camera.allowHDR = false;
+            camera.allowMSAA = true;
+            camera.enabled = false; // рисуем вручную через Render()
+
+            // Только слой по умолчанию: игровые объекты UI и эффектов
+            // не должны попадать в кадр бейкера
+            camera.cullingMask = 1 << 0;
 
             Vector3 lookAt = bounds.center;
             go.transform.position = lookAt - direction * distance;
