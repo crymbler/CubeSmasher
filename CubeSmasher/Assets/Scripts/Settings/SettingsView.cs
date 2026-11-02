@@ -124,6 +124,10 @@ namespace CubeSmasher.Settings
 
                 item.Button.interactable = item.Code != YG2.lang;
 
+                // Флаг показываем только если картинка назначена: пустой
+                // белый квадрат рядом с названием выглядел бы как ошибка
+                if (item.Flag != null) item.Flag.enabled = item.Flag.sprite != null;
+
                 string code = item.Code;
                 item.Button.onClick.RemoveAllListeners();
                 item.Button.onClick.AddListener(() => ChooseLanguage(code));

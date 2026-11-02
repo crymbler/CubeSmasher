@@ -15,7 +15,11 @@ public class LanguageSettingsPanel : MonoBehaviour
     {
         [Tooltip("Код языка: ru, en или tr")]
         public string Code;
+
         public Button Button;
+
+        [Tooltip("Флаг рядом с названием. Пусто — кнопка без картинки")]
+        public UnityEngine.UI.Image Flag;
     }
 
     [SerializeField] private LanguageButton[] _buttons;
