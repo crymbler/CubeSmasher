@@ -24,9 +24,30 @@ public static class CosmeticShopBuilder
     private const string CoinSlotPath = UIFolder + "/CosmeticSlot_Coin.prefab";
     private const string PremiumSlotPath = UIFolder + "/CosmeticSlot_Premium.prefab";
 
+    /// <summary>
+    /// Сборка экрана и префабов слотов.
+    ///
+    /// ВНИМАНИЕ: пересоздаёт префабы с нуля, поэтому правки цветов, размеров
+    /// и отступов, сделанные руками в префабе, будут потеряны. Если префабы
+    /// уже есть — спрашиваем подтверждение.
+    /// </summary>
     [MenuItem("Tools/CubeSmasher/Build Cosmetic Shop")]
     public static void Build()
     {
+        bool slotsExist = AssetDatabase.LoadAssetAtPath<GameObject>(CoinSlotPath) != null
+                       || AssetDatabase.LoadAssetAtPath<GameObject>(PremiumSlotPath) != null;
+
+        if (slotsExist && !EditorUtility.DisplayDialog(
+                "Пересобрать магазин косметики?",
+                "Префабы слотов будут созданы заново. Все правки цветов, размеров " +
+                "и отступов, сделанные в них вручную, пропадут.\n\n" +
+                "Продолжить?",
+                "Пересобрать", "Отмена"))
+        {
+            Debug.Log("[CosmeticShop] Сборка отменена: префабы оставлены как есть.");
+            return;
+        }
+
         EnsureFolder();
 
         // Без шрифта с кириллицей русские названия превращаются в квадраты
