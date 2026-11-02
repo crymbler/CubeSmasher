@@ -8,17 +8,18 @@ namespace CubeSmasher.UI.Skins
     /// <summary>
     /// Один слот магазина косметики: картинка модели, название, цена, кнопка.
     ///
-    /// Цвета берутся из UITheme, а не из полей инспектора: раньше цвета были
-    /// захардкожены прямо в компоненте и расходились с палитрой игры —
-    /// отсюда зелёные и синие прямоугольники вместо неона.
+    /// РАЗДЕЛЕНИЕ ОТВЕТСТВЕННОСТИ:
+    ///  - префаб хранит ВИД: цвета состояний, размеры, шрифты, отступы;
+    ///  - код только выбирает, какое состояние сейчас, и подставляет
+    ///    цвета из полей этого компонента.
     ///
-    /// Состояния различаются не только текстом, но и цветом подложки:
-    /// монеты — зелёный, премиум — фиолетовый, надето — синий металл,
-    /// закрыто — тёмный. Так карточку можно понять, не читая подпись.
+    /// Раньше цвета были захардкожены в Render() через UITheme, и правки
+    /// в префабе затирались при каждом старте. Теперь всё настраивается
+    /// в инспекторе: что поставили, то и будет в игре.
     ///
-    /// Звук клика играет здесь же через AudioService: на кнопке магазина нет
-    /// ButtonClickSound, потому что слоты создаются кодом, и вешать компонент
-    /// на каждый было бы лишней работой.
+    /// Значения по умолчанию берутся из UITheme, но это только стартовые
+    /// значения полей. После создания префаба они становятся обычными
+    /// сериализованными данными.
     /// </summary>
     public class CosmeticSlotView : MonoBehaviour
     {
@@ -37,6 +38,32 @@ namespace CubeSmasher.UI.Skins
         [Tooltip("Полоска-акцент сверху карточки или рамка премиального слота")]
         [SerializeField] private Image _accent;
 
+        [Header("Цвета: за монеты")]
+        [SerializeField] private Color _coinBackground = UITheme.MetalDark;
+        [SerializeField] private Color _coinAccent = UITheme.NeonGreen;
+
+        [Header("Цвета: премиум")]
+        [SerializeField] private Color _premiumBackground = UITheme.MetalDark;
+        [SerializeField] private Color _premiumAccent = UITheme.NeonPurple;
+
+        [Header("Цвета: куплено")]
+        [SerializeField] private Color _ownedBackground = UITheme.MetalDarkest;
+        [SerializeField] private Color _ownedAccent = UITheme.MetalLight;
+
+        [Header("Цвета: надето")]
+        [SerializeField] private Color _equippedBackground = UITheme.MetalDarkest;
+        [SerializeField] private Color _equippedAccent = UITheme.MetalSheen;
+
+        [Header("Цвета: закрыто")]
+        [SerializeField] private Color _lockedBackground = UITheme.MetalDarkest;
+        [SerializeField] private Color _lockedAccent = UITheme.TextMuted;
+
+        [Header("Цвета текста")]
+        [SerializeField] private Color _nameColor = UITheme.TextPrimary;
+        [SerializeField] private Color _priceColor = UITheme.TextPrimary;
+        [SerializeField] private Color _stateColor = UITheme.TextSecondary;
+        [SerializeField] private Color _stateColorEquipped = UITheme.NeonGreen;
+
         [Header("Звук")]
         [Tooltip("Громкость клика по карточке")]
         [SerializeField, Range(0f, 1f)] private float _clickVolume = 0.8f;
@@ -48,7 +75,8 @@ namespace CubeSmasher.UI.Skins
 
         /// <summary>
         /// Заполнить ссылки на дочерние элементы. Нужно, когда слот собирается
-        /// кодом, а не берётся из префаба.
+        /// кодом, а не берётся из префаба. Цвета при этом НЕ трогаются:
+        /// они остаются теми, что стоят в полях компонента.
         /// </summary>
         public void Bind(TextMeshProUGUI nameText, TextMeshProUGUI priceText,
                          TextMeshProUGUI stateText, Button button, Image background,
@@ -99,15 +127,15 @@ namespace CubeSmasher.UI.Skins
             switch (slot.State)
             {
                 case CosmeticSlotState.ForCoins:
-                    background = UITheme.MetalDark;
-                    accent = UITheme.NeonGreen;
+                    background = _coinBackground;
+                    accent = _coinAccent;
                     price = slot.CoinPrice.ToString("N0");
                     state = UiText.Get("shop.buy_coins", price);
                     break;
 
                 case CosmeticSlotState.ForYan:
-                    background = UITheme.MetalDark;
-                    accent = UITheme.NeonPurple;
+                    background = _premiumBackground;
+                    accent = _premiumAccent;
                     price = slot.YanPrice ?? string.Empty;
                     state = string.IsNullOrEmpty(price)
                         ? UiText.Get("ui.buy")
@@ -115,56 +143,55 @@ namespace CubeSmasher.UI.Skins
                     break;
 
                 case CosmeticSlotState.Owned:
-                    background = UITheme.MetalDarkest;
-                    accent = UITheme.MetalLight;
+                    background = _ownedBackground;
+                    accent = _ownedAccent;
                     state = UiText.Get("skins.equip");
                     break;
 
                 case CosmeticSlotState.Equipped:
-                    background = UITheme.MetalDarkest;
-                    accent = UITheme.MetalSheen;
+                    background = _equippedBackground;
+                    accent = _equippedAccent;
                     state = UiText.Get("skins.equipped");
                     break;
 
                 case CosmeticSlotState.Locked:
-                    background = UITheme.MetalDarkest;
-                    accent = UITheme.TextMuted;
+                    background = _lockedBackground;
+                    accent = _lockedAccent;
                     state = UiText.Get("shop.unlock", slot.UnlockStage);
                     break;
 
                 case CosmeticSlotState.Unavailable:
-                    background = UITheme.MetalDarkest;
-                    accent = UITheme.TextMuted;
+                    background = _lockedBackground;
+                    accent = _lockedAccent;
                     state = UiText.Get("skins.unavailable");
                     break;
 
                 default:
-                    background = UITheme.MetalDark;
-                    accent = UITheme.MetalLight;
+                    background = _lockedBackground;
+                    accent = _lockedAccent;
                     break;
             }
 
             if (_background != null) _background.color = background;
             if (_accent != null) _accent.color = accent;
             if (_frame != null) _frame.color = accent;
-            if (_stateText != null) _stateText.text = state;
+            if (_nameText != null) _nameText.color = _nameColor;
+            if (_priceText != null) _priceText.color = _priceColor;
 
-            // Надетое состояние выделяем цветом текста, чтобы его было видно сразу
             if (_stateText != null)
             {
+                _stateText.text = state;
                 _stateText.color = slot.State == CosmeticSlotState.Equipped
-                    ? UITheme.NeonGreen
-                    : UITheme.TextSecondary;
+                    ? _stateColorEquipped
+                    : _stateColor;
             }
-
-            if (_nameText != null) _nameText.color = UITheme.TextPrimary;
 
             if (_priceText != null)
             {
+                // Для купленных и недоступных цена не нужна: состояние уже всё сказало
                 bool showPrice = slot.State == CosmeticSlotState.ForCoins
                               || slot.State == CosmeticSlotState.ForYan;
                 _priceText.text = showPrice ? price : string.Empty;
-                _priceText.color = UITheme.TextPrimary;
             }
         }
 
