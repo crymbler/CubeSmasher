@@ -179,6 +179,22 @@ MonoBehaviour:
     m_Key: dish.premium
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430430
+    m_Key: settings.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430431
+    m_Key: settings.music
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430432
+    m_Key: settings.sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430433
+    m_Key: settings.language
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

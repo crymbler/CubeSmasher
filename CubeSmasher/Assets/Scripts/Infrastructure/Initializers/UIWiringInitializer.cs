@@ -21,15 +21,21 @@ namespace CubeSmasher.Infrastructure.Initializers
         private readonly List<UpgradeConfig> _upgradeConfigs;
         private readonly CubeSmasher.UI.Skins.CosmeticShopView _cosmeticShopView;
         private readonly Button _openSkinsButton;
+        private readonly CubeSmasher.Settings.SettingsView _settingsView;
+        private readonly Button _openSettingsButton;
 
         public UIWiringInitializer(TopHudView topHudView, ShopView shopView, GarageView garageView,
                                    Button openShopButton, Button openGarageButton,
                                    List<UpgradeConfig> upgradeConfigs,
                                    CubeSmasher.UI.Skins.CosmeticShopView cosmeticShopView,
-                                   Button openSkinsButton)
+                                   Button openSkinsButton,
+                                   CubeSmasher.Settings.SettingsView settingsView,
+                                   Button openSettingsButton)
         {
             _cosmeticShopView = cosmeticShopView;
             _openSkinsButton = openSkinsButton;
+            _settingsView = settingsView;
+            _openSettingsButton = openSettingsButton;
             _topHudView = topHudView;
             _shopView = shopView;
             _garageView = garageView;
@@ -114,6 +120,33 @@ namespace CubeSmasher.Infrastructure.Initializers
                         _cosmeticShopView.Open();
                         cosmeticPresenter.RefreshAll();
                     });
+                }
+            }
+
+            // Настройки: громкость и язык. Сервис нужен и без экрана —
+            // он применяет сохранённую громкость к микшеру при старте
+            if (services.TryGet(out CubeSmasher.Infrastructure.AudioService audio)
+                && services.TryGet(out CubeSmasher.Core.Interfaces.ISaveService saveService))
+            {
+                var settings = new CubeSmasher.Settings.SettingsService(audio, saveService);
+                services.Register(settings);
+
+                if (_settingsView != null)
+                {
+                    _settingsView.Initialize(settings);
+
+                    _settingsView.Closed += gamePause.Disable;
+                    _settingsView.Closed += cursorHider.Hide;
+
+                    if (_openSettingsButton != null)
+                    {
+                        _openSettingsButton.onClick.AddListener(() =>
+                        {
+                            gamePause.Enable();
+                            cursorHider.Show();
+                            _settingsView.Open();
+                        });
+                    }
                 }
             }
 

@@ -16,6 +16,7 @@
 | K1 | Палитра + генератор префабов | **готово** | `UI/UITheme.cs`, `Assets/Editor/UIBuilderTool.cs` |
 | K2 | HUD: верх, низ, окна | **готово** (сделано владельцем вручную, рабочий и адаптивный) | `my hud.prefab`, `UI/BottomNavView.cs` |
 | K3 | Окна скрывают HUD | **готово в коде, не проверено в Unity** (`HudVisibility`: HUD ищется сам, `_hideWhileOpen` больше не обязателен; счётчик держит HUD скрытым при вложенных окнах) | `UI/HudVisibility.cs`, `UI/GarageView.cs`, `UI/Shop/ShopView.cs`, `UI/Skins/CosmeticShopView.cs` |
+| K11 | Экран настроек | **готово в коде, не проверено в Unity** (громкость музыки и звуков с сохранением в `YG2.saves`, выбор языка через `YG2.SwitchLanguage`; установщик `Tools → CubeSmasher → Build Settings Screen`) | `Settings/SettingsView.cs`, `Settings/SettingsService.cs`, `Assets/Editor/SettingsScreenBuilder.cs` |
 | K4 | Прокачка кубов и спавна | **готово в коде, не проверено в Unity** (`hammer_radius` доходит до молота с ограничением 0.5–6 м; спавн читает апгрейды `spawn_parts` и `respawn_delay`; `StatNameKey`/`UnitKey` идут через таблицу `UI`) |
 | K5 | Локализация с аргументами | **готово в коде, не проверено в Unity** (таблица `UI`, `UiText.Get`, `YG2LocaleBridge`; старый `Localization.cs` удалён) | `Settings/Localizer.cs`, `Settings/Localization.cs`, `Economy/Shop/UpgradeConfig.cs`, `Data/Configs/GarageCarData.cs` |
 | K6 | SafeArea | **готово в коде, не проверено в Unity** (`UI/SafeAreaFitter.cs`, установщик `Tools → CubeSmasher → Install SafeArea Fitter`) | `UI/SafeAreaFitter.cs` |
@@ -372,6 +373,16 @@
 - **Счётчик `_openCount`** держит HUD скрытым, пока открыто хоть одно окно: магазин → скины → назад, HUD не мигает.
 - **`_hideWhileOpen` остаётся** как явный приоритет: если заполнен, используется он, и можно скрывать не только HUD.
 - **`Reset()`** сбрасывает состояние при перезагрузке сцены.
+
+### 02.11.2026, K11: экран настроек
+
+- **Чего не было:** кнопка `BtnSettings` в HUD есть, обработчика нет. `LanguageSettingsPanel` написан, но в префаб не привязан. Громкость сохранялась в `YG2.saves`, но менять её было негде.
+- **`Settings/SettingsService.cs`** — громкость музыки и звуков. Значения живут в `YG2.saves.musicVolume` / `soundVolume`, каждое изменение применяется к микшеру через `AudioService.ApplyVolumes` и сохраняется. Сервис создаётся даже без экрана: он применяет сохранённую громкость при старте.
+- **`Settings/SettingsView.cs`** — окно: два ползунка с процентами и три кнопки языка. Ползунки обновляются через `SetValueWithoutNotify`, иначе установка значения вызывала бы `onValueChanged` и лишнюю запись сохранения.
+- **Язык:** `YG2.SwitchLanguage` сохраняет выбор, `YG2LocaleBridge` переключает Unity Localization. Сцена перезагружается — уже созданные тексты не перечитают таблицу сами. Текущий язык нельзя выбрать повторно, кнопка неактивна.
+- **`Assets/Editor/SettingsScreenBuilder.cs`** — `Tools → CubeSmasher → Build Settings Screen` собирает префаб: заголовок, строки громкости, ползунки с фоном, заполнением и ручкой, кнопки языка. Как и у магазина, спрашивает подтверждение, если префаб уже есть.
+- **Подключение:** `Bootstrapper._settingsView` и `_openSettingsButton` → `UIWiringInitializer` создаёт сервис, вызывает `Initialize`, вешает открытие и снятие паузы.
+- **Ключи:** `settings.title`, `settings.music`, `settings.sound`, `settings.language` добавлены в таблицу `UI` и три локали.
 
 ### Следующие шаги
 

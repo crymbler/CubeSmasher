@@ -48,6 +48,11 @@ public class Bootstrapper : MonoBehaviour
     [Tooltip("«вук раскола детали на осколки")]
     [SerializeField] private AudioClip _splitClip;
 
+    [Header("UI - Ќастройки")]
+    [Tooltip("Ёкран настроек: громкость и €зык. ѕусто Ч кнопка настроек не работает")]
+    [SerializeField] private CubeSmasher.Settings.SettingsView _settingsView;
+    [SerializeField] private Button _openSettingsButton;
+
     [Header("UI - —кины")]
     [Tooltip("Ёкран косметики: молоты и тарелки. ѕусто Ч кнопка скинов не работает")]
     [SerializeField] private CubeSmasher.UI.Skins.CosmeticShopView _cosmeticShopView;
@@ -100,7 +105,8 @@ public class Bootstrapper : MonoBehaviour
             new AudioInitializer(_audioMixer, _musicClip, _clickClip, _hammerHitClip, _unlockClip, _splitClip),
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
                                     _openShopButton, _openGarageButton, _upgradeConfigs,
-                                    _cosmeticShopView, _openSkinsButton)
+                                    _cosmeticShopView, _openSkinsButton,
+                                    _settingsView, _openSettingsButton)
         };
 
         foreach (IGameInitializer initializer in initializers)

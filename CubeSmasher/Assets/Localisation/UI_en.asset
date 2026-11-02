@@ -182,6 +182,22 @@ MonoBehaviour:
     m_Localized: "Neon plate"
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430430
+    m_Localized: "SETTINGS"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430431
+    m_Localized: "Music"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430432
+    m_Localized: "Sounds"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430433
+    m_Localized: "Language"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
