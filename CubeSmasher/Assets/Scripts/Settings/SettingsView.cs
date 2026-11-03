@@ -57,6 +57,11 @@ namespace CubeSmasher.Settings
                 _soundSlider.maxValue = 1f;
                 _soundSlider.onValueChanged.AddListener(OnSoundChanged);
             }
+
+            // Клики привязываются здесь И в Refresh: если окно когда-либо
+            // включается без вызова Open, кнопки иначе остались бы без
+            // обработчиков и молчали бы — без единой ошибки в консоли
+            BindLanguageButtons();
         }
 
         /// <summary>Передать сервис настроек. Вызывается из UIWiringInitializer.</summary>
@@ -123,16 +128,43 @@ namespace CubeSmasher.Settings
         }
 
         /// <summary>Текущий язык нельзя выбрать повторно: кнопка становится неактивной.</summary>
-        private void RefreshLanguage()
+        /// <summary>
+        /// Привязать обработчики к кнопкам языка.
+        ///
+        /// Здесь же чинится самая дорогая поломка этого экрана: если Graphic
+        /// у кнопки выключен (m_Enabled = 0), он не участвует в raycast,
+        /// и клик до Button не доходит вообще. Снаружи это выглядит как
+        /// «кнопка есть, но не работает», и в Console нет ни строчки.
+        /// Поэтому графика принудительно включается и делается кликабельной.
+        /// </summary>
+        private void BindLanguageButtons()
         {
-            if (_languageButtons == null) return;
+            if (_languageButtons == null || _languageButtons.Length == 0)
+            {
+                Debug.LogError("[Settings] Список кнопок языка пуст: назначьте " +
+                               "_languageButtons в инспекторе Settings_Screen.");
+                return;
+            }
 
             for (int i = 0; i < _languageButtons.Length; i++)
             {
                 LanguageSettingsPanel.LanguageButton item = _languageButtons[i];
-                if (item.Button == null) continue;
 
-                item.Button.interactable = item.Code != YG2.lang;
+                if (item.Button == null)
+                {
+                    Debug.LogError("[Settings] У кнопки языка '" + item.Code +
+                                   "' не назначен Button.");
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(item.Code))
+                {
+                    Debug.LogError("[Settings] Пустой код языка у кнопки " +
+                                   item.Button.name + ".");
+                    continue;
+                }
+
+                EnsureClickable(item.Button);
 
                 // Флаг показываем только если картинка назначена: пустой
                 // белый квадрат рядом с названием выглядел бы как ошибка
@@ -144,8 +176,50 @@ namespace CubeSmasher.Settings
             }
         }
 
+        /// <summary>
+        /// Сделать кнопку реально кликабельной. Выключенный Graphic не попадает
+        /// в список целей raycast, а пустой TargetGraphic ломает Selectable.
+        /// </summary>
+        private static void EnsureClickable(Button button)
+        {
+            Graphic graphic = button.targetGraphic;
+
+            if (graphic == null) graphic = button.GetComponent<Graphic>();
+
+            if (graphic == null)
+            {
+                Debug.LogError("[Settings] У кнопки " + button.name +
+                               " нет Graphic: клик невозможен.");
+                return;
+            }
+
+            if (!graphic.enabled) graphic.enabled = true;
+            if (!graphic.raycastTarget) graphic.raycastTarget = true;
+
+            // Пустой targetGraphic ломает переходы состояний Selectable
+            if (button.targetGraphic == null) button.targetGraphic = graphic;
+        }
+
+        /// <summary>Подсветить текущий язык: его кнопка становится неактивной.</summary>
+        private void RefreshLanguage()
+        {
+            if (_languageButtons == null) return;
+
+            for (int i = 0; i < _languageButtons.Length; i++)
+            {
+                LanguageSettingsPanel.LanguageButton item = _languageButtons[i];
+                if (item.Button == null) continue;
+
+                item.Button.interactable = item.Code != YG2.lang;
+            }
+        }
+
         private void ChooseLanguage(string code)
         {
+            // Лог на входе: это единственный способ отличить
+            // «клик не дошёл до обработчика» от «дошёл, но не переключил»
+            Debug.Log("[Settings] Нажата кнопка языка: " + code + " (текущий: " + YG2.lang + ")");
+
             if (string.IsNullOrEmpty(code)) return;
 
             // Совпадение с текущим языком — не ошибка, просто ничего не меняем.
