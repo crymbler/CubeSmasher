@@ -142,6 +142,9 @@ namespace CubeSmasher.Infrastructure.Initializers
                     {
                         _openSettingsButton.onClick.AddListener(() =>
                         {
+                            // Повторный клик не должен включать паузу второй раз
+                            if (_settingsView.IsOpen) return;
+
                             gamePause.Enable();
                             cursorHider.Show();
                             _settingsView.Open();

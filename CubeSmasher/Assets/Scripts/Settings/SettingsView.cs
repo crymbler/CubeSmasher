@@ -66,6 +66,12 @@ namespace CubeSmasher.Settings
             Refresh();
         }
 
+        /// <summary>
+        /// Окно сейчас открыто. Нужно, чтобы не включить паузу дважды:
+        /// иначе одно закрытие её не снимет и игра останется стоять.
+        /// </summary>
+        public bool IsOpen => gameObject.activeSelf;
+
         public void Open()
         {
             gameObject.SetActive(true);
