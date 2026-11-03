@@ -29,6 +29,13 @@ public class GaragePresenter : IDisposable
         ShowSelected();
     }
 
+    /// <summary>
+    /// Перерисовать текущую машину. Вызывается после смены языка и при
+    /// открытии гаража: описание и доход пишутся через UiText.Get и без
+    /// повторного ShowCar остаются на языке прошлого показа.
+    /// </summary>
+    public void Refresh() => ShowSelected();
+
     private void HandleCarSelected(int index)
     {
         _garage.TrySelect(index);

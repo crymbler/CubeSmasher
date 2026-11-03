@@ -46,6 +46,17 @@ public class ShopPresenter : IDisposable
         RefreshAll();
     }
 
+    /// <summary>
+    /// Перерисовать магазин. Вызывается после смены языка и при открытии окна:
+    /// цены и уровни те же, но «Ур. N» и «Откроется на стадии N» перечитываются.
+    /// Карточки создаются один раз и живут между открытиями, поэтому без
+    /// повторного Render остаются на языке прошлого показа.
+    /// </summary>
+    public void Refresh()
+    {
+        RefreshAll();
+    }
+
     private void RefreshAll()
     {
         if (_configs == null) return;

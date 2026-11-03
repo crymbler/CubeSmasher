@@ -49,6 +49,10 @@ namespace CubeSmasher.Infrastructure.Initializers
             ServiceLocator services = ServiceLocator.Instance;
             services.TryGet(out Subscriptions subs);
 
+            // Подписчики на смену языка принадлежат этой сцене: старые снимаем,
+            // иначе после перезагрузки остались бы ссылки на уничтоженные экраны
+            CubeSmasher.Settings.LocalizationRefresher.Reset();
+
             if (!services.TryGet(out IWallet wallet)) return;
             if (!services.TryGet(out StageModel stageModel)) return;
             if (!services.TryGet(out ShopModel shopModel)) return;
@@ -60,6 +64,7 @@ namespace CubeSmasher.Infrastructure.Initializers
             // HUD: баланс монет и прогресс сборки машины
             var topHudPresenter = new TopHudPresenter(wallet, _topHudView);
             services.Register(topHudPresenter);
+            CubeSmasher.Settings.LocalizationRefresher.LanguageReady += topHudPresenter.Refresh;
             if (subs != null)
             {
                 subs.Track(() => stageModel.OnProgressChanged += topHudPresenter.UpdateMachineProgress,
@@ -83,12 +88,16 @@ namespace CubeSmasher.Infrastructure.Initializers
             // Гараж: окно выбора машин
             if (services.TryGet(out IGarageService garage) && _garageView != null)
             {
-                services.Register(new GaragePresenter(garage, _garageView));
+                var garagePresenter = new GaragePresenter(garage, _garageView);
+                services.Register(garagePresenter);
+
+                CubeSmasher.Settings.LocalizationRefresher.LanguageReady += garagePresenter.Refresh;
             }
 
             // Магазин
             var shopPresenter = new ShopPresenter(shopModel, _shopView, wallet, _upgradeConfigs, stageModel);
             services.Register(shopPresenter);
+            CubeSmasher.Settings.LocalizationRefresher.LanguageReady += shopPresenter.Refresh;
 
             if (_openShopButton != null && _shopView != null)
             {
@@ -107,6 +116,7 @@ namespace CubeSmasher.Infrastructure.Initializers
                 var cosmeticPresenter = new CubeSmasher.UI.Skins.CosmeticShopPresenter(
                     cosmetics, _cosmeticShopView, wallet, stageModel);
                 services.Register(cosmeticPresenter);
+                CubeSmasher.Settings.LocalizationRefresher.LanguageReady += cosmeticPresenter.RefreshAll;
 
                 _cosmeticShopView.Closed += gamePause.Disable;
                 _cosmeticShopView.Closed += cursorHider.Hide;
@@ -173,6 +183,7 @@ namespace CubeSmasher.Infrastructure.Initializers
                 if (_shopView != null)
                 {
                     subs.Track(() => _shopView.OnOpened += gamePause.Enable, () => _shopView.OnOpened -= gamePause.Enable);
+                    subs.Track(() => _shopView.OnOpened += shopPresenter.Refresh, () => _shopView.OnOpened -= shopPresenter.Refresh);
                     subs.Track(() => _shopView.OnOpened += cursorHider.Show, () => _shopView.OnOpened -= cursorHider.Show);
                     subs.Track(() => _shopView.OnClosed += gamePause.Disable, () => _shopView.OnClosed -= gamePause.Disable);
                     subs.Track(() => _shopView.OnClosed += cursorHider.Hide, () => _shopView.OnClosed -= cursorHider.Hide);
@@ -181,6 +192,7 @@ namespace CubeSmasher.Infrastructure.Initializers
                 if (_garageView != null)
                 {
                     subs.Track(() => _garageView.OnOpened += gamePause.Enable, () => _garageView.OnOpened -= gamePause.Enable);
+                    subs.Track(() => _garageView.OnOpened += garagePresenter.Refresh, () => _garageView.OnOpened -= garagePresenter.Refresh);
                     subs.Track(() => _garageView.OnOpened += cursorHider.Show, () => _garageView.OnOpened -= cursorHider.Show);
                     subs.Track(() => _garageView.OnClosed += gamePause.Disable, () => _garageView.OnClosed -= gamePause.Disable);
                     subs.Track(() => _garageView.OnClosed += cursorHider.Hide, () => _garageView.OnClosed -= cursorHider.Hide);
