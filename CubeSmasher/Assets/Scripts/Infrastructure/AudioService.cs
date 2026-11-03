@@ -29,6 +29,9 @@ namespace CubeSmasher.Infrastructure
         private const float MutedDecibels = -80f;
         private const int SfxPoolSize = 6;
 
+        /// <summary>Имя объекта в сцене: по нему находим уже живой хост.</summary>
+        private const string HostName = "AudioService";
+
         private readonly AudioSource _music;
         private readonly AudioSource[] _sfxPool;
         private readonly AudioMixer _mixer;
@@ -39,26 +42,60 @@ namespace CubeSmasher.Infrastructure
         {
             _mixer = mixer;
 
-            var host = new GameObject("AudioService");
-            Object.DontDestroyOnLoad(host);
+            // Хост живёт между сценами (DontDestroyOnLoad). Если Bootstrapper создаётся
+            // заново после перезагрузки сцены, новый AudioService создал бы ВТОРОЙ такой
+            // объект — и вторая музыка играла бы поверх первой. Поэтому ищем живой хост
+            // и переиспользуем его источники вместо создания новых.
+            var host = GameObject.Find(HostName);
 
-            _music = host.AddComponent<AudioSource>();
-            _music.loop = true;
-            _music.playOnAwake = false;
-            _music.spatialBlend = 0f;
+            if (host != null)
+            {
+                AudioSource[] existing = host.GetComponents<AudioSource>();
+
+                _music = existing.Length > 0 ? existing[0] : host.AddComponent<AudioSource>();
+                _music.loop = true;
+                _music.playOnAwake = false;
+                _music.spatialBlend = 0f;
+
+                _sfxPool = new AudioSource[SfxPoolSize];
+                for (int i = 0; i < _sfxPool.Length; i++)
+                {
+                    int index = i + 1;
+                    _sfxPool[i] = index < existing.Length
+                        ? existing[index]
+                        : host.AddComponent<AudioSource>();
+
+                    _sfxPool[i].playOnAwake = false;
+                    _sfxPool[i].spatialBlend = 0f;
+                }
+            }
+            else
+            {
+                host = new GameObject(HostName);
+                Object.DontDestroyOnLoad(host);
+
+                _music = host.AddComponent<AudioSource>();
+                _music.loop = true;
+                _music.playOnAwake = false;
+                _music.spatialBlend = 0f;
+
+                _sfxPool = new AudioSource[SfxPoolSize];
+                for (int i = 0; i < _sfxPool.Length; i++)
+                {
+                    var source = host.AddComponent<AudioSource>();
+                    source.playOnAwake = false;
+                    source.spatialBlend = 0f;
+                    _sfxPool[i] = source;
+                }
+            }
 
             AudioMixerGroup musicGroup = FindGroup("Music");
             AudioMixerGroup sfxGroup = FindGroup("UI") ?? FindGroup("Sound");
             if (musicGroup != null) _music.outputAudioMixerGroup = musicGroup;
 
-            _sfxPool = new AudioSource[SfxPoolSize];
             for (int i = 0; i < _sfxPool.Length; i++)
             {
-                var source = host.AddComponent<AudioSource>();
-                source.playOnAwake = false;
-                source.spatialBlend = 0f;
-                if (sfxGroup != null) source.outputAudioMixerGroup = sfxGroup;
-                _sfxPool[i] = source;
+                if (sfxGroup != null) _sfxPool[i].outputAudioMixerGroup = sfxGroup;
             }
 
             // Без микшера громкость SFX хранится тут и применяется к каждому

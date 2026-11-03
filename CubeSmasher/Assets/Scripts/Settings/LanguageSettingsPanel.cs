@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using YG;
 
@@ -44,11 +43,26 @@ public class LanguageSettingsPanel : MonoBehaviour
         }
     }
 
+    /// <summary>Перечитать переводимые тексты в сцене после смены языка.</summary>
+    private static void ReapplyTranslations()
+    {
+        CubeSmasher.UI.UiTextLabel[] labels =
+            Resources.FindObjectsOfTypeAll<CubeSmasher.UI.UiTextLabel>();
+
+        for (int i = 0; i < labels.Length; i++)
+        {
+            if (labels[i] == null || !labels[i].gameObject.scene.IsValid()) continue;
+            labels[i].Apply();
+        }
+    }
+
     public void Choose(string code)
     {
         if (string.IsNullOrEmpty(code) || code == YG2.lang) return;
 
+        // Без перезагрузки сцены: она пересоздаёт сервисы, а AudioService
+        // с DontDestroyOnLoad остаётся — получается вторая музыка.
         YG2.SwitchLanguage(code);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        ReapplyTranslations();
     }
 }
