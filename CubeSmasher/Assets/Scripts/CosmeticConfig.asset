@@ -23,7 +23,7 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
-    Title: Молоты
+    Title: "\u041C\u043E\u043B\u043E\u0442\u044B"
     Items:
     - Id: model_1
       LocalizedName:
@@ -35,9 +35,9 @@ MonoBehaviour:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-      Name: Сладкий леденец
+      Name: "\u0421\u043B\u0430\u0434\u043A\u0438\u0439 \u043B\u0435\u0434\u0435\u043D\u0435\u0446"
       ModelPrefab: {fileID: 7469777209679238458, guid: 884d37e39b0a7064ba3d8e6aab628b76, type: 3}
-      Material: {fileID: 4654016830019235768, guid: 08ea2f593054c89498728bf239c77d56, type: 3}
+      Material: {fileID: 0}
       UnlockStage: 0
       IsDefault: 0
       ForCoins: 0
@@ -54,9 +54,9 @@ MonoBehaviour:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-      Name: Красивый молот
+      Name: "\u041A\u0440\u0430\u0441\u0438\u0432\u044B\u0439 \u043C\u043E\u043B\u043E\u0442"
       ModelPrefab: {fileID: 5626830250503183762, guid: 0f48c446d54686d408a27cd88848bf81, type: 3}
-      Material: {fileID: 9105100056980528290, guid: 08ea2f593054c89498728bf239c77d56, type: 3}
+      Material: {fileID: 0}
       UnlockStage: 0
       IsDefault: 0
       ForCoins: 1
@@ -73,9 +73,10 @@ MonoBehaviour:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-      Name: На что хватило денег
+      Name: "\u041D\u0430 \u0447\u0442\u043E \u0445\u0432\u0430\u0442\u0438\u043B\u043E
+        \u0434\u0435\u043D\u0435\u0433"
       ModelPrefab: {fileID: 1999830032925630739, guid: 9dc1d13dbe81b354a9a8c95a5ded8ce9, type: 3}
-      Material: {fileID: -8711219629800120496, guid: 08ea2f593054c89498728bf239c77d56, type: 3}
+      Material: {fileID: 0}
       UnlockStage: 0
       IsDefault: 0
       ForCoins: 1
@@ -92,7 +93,7 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
-    Title: Тарелки
+    Title: "\u0422\u0430\u0440\u0435\u043B\u043A\u0438"
     Items:
     - Id: dish_1
       LocalizedName:
@@ -104,7 +105,7 @@ MonoBehaviour:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-      Name: Элитное блюдце
+      Name: "\u042D\u043B\u0438\u0442\u043D\u043E\u0435 \u0431\u043B\u044E\u0434\u0446\u0435"
       ModelPrefab: {fileID: 2122227916383651965, guid: 2d28de5810727dc43aae6ecdacf48efc, type: 3}
       Material: {fileID: 2100000, guid: 3febeae92ada2d0468fae07bf2b6be56, type: 2}
       UnlockStage: 0
@@ -123,10 +124,10 @@ MonoBehaviour:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-      Name: Простое
+      Name: "\u041F\u0440\u043E\u0441\u0442\u043E\u0435"
       ModelPrefab: {fileID: 2122227916383651965, guid: a34b320880b308841bb60a48c915496f, type: 3}
       Material: {fileID: 0}
-      UnlockStage: 0
+      UnlockStage: 20
       IsDefault: 0
       ForCoins: 1
       SoftPrice: 1000000
@@ -142,7 +143,7 @@ MonoBehaviour:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-      Name: Стандартное
+      Name: "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u043E\u0435"
       ModelPrefab: {fileID: 2122227916383651965, guid: afa0454c260746f469fc9ce64ae41065, type: 3}
       Material: {fileID: 0}
       UnlockStage: 0
@@ -153,3 +154,6 @@ MonoBehaviour:
       IsPremium: 0
   PaymentsEnabled: 0
   YanRechargePurchaseId: 
+  references:
+    version: 2
+    RefIds: []

@@ -30,7 +30,7 @@ namespace CubeSmasher.UI.Skins
     public static class CosmeticThumbnailBaker
     {
         private const int Size = 256;
-        private const float Fov = 28f;
+        private const float Fov = 20f;
         private const float DistanceFromScene = 20000f;
 
         private static readonly Dictionary<string, Sprite> Cache = new Dictionary<string, Sprite>();
