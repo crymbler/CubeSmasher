@@ -1,23 +1,23 @@
 {
-    "idSave": 1951,
-    "lastSaveTime": 1793642892,
+    "idSave": 1994,
+    "lastSaveTime": 1793702700,
     "bestScore": 0,
     "isAdsRemoved": false,
     "level": 4,
-    "stageDetails": 6,
+    "stageDetails": 83,
     "hasPendingLocalSave": true,
-    "lastGarageCarIndex": 4,
+    "lastGarageCarIndex": 25,
     "openedGarageCars": [
         0,
         4,
         1
     ],
     "garageOpenMigrated": true,
-    "balance": 233510.4353115559,
+    "balance": 277414.9200556278,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
-    "soundVolume": 0.16532443463802339,
-    "musicVolume": 0.16605086624622346,
+    "soundVolume": 0.5819287896156311,
+    "musicVolume": 0.1481289267539978,
     "ownedCosmetics": [
         "hammer/model_17"
     ],
@@ -27,9 +27,9 @@
     "tapUpgrades": [
         {
             "id": "hammer_damage",
-            "level": 7,
-            "price": 164.8652195930481,
-            "value": 26.99553489685059,
+            "level": 8,
+            "price": 201.13556385040284,
+            "value": 31.85472869873047,
             "isLocked": false
         },
         {
