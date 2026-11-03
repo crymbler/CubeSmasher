@@ -8,22 +8,24 @@ using CubeSmasher.UI;
 /// <summary>
 /// Tools > CubeSmasher > Build Settings Screen
 ///
-/// Раскладка задана числами и проверена арифметически, чтобы строки не могли
-/// наложиться. Схема по вертикали от верха контента:
+/// Собирает экран настроек в той же схеме, что HUD и гараж:
+///   Settings_Screen (фон, SettingsView)
+///     SafeArea (SafeAreaFitter — вырезы и полоса жестов)
+///       Title, CloseButton
+///       Content (VerticalLayoutGroup)
+///         MusicRow, SoundRow  — подпись, процент, ползунок
+///         LanguageCaption     — слово «Язык»
+///         LanguageRow         — три кнопки с местом под флаг
 ///
-///   Music   0 .. -160     шапка -8..-60, ползунок -80..-144
-///   Sound  -190 .. -350   шапка -198..-250, ползунок -270..-334
-///   Язык   -390 .. -440   подпись строки
-///   Кнопки -455 .. -595   три кнопки с местом под флаг
+/// Почему VerticalLayoutGroup здесь уместен, а в магазине косметики нет:
+/// у каждой строки есть LayoutElement с preferredHeight. Вертикальная группа
+/// с childControlHeight берёт высоту именно оттуда, поэтому строки не могут
+/// схлопнуться в ноль. Группа без LayoutElement у детей — та самая ловушка,
+/// из-за которой слоты магазина были невидимы.
 ///
-/// Оба ползунка строятся одной функцией и получают одинаковые размеры
-/// по построению: ширину родителя и высоту 64.
-///
-/// Ручка ползунка настраивается под то, что делает сам Slider: он переписывает
-/// anchorMin/anchorMax ручки в (x,0)-(x,1), то есть растягивает её по высоте.
-/// Поэтому ширина задаётся через sizeDelta.x, а высота — нулём в sizeDelta.y.
-/// Раньше высота шла через sizeDelta.y, Slider её игнорировал, и ручки
-/// выглядели разного размера в соседних строках.
+/// Ползунки строятся одной функцией, поэтому совпадают по размеру по построению.
+/// Ручка ползунка: Slider сам переписывает её якоря в (x,0)-(x,1) и растягивает
+/// по высоте родителя, поэтому высоту задаёт Handle Slide Area, а не sizeDelta.y.
 /// </summary>
 public static class SettingsScreenBuilder
 {
@@ -31,24 +33,22 @@ public static class SettingsScreenBuilder
     private const string Path = UIFolder + "/Settings_Screen.prefab";
     private const string FontPath = "Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset";
 
-    // Вертикальная сетка
-    private const float ContentTop = -180f;
-    private const float VolumeRowHeight = 160f;
-    private const float VolumeRowStep = 190f;
+    // Размеры
+    private const float RowHeight = 150f;
     private const float HeaderHeight = 52f;
-    private const float HeaderInset = 8f;
-    private const float SliderHeight = 64f;
-    private const float SliderInset = 16f;
-
-    private const float LanguageCaptionTop = -390f;
-    private const float LanguageCaptionHeight = 50f;
-    private const float LanguageRowTop = -455f;
-    private const float LanguageRowHeight = 140f;
-
-    // Горизонталь
-    private const float ContentSideMargin = 192f;
-    private const float ButtonGap = 20f;
+    private const float SliderHeight = 56f;
+    private const float SliderBottom = 10f;
+    private const float HandleWidth = 44f;
+    private const float LanguageCaptionHeight = 44f;
+    private const float LanguageRowHeight = 132f;
+    private const float LanguageButtonHeight = 110f;
     private const float FlagSize = 72f;
+    private const float RowSpacing = 40f;
+
+    // Отступы контента внутри SafeArea
+    private const float SideMargin = 96f;
+    private const float TopOffset = 200f;
+    private const float BottomMargin = 64f;
 
     [MenuItem("Tools/CubeSmasher/Build Settings Screen")]
     public static void Build()
@@ -81,80 +81,75 @@ public static class SettingsScreenBuilder
         AssetDatabase.Refresh();
 
         Debug.Log("[Settings] Готово: " + Path);
-        Debug.Log("[Settings] Флаги: в префабе у Btn_ru / Btn_en / Btn_tr есть дочерний " +
-                  "объект Flag. Перетащите картинку в его поле Source Image.");
+        Debug.Log("[Settings] Флаги: у Btn_ru / Btn_en / Btn_tr есть дочерний объект Flag. " +
+                  "Перетащите картинку в его поле Source Image.");
         Debug.Log("[Settings] Дальше: Settings_Screen на Canvas, в Bootstrapper назначить " +
                   "_settingsView и _openSettingsButton (BtnSettings в HUD).");
     }
 
     private static GameObject BuildScreen(TMP_FontAsset font)
     {
-        RectTransform root = NewRect("Settings_Screen", null);
+        RectTransform root = NewUI("Settings_Screen", null);
         Stretch(root);
 
         var background = root.gameObject.AddComponent<Image>();
         background.color = UITheme.WithAlpha(UITheme.MetalDarkest, 245);
+        background.raycastTarget = true;
 
         var view = root.gameObject.AddComponent<SettingsView>();
 
+        // --- SafeArea: тот же приём, что в HUD ---
+        RectTransform safeArea = NewUI("SafeArea", root);
+        Stretch(safeArea);
+        safeArea.gameObject.AddComponent<SafeAreaFitter>();
+
         // --- Заголовок ---
-        TextMeshProUGUI title = NewText(root, "Title", "settings.title", 64,
-                                        UITheme.NeonGreen, font);
-        var titleRect = (RectTransform)title.transform;
-        titleRect.anchorMin = new Vector2(0f, 1f);
-        titleRect.anchorMax = new Vector2(1f, 1f);
-        titleRect.pivot = new Vector2(0.5f, 1f);
-        titleRect.anchoredPosition = new Vector2(0f, -48f);
-        titleRect.sizeDelta = new Vector2(-360f, 92f);
+        TextMeshProUGUI title = AddText(safeArea, "Title", "settings.title", 64,
+                                        UITheme.NeonGreen, font, TextAlignmentOptions.Center);
+        Band(title.rectTransform, top: true, height: 92f, offset: 40f);
         title.fontStyle = FontStyles.Bold;
-        title.alignment = TextAlignmentOptions.Center;
         AddLabelKey(title, "settings.title");
 
         var titleShadow = title.gameObject.AddComponent<Shadow>();
         titleShadow.effectColor = UITheme.NeonGreenDark;
         titleShadow.effectDistance = new Vector2(3f, -3f);
 
-        // --- Закрыть ---
-        Button close = NewButton(root, "CloseButton", "X", font, 40f);
-        var closeRect = (RectTransform)close.transform;
-        closeRect.anchorMin = new Vector2(1f, 1f);
-        closeRect.anchorMax = new Vector2(1f, 1f);
-        closeRect.pivot = new Vector2(1f, 1f);
-        closeRect.anchoredPosition = new Vector2(-40f, -40f);
-        closeRect.sizeDelta = new Vector2(96f, 96f);
+        // --- Кнопка закрытия ---
+        Button close = AddButton(safeArea, "CloseButton", "X", font, 40f);
+        Point((RectTransform)close.transform, new Vector2(1f, 1f), new Vector2(1f, 1f),
+              new Vector2(-40f, -40f), new Vector2(96f, 96f));
 
         // --- Контент ---
-        RectTransform content = NewRect("Content", root);
-        content.anchorMin = new Vector2(0f, 1f);
-        content.anchorMax = new Vector2(1f, 1f);
-        content.pivot = new Vector2(0.5f, 1f);
-        content.anchoredPosition = new Vector2(0f, ContentTop);
-        content.sizeDelta = new Vector2(-ContentSideMargin, 0f);
+        RectTransform content = NewUI("Content", safeArea);
+        content.anchorMin = Vector2.zero;
+        content.anchorMax = Vector2.one;
+        content.offsetMin = new Vector2(SideMargin, BottomMargin);
+        content.offsetMax = new Vector2(-SideMargin, -TopOffset);
 
-        // Музыка
+        var layout = content.gameObject.AddComponent<VerticalLayoutGroup>();
+        layout.padding = new RectOffset(0, 0, 0, 0);
+        layout.spacing = RowSpacing;
+        layout.childAlignment = TextAnchor.UpperCenter;
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+
+        // Строки громкости
         (Slider musicSlider, TextMeshProUGUI musicValue) =
-            BuildVolumeRow(content, "Music", "settings.music", 0f, font);
+            BuildVolumeRow(content, "MusicRow", "settings.music", font);
 
-        // Звуки
         (Slider soundSlider, TextMeshProUGUI soundValue) =
-            BuildVolumeRow(content, "Sound", "settings.sound", -VolumeRowStep, font);
+            BuildVolumeRow(content, "SoundRow", "settings.sound", font);
 
-        // Подпись над кнопками языка
-        TextMeshProUGUI languageCaption = NewText(content, "LanguageCaption",
-                                                  "settings.language", 32,
-                                                  UITheme.TextSecondary, font);
-        var captionRect = (RectTransform)languageCaption.transform;
-        captionRect.anchorMin = new Vector2(0f, 1f);
-        captionRect.anchorMax = new Vector2(1f, 1f);
-        captionRect.pivot = new Vector2(0.5f, 1f);
-        captionRect.anchoredPosition = new Vector2(0f, LanguageCaptionTop);
-        captionRect.sizeDelta = new Vector2(0f, LanguageCaptionHeight);
-        languageCaption.alignment = TextAlignmentOptions.MidlineLeft;
-        AddLabelKey(languageCaption, "settings.language");
+        // Подпись «Язык»
+        TextMeshProUGUI caption = AddText(content, "LanguageCaption", "settings.language", 32,
+                                          UITheme.TextSecondary, font, TextAlignmentOptions.MidlineLeft);
+        AddRowHeight(caption.gameObject, LanguageCaptionHeight);
+        AddLabelKey(caption, "settings.language");
 
         // Кнопки языка
-        LanguageSettingsPanel.LanguageButton[] languages =
-            BuildLanguageRow(content, font);
+        LanguageSettingsPanel.LanguageButton[] languages = BuildLanguageRow(content, font);
 
         var so = new SerializedObject(view);
         SetObject(so, "_closeButton", close);
@@ -169,50 +164,36 @@ public static class SettingsScreenBuilder
     }
 
     /// <summary>
-    /// Строка громкости: шапка сверху (подпись и процент), ползунок снизу.
-    /// Обе строки строятся этим методом, поэтому совпадают по размерам.
+    /// Строка громкости: сверху подпись и процент, снизу ползунок.
+    /// Высота объявлена через LayoutElement — по ней строку ставит группа.
     /// </summary>
     private static (Slider, TextMeshProUGUI) BuildVolumeRow(
-        RectTransform parent, string name, string key, float topOffset, TMP_FontAsset font)
+        RectTransform parent, string name, string key, TMP_FontAsset font)
     {
-        RectTransform row = NewRect(name + "Row", parent);
-        row.anchorMin = new Vector2(0f, 1f);
-        row.anchorMax = new Vector2(1f, 1f);
-        row.pivot = new Vector2(0.5f, 1f);
-        row.anchoredPosition = new Vector2(0f, topOffset);
-        row.sizeDelta = new Vector2(0f, VolumeRowHeight);
+        RectTransform row = NewUI(name, parent);
+        AddRowHeight(row.gameObject, RowHeight);
 
-        // Шапка: подпись слева, процент справа
-        RectTransform header = NewRect("Header", row);
-        header.anchorMin = new Vector2(0f, 1f);
-        header.anchorMax = new Vector2(1f, 1f);
-        header.pivot = new Vector2(0.5f, 1f);
-        header.anchoredPosition = new Vector2(0f, -HeaderInset);
-        header.sizeDelta = new Vector2(0f, HeaderHeight);
+        // Шапка: слева название, справа процент
+        RectTransform header = NewUI("Header", row);
+        Band(header, top: true, height: HeaderHeight);
 
-        TextMeshProUGUI caption = NewText(header, "Label", key, 36, UITheme.TextPrimary, font);
-        var captionRect = (RectTransform)caption.transform;
-        captionRect.anchorMin = new Vector2(0f, 0f);
-        captionRect.anchorMax = new Vector2(0.7f, 1f);
-        captionRect.offsetMin = Vector2.zero;
-        captionRect.offsetMax = Vector2.zero;
-        caption.alignment = TextAlignmentOptions.MidlineLeft;
+        TextMeshProUGUI caption = AddText(header, "Label", key, 36, UITheme.TextPrimary, font,
+                                          TextAlignmentOptions.MidlineLeft);
+        caption.rectTransform.anchorMin = new Vector2(0f, 0f);
+        caption.rectTransform.anchorMax = new Vector2(0.7f, 1f);
         AddLabelKey(caption, key);
 
-        TextMeshProUGUI value = NewText(header, "Value", "50%", 36, UITheme.NeonGreen, font);
-        var valueRect = (RectTransform)value.transform;
-        valueRect.anchorMin = new Vector2(0.7f, 0f);
-        valueRect.anchorMax = new Vector2(1f, 1f);
-        valueRect.offsetMin = Vector2.zero;
-        valueRect.offsetMax = Vector2.zero;
-        value.alignment = TextAlignmentOptions.MidlineRight;
+        TextMeshProUGUI value = AddText(header, "Value", "50%", 36, UITheme.NeonGreen, font,
+                                        TextAlignmentOptions.MidlineRight);
+        value.rectTransform.anchorMin = new Vector2(0.7f, 0f);
+        value.rectTransform.anchorMax = new Vector2(1f, 1f);
 
-        // Ползунок прижат к низу строки, высота фиксированная
-        RectTransform sliderRect = NewRect("Slider", row);
+        // Ползунок прижат к низу строки, во всю ширину
+        RectTransform sliderRect = NewUI("Slider", row);
         sliderRect.anchorMin = new Vector2(0f, 0f);
         sliderRect.anchorMax = new Vector2(1f, 0f);
         sliderRect.pivot = new Vector2(0.5f, 0f);
-        sliderRect.anchoredPosition = new Vector2(0f, SliderInset);
+        sliderRect.anchoredPosition = new Vector2(0f, SliderBottom);
         sliderRect.sizeDelta = new Vector2(0f, SliderHeight);
 
         Slider slider = BuildSlider(sliderRect);
@@ -222,16 +203,15 @@ public static class SettingsScreenBuilder
 
     /// <summary>
     /// Ползунок: дорожка, заполнение, ручка.
-    ///
-    /// Ручка растягивается по высоте: Slider сам ставит ей anchorMin (x,0)
-    /// и anchorMax (x,1). Значит высоту задаёт родитель, а ширина — sizeDelta.x.
+    /// Высота ручки задаётся зоной Handle Slide Area (56 − 2×8 = 40),
+    /// а не sizeDelta.y: Slider растягивает ручку по высоте родителя сам.
     /// </summary>
     private static Slider BuildSlider(RectTransform parent)
     {
         var slider = parent.gameObject.AddComponent<Slider>();
 
         // Дорожка
-        RectTransform track = NewRect("Background", parent);
+        RectTransform track = NewUI("Background", parent);
         track.anchorMin = new Vector2(0f, 0.5f);
         track.anchorMax = new Vector2(1f, 0.5f);
         track.sizeDelta = new Vector2(0f, 20f);
@@ -240,38 +220,31 @@ public static class SettingsScreenBuilder
         trackImage.color = UITheme.MetalMid;
         trackImage.raycastTarget = false;
 
-        // Зона заполнения: отступы по краям равны половине ручки,
-        // иначе заполнение заезжает под ручку при крайних значениях
-        const float handleWidth = 44f;
-
-        RectTransform fillArea = NewRect("Fill Area", parent);
+        // Заполнение: отступы по краям равны половине ручки,
+        // иначе на крайних значениях оно заезжает под ручку
+        RectTransform fillArea = NewUI("Fill Area", parent);
         fillArea.anchorMin = new Vector2(0f, 0.5f);
         fillArea.anchorMax = new Vector2(1f, 0.5f);
-        fillArea.sizeDelta = new Vector2(-handleWidth, 20f);
+        fillArea.sizeDelta = new Vector2(-HandleWidth, 20f);
 
-        RectTransform fill = NewRect("Fill", fillArea);
-        fill.anchorMin = Vector2.zero;
-        fill.anchorMax = Vector2.one;
-        fill.offsetMin = Vector2.zero;
-        fill.offsetMax = Vector2.zero;
+        RectTransform fill = NewUI("Fill", fillArea);
+        Stretch(fill);
 
         var fillImage = fill.gameObject.AddComponent<Image>();
         fillImage.color = UITheme.NeonGreen;
         fillImage.raycastTarget = false;
 
-        // Зона ручки
-        RectTransform handleArea = NewRect("Handle Slide Area", parent);
+        // Ручка: высоту даёт эта зона, ширину — sizeDelta.x
+        RectTransform handleArea = NewUI("Handle Slide Area", parent);
         handleArea.anchorMin = Vector2.zero;
         handleArea.anchorMax = Vector2.one;
-        handleArea.offsetMin = new Vector2(handleWidth * 0.5f, 8f);
-        handleArea.offsetMax = new Vector2(-handleWidth * 0.5f, -8f);
+        handleArea.offsetMin = new Vector2(HandleWidth * 0.5f, 8f);
+        handleArea.offsetMax = new Vector2(-HandleWidth * 0.5f, -8f);
 
-        RectTransform handle = NewRect("Handle", handleArea);
-        // Slider перепишет anchorMin/anchorMax по X, а Y растянет от 0 до 1.
-        // Поэтому высота в sizeDelta = 0, ширина = handleWidth.
+        RectTransform handle = NewUI("Handle", handleArea);
         handle.anchorMin = new Vector2(0f, 0f);
         handle.anchorMax = new Vector2(0f, 1f);
-        handle.sizeDelta = new Vector2(handleWidth, 0f);
+        handle.sizeDelta = new Vector2(HandleWidth, 0f);
 
         var handleImage = handle.gameObject.AddComponent<Image>();
         handleImage.color = UITheme.NeonGreenLight;
@@ -282,24 +255,30 @@ public static class SettingsScreenBuilder
         slider.direction = Slider.Direction.LeftToRight;
         slider.minValue = 0f;
         slider.maxValue = 1f;
-        slider.value = 0.5f;
+        slider.value = 1f;
 
         return slider;
     }
 
     /// <summary>
-    /// Три кнопки языка: светлая подложка, слева место под флаг, справа название.
-    /// Флаг выключен, пока не назначена картинка — пустой квадрат не висит.
+    /// Три кнопки языка. Горизонтальная группа делит ширину поровну,
+    /// высота кнопки задаётся LayoutElement — иначе она нулевая и кнопку не видно.
+    /// Внутри: слева место под флаг, справа название.
     /// </summary>
     private static LanguageSettingsPanel.LanguageButton[] BuildLanguageRow(
         RectTransform parent, TMP_FontAsset font)
     {
-        RectTransform row = NewRect("LanguageRow", parent);
-        row.anchorMin = new Vector2(0f, 1f);
-        row.anchorMax = new Vector2(1f, 1f);
-        row.pivot = new Vector2(0.5f, 1f);
-        row.anchoredPosition = new Vector2(0f, LanguageRowTop);
-        row.sizeDelta = new Vector2(0f, LanguageRowHeight);
+        RectTransform row = NewUI("LanguageRow", parent);
+        AddRowHeight(row.gameObject, LanguageRowHeight);
+
+        var layout = row.gameObject.AddComponent<HorizontalLayoutGroup>();
+        layout.padding = new RectOffset(0, 0, 0, 0);
+        layout.spacing = 24f;
+        layout.childAlignment = TextAnchor.MiddleCenter;
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
 
         string[] codes = { "ru", "en", "tr" };
         string[] labels = { "Русский", "English", "Türkçe" };
@@ -308,40 +287,39 @@ public static class SettingsScreenBuilder
 
         for (int i = 0; i < codes.Length; i++)
         {
-            float from = i / (float)codes.Length;
-            float to = (i + 1) / (float)codes.Length;
+            RectTransform slot = NewUI("Btn_" + codes[i], row);
 
-            RectTransform slot = NewRect("Btn_" + codes[i], row);
-            slot.anchorMin = new Vector2(from, 0f);
-            slot.anchorMax = new Vector2(to, 1f);
-            // Зазор между кнопками: половина с каждой стороны
-            slot.offsetMin = new Vector2(ButtonGap * 0.5f, 0f);
-            slot.offsetMax = new Vector2(-ButtonGap * 0.5f, 0f);
+            var element = slot.gameObject.AddComponent<LayoutElement>();
+            element.preferredHeight = LanguageButtonHeight;
+            element.minHeight = LanguageButtonHeight;
+            element.flexibleWidth = 1f;
 
-            Button button = AttachButton(slot);
+            var image = slot.gameObject.AddComponent<Image>();
+            image.color = UITheme.ButtonSecondaryMain;
+
+            var button = slot.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
 
             // Флаг слева
-            RectTransform flagRect = NewRect("Flag", slot);
+            RectTransform flagRect = NewUI("Flag", slot);
             flagRect.anchorMin = new Vector2(0f, 0.5f);
             flagRect.anchorMax = new Vector2(0f, 0.5f);
             flagRect.pivot = new Vector2(0f, 0.5f);
-            flagRect.anchoredPosition = new Vector2(18f, 0f);
+            flagRect.anchoredPosition = new Vector2(20f, 0f);
             flagRect.sizeDelta = new Vector2(FlagSize, FlagSize);
 
             var flag = flagRect.gameObject.AddComponent<Image>();
             flag.preserveAspect = true;
             flag.raycastTarget = false;
-            flag.enabled = false; // включится, когда появится спрайт
+            flag.enabled = false; // включится, когда появится картинка
 
             // Название справа от флага
-            TextMeshProUGUI label = NewText(slot, "Label", labels[i], 32,
-                                            UITheme.TextOnAccent, font);
-            var labelRect = (RectTransform)label.transform;
-            labelRect.anchorMin = Vector2.zero;
-            labelRect.anchorMax = Vector2.one;
-            labelRect.offsetMin = new Vector2(FlagSize + 32f, 0f);
-            labelRect.offsetMax = new Vector2(-16f, 0f);
-            label.alignment = TextAlignmentOptions.MidlineLeft;
+            TextMeshProUGUI label = AddText(slot, "Label", labels[i], 32,
+                                            UITheme.TextOnAccent, font, TextAlignmentOptions.MidlineLeft);
+            label.rectTransform.anchorMin = Vector2.zero;
+            label.rectTransform.anchorMax = Vector2.one;
+            label.rectTransform.offsetMin = new Vector2(FlagSize + 44f, 0f);
+            label.rectTransform.offsetMax = new Vector2(-16f, 0f);
 
             result[i] = new LanguageSettingsPanel.LanguageButton
             {
@@ -354,27 +332,107 @@ public static class SettingsScreenBuilder
         return result;
     }
 
-    // --- хелперы ---
+    // ------------------------------------------------------------------
+    // Хелперы — те же приёмы, что в HudBuilderTool и UIBuilderTool
+    // ------------------------------------------------------------------
 
-    /// <summary>
-    /// Вешает Button на готовый RectTransform: якоря задаются до добавления
-    /// компонента, чтобы не зависеть от порядка инициализации.
-    /// </summary>
-    private static Button AttachButton(RectTransform rect)
+    private static RectTransform NewUI(string name, Transform parent)
     {
+        var go = new GameObject(name, typeof(RectTransform));
+
+        // Слой UI может отсутствовать: -1 в go.layer недопустим
+        int uiLayer = LayerMask.NameToLayer("UI");
+        go.layer = uiLayer >= 0 ? uiLayer : 0;
+
+        if (parent != null) go.transform.SetParent(parent, false);
+        go.transform.localScale = Vector3.one;
+        return (RectTransform)go.transform;
+    }
+
+    private static void Stretch(RectTransform rt)
+    {
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+        rt.localScale = Vector3.one;
+    }
+
+    /// <summary>Полоса на всю ширину, прижатая к верху или низу родителя.</summary>
+    private static void Band(RectTransform rt, bool top, float height, float offset = 0f)
+    {
+        rt.anchorMin = new Vector2(0f, top ? 1f : 0f);
+        rt.anchorMax = new Vector2(1f, top ? 1f : 0f);
+        rt.pivot = new Vector2(0.5f, top ? 1f : 0f);
+        rt.sizeDelta = new Vector2(0f, height);
+        rt.anchoredPosition = new Vector2(0f, top ? -offset : offset);
+        rt.localScale = Vector3.one;
+    }
+
+    /// <summary>Точка в углу родителя: anchor задаёт угол, pivot — куда растёт элемент.</summary>
+    private static void Point(RectTransform rt, Vector2 anchor, Vector2 pivot,
+                              Vector2 offset, Vector2 size)
+    {
+        rt.anchorMin = anchor;
+        rt.anchorMax = anchor;
+        rt.pivot = pivot;
+        rt.anchoredPosition = offset;
+        rt.sizeDelta = size;
+        rt.localScale = Vector3.one;
+    }
+
+    /// <summary>Высота строки для VerticalLayoutGroup.</summary>
+    private static void AddRowHeight(GameObject go, float height)
+    {
+        var element = go.GetComponent<LayoutElement>();
+        if (element == null) element = go.AddComponent<LayoutElement>();
+        element.preferredHeight = height;
+        element.minHeight = height;
+        element.flexibleWidth = 1f;
+    }
+
+    private static TextMeshProUGUI AddText(Transform parent, string name, string text,
+                                           float size, Color color, TMP_FontAsset font,
+                                           TextAlignmentOptions align = TextAlignmentOptions.Center)
+    {
+        RectTransform rect = NewUI(name, parent);
+
+        var tmp = rect.gameObject.AddComponent<TextMeshProUGUI>();
+        if (font != null) tmp.font = font;
+
+        tmp.text = text;
+        tmp.fontSize = size;
+        tmp.color = color;
+        tmp.alignment = align;
+        tmp.raycastTarget = false;
+        tmp.overflowMode = TextOverflowModes.Overflow;
+
+        Stretch(rect);
+        return tmp;
+    }
+
+    private static Button AddButton(Transform parent, string name, string label,
+                                    TMP_FontAsset font, float fontSize = 40f)
+    {
+        RectTransform rect = NewUI(name, parent);
+
         var image = rect.gameObject.AddComponent<Image>();
         image.color = UITheme.ButtonSecondaryMain;
 
         var button = rect.gameObject.AddComponent<Button>();
         button.targetGraphic = image;
 
+        TextMeshProUGUI text = AddText(rect, "Label", label, fontSize,
+                                       UITheme.TextOnAccent, font, TextAlignmentOptions.Center);
+        Stretch(text.rectTransform);
+
         return button;
     }
 
     /// <summary>
-    /// Помечает текст как переводимый: в рантайме UiTextLabel подставит
-    /// значение из таблицы UI вместо ключа. В редакторе таблица не загружена,
-    /// поэтому в префаб попадает ключ.
+    /// Помечает текст как переводимый. В редакторе таблица локализации
+    /// не загружена и UiText.Get вернул бы сам ключ — поэтому в префаб
+    /// кладётся ключ, а перевод подставляет UiTextLabel в рантайме.
     /// </summary>
     private static void AddLabelKey(TextMeshProUGUI label, string key)
     {
@@ -404,42 +462,6 @@ public static class SettingsScreenBuilder
         }
     }
 
-    private static RectTransform NewRect(string name, Transform parent)
-    {
-        var go = new GameObject(name, typeof(RectTransform));
-        if (parent != null) go.transform.SetParent(parent, false);
-        return (RectTransform)go.transform;
-    }
-
-    private static TextMeshProUGUI NewText(Transform parent, string name, string text,
-                                           float size, Color color, TMP_FontAsset font)
-    {
-        RectTransform rect = NewRect(name, parent);
-
-        var label = rect.gameObject.AddComponent<TextMeshProUGUI>();
-        if (font != null) label.font = font;
-
-        label.text = text;
-        label.fontSize = size;
-        label.color = color;
-        label.alignment = TextAlignmentOptions.Center;
-        label.raycastTarget = false;
-
-        return label;
-    }
-
-    private static Button NewButton(Transform parent, string name, string label,
-                                    TMP_FontAsset font, float fontSize = 40f)
-    {
-        RectTransform rect = NewRect(name, parent);
-        Button button = AttachButton(rect);
-
-        TextMeshProUGUI text = NewText(rect, "Label", label, fontSize, UITheme.TextOnAccent, font);
-        Stretch((RectTransform)text.transform);
-
-        return button;
-    }
-
     private static void SetObject(SerializedObject so, string field, Object value)
     {
         SerializedProperty prop = so.FindProperty(field);
@@ -449,13 +471,5 @@ public static class SettingsScreenBuilder
             return;
         }
         prop.objectReferenceValue = value;
-    }
-
-    private static void Stretch(RectTransform rt)
-    {
-        rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.offsetMin = Vector2.zero;
-        rt.offsetMax = Vector2.zero;
     }
 }
