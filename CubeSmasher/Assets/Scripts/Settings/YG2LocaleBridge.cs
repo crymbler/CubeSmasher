@@ -60,26 +60,40 @@ public class YG2LocaleBridge : MonoBehaviour
     {
         if (string.IsNullOrEmpty(lang)) return;
 
-        // Таблица грузится асинхронно: до готовности ничего не трогаем
-        if (!LocalizationSettings.InitializationOperation.IsDone) return;
+        // Раньше здесь стоял молчаливый `return`: если локализация ещё не
+        // инициализировалась, смена языка просто не происходила, и в Console
+        // не было ни строчки. Теперь каждый исход виден.
+        if (!LocalizationSettings.InitializationOperation.IsDone)
+        {
+            Debug.LogWarning("[Locale] Локализация ещё не готова, смена отложена: " + lang);
+            return;
+        }
 
         var locales = LocalizationSettings.AvailableLocales;
-        if (locales == null) return;
+
+        if (locales == null)
+        {
+            Debug.LogWarning("[Locale] Список локалей пуст. Проверьте " +
+                             "Window → Asset Management → Localization Scene Controls.");
+            return;
+        }
 
         var locale = locales.GetLocale(lang) ?? locales.GetLocale("en");
 
         if (locale == null)
         {
-            Debug.LogWarning("[Locale] В проекте нет локали для языка '" + lang +
+            Debug.LogWarning("[Locale] Нет локали для языка '" + lang +
                              "'. Проверьте Assets/Localisation: должны быть ru, en, tr.");
             return;
         }
 
-        // Повторная установка той же локали не шлёт SelectedLocaleChanged,
-        // поэтому проверяем явно
-        if (LocalizationSettings.SelectedLocale != locale)
+        if (LocalizationSettings.SelectedLocale == locale)
         {
-            LocalizationSettings.SelectedLocale = locale;
+            Debug.Log("[Locale] Язык уже активен: " + locale.Identifier.Code);
+            return;
         }
+
+        LocalizationSettings.SelectedLocale = locale;
+        Debug.Log("[Locale] Язык переключён на " + locale.Identifier.Code);
     }
 }
