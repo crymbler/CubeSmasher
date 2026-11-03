@@ -271,17 +271,12 @@ public static class SettingsScreenBuilder
         RectTransform row = NewUI("LanguageRow", parent);
         AddRowHeight(row.gameObject, LanguageRowHeight);
 
-        var layout = row.gameObject.AddComponent<HorizontalLayoutGroup>();
-        layout.padding = new RectOffset(0, 0, 0, 0);
-        layout.spacing = 24f;
-        layout.childAlignment = TextAnchor.MiddleCenter;
-        layout.childControlWidth = true;
-        layout.childControlHeight = true;
-        layout.childForceExpandWidth = true;
-        layout.childForceExpandHeight = false;
-
         string[] codes = { "ru", "en", "tr" };
         string[] labels = { "Русский", "English", "Türkçe" };
+
+        const float ButtonWidth = 200f;
+        const float ButtonHeight = 150f;
+        const float Step = 604f;
 
         var result = new LanguageSettingsPanel.LanguageButton[codes.Length];
 
@@ -289,10 +284,16 @@ public static class SettingsScreenBuilder
         {
             RectTransform slot = NewUI("Btn_" + codes[i], row);
 
-            var element = slot.gameObject.AddComponent<LayoutElement>();
-            element.preferredHeight = LanguageButtonHeight;
-            element.minHeight = LanguageButtonHeight;
-            element.flexibleWidth = 1f;
+            // Якоря и размер задаются ЯВНО. Если оставить кнопку растянутой
+            // (anchorMin 0,0 / anchorMax 1,1), она накрывает весь ряд
+            // и перехватывает клики у соседей — снаружи «кнопки не работают».
+            slot.anchorMin = new Vector2(0f, 1f);
+            slot.anchorMax = new Vector2(0f, 1f);
+            slot.pivot = new Vector2(0.5f, 0.5f);
+            slot.sizeDelta = new Vector2(ButtonWidth, ButtonHeight);
+
+            // Первая кнопка по центру своей ячейки, дальше — постоянный шаг
+            slot.anchoredPosition = new Vector2(292f + Step * i, -50f);
 
             var image = slot.gameObject.AddComponent<Image>();
             image.color = UITheme.ButtonSecondaryMain;
@@ -300,26 +301,26 @@ public static class SettingsScreenBuilder
             var button = slot.gameObject.AddComponent<Button>();
             button.targetGraphic = image;
 
-            // Флаг слева
+            // Флаг слева, фиксированного размера
             RectTransform flagRect = NewUI("Flag", slot);
             flagRect.anchorMin = new Vector2(0f, 0.5f);
             flagRect.anchorMax = new Vector2(0f, 0.5f);
             flagRect.pivot = new Vector2(0f, 0.5f);
-            flagRect.anchoredPosition = new Vector2(20f, 0f);
+            flagRect.anchoredPosition = new Vector2(14f, 0f);
             flagRect.sizeDelta = new Vector2(FlagSize, FlagSize);
 
             var flag = flagRect.gameObject.AddComponent<Image>();
             flag.preserveAspect = true;
             flag.raycastTarget = false;
-            flag.enabled = false; // включится, когда появится картинка
+            flag.enabled = false;
 
             // Название справа от флага
-            TextMeshProUGUI label = AddText(slot, "Label", labels[i], 32,
+            TextMeshProUGUI label = AddText(slot, "Label", labels[i], 30,
                                             UITheme.TextOnAccent, font, TextAlignmentOptions.MidlineLeft);
             label.rectTransform.anchorMin = Vector2.zero;
             label.rectTransform.anchorMax = Vector2.one;
-            label.rectTransform.offsetMin = new Vector2(FlagSize + 44f, 0f);
-            label.rectTransform.offsetMax = new Vector2(-16f, 0f);
+            label.rectTransform.offsetMin = new Vector2(FlagSize + 24f, 0f);
+            label.rectTransform.offsetMax = new Vector2(-10f, 0f);
 
             result[i] = new LanguageSettingsPanel.LanguageButton
             {

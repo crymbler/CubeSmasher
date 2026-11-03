@@ -140,7 +140,17 @@ namespace CubeSmasher.Settings
 
         private void ChooseLanguage(string code)
         {
-            if (string.IsNullOrEmpty(code) || code == YG2.lang) return;
+            if (string.IsNullOrEmpty(code)) return;
+
+            // Совпадение с текущим языком — не ошибка, просто ничего не меняем.
+            // Раньше здесь стоял `return` до всякой диагностики; если клик попадал
+            // в перекрытую кнопку, код оказывался текущим, метод выходил молча,
+            // и снаружи это выглядело как «кнопки не работают». Теперь пишем в Console.
+            if (code == YG2.lang)
+            {
+                Debug.Log("[Settings] Язык уже выбран: " + code);
+                return;
+            }
 
             // Без перезагрузки сцены: она создаёт заново все сервисы, а AudioService
             // с DontDestroyOnLoad остаётся жить — отсюда вторая музыка.
