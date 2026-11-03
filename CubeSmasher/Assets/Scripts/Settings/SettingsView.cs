@@ -142,35 +142,22 @@ namespace CubeSmasher.Settings
         {
             if (string.IsNullOrEmpty(code) || code == YG2.lang) return;
 
-            // YG2 сохраняет выбор сам, YG2LocaleBridge переключает Unity Localization.
-            // Перезагрузка сцены нужна, потому что уже созданные тексты
-            // не перечитают таблицу сами.
             // Без перезагрузки сцены: она создаёт заново все сервисы, а AudioService
-            // с DontDestroyOnLoad остаётся жить — отсюда вторая музыка и подвисание.
-            // Тексты перечитываем на месте через UiTextLabel.
+            // с DontDestroyOnLoad остаётся жить — отсюда вторая музыка.
             YG2.SwitchLanguage(code);
-            ReapplyTranslations();
+
+            // Явный вызов вместо надежды на подписку: плагин под #if UNITY_EDITOR
+            // обнуляет YG2.onSwitchLang при инициализации, и подписка теряется.
+            YG2LocaleBridge.Apply(code);
+
+            // Тексты перечитает UiTextLabel по событию SelectedLocaleChanged.
+            // Здесь только подсвечиваем активную кнопку.
+            RefreshLanguage();
         }
 
         private static void UpdateValueLabel(TextMeshProUGUI label, float value)
         {
             if (label != null) label.text = Mathf.RoundToInt(value * 100f) + "%";
-        }
-
-        /// <summary>
-        /// Перечитать все переводимые тексты в сцене после смены языка.
-        /// FindObjectsOfTypeAll отдаёт и ассеты префабов, поэтому берём
-        /// только объекты живой сцены.
-        /// </summary>
-        private static void ReapplyTranslations()
-        {
-            UiTextLabel[] labels = Resources.FindObjectsOfTypeAll<UiTextLabel>();
-
-            for (int i = 0; i < labels.Length; i++)
-            {
-                if (labels[i] == null || !labels[i].gameObject.scene.IsValid()) continue;
-                labels[i].Apply();
-            }
         }
 
         private void SetHidden(bool hide)

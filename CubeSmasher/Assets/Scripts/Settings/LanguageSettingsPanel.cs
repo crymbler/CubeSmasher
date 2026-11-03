@@ -43,18 +43,6 @@ public class LanguageSettingsPanel : MonoBehaviour
         }
     }
 
-    /// <summary>Перечитать переводимые тексты в сцене после смены языка.</summary>
-    private static void ReapplyTranslations()
-    {
-        CubeSmasher.UI.UiTextLabel[] labels =
-            Resources.FindObjectsOfTypeAll<CubeSmasher.UI.UiTextLabel>();
-
-        for (int i = 0; i < labels.Length; i++)
-        {
-            if (labels[i] == null || !labels[i].gameObject.scene.IsValid()) continue;
-            labels[i].Apply();
-        }
-    }
 
     public void Choose(string code)
     {
@@ -63,6 +51,8 @@ public class LanguageSettingsPanel : MonoBehaviour
         // Без перезагрузки сцены: она пересоздаёт сервисы, а AudioService
         // с DontDestroyOnLoad остаётся — получается вторая музыка.
         YG2.SwitchLanguage(code);
-        ReapplyTranslations();
+
+        // Явный вызов: подписка на onSwitchLang могла быть обнулена плагином
+        YG2LocaleBridge.Apply(code);
     }
 }
