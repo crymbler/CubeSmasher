@@ -24,20 +24,20 @@ namespace CubeSmasher.Infrastructure.Initializers
 
             shopService.OnUpgradePurchased += upgradeId =>
             {
-                if (upgradeId == "hammer_damage") ApplyDamage(shopService);
-                if (upgradeId == "hammer_radius") ApplyRadius(shopService);
+                if (upgradeId == StatType.HammerDamage.ToString()) ApplyDamage(shopService);
+                if (upgradeId == StatType.HammerRadius.ToString()) ApplyRadius(shopService);
             };
         }
 
         private void ApplyRadius(IShopService shopService)
         {
-            var radiusData = shopService.GetUpgradeData("hammer_radius");
+            var radiusData = shopService.GetUpgradeData(StatType.HammerRadius.ToString());
             if (radiusData != null) _hammerCaster.SetHitRadius((float)radiusData.value);
         }
 
         private void ApplyDamage(IShopService shopService)
         {
-            var damageData = shopService.GetUpgradeData("hammer_damage");
+            var damageData = shopService.GetUpgradeData(StatType.HammerDamage.ToString());
             if (damageData != null)
             {
                 _hammerCaster.SetDamage((float)damageData.value);

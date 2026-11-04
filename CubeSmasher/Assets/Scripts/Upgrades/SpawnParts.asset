@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fa6d727ed99214ba0ed0a292c4d696, type: 3}
   m_Name: SpawnParts
   m_EditorClassIdentifier: 
-  Id: spawn_parts
+  Stat: 4
   Category: 0
   UpgradeName: "\u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0434\u0435\u0442\u0430\u043B\u0435\u0439"
   LocalizedName:

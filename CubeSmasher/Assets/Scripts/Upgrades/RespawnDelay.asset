@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fa6d727ed99214ba0ed0a292c4d696, type: 3}
   m_Name: RespawnDelay
   m_EditorClassIdentifier: 
-  Id: respawn_delay
+  Stat: 5
   Category: 0
   UpgradeName: "\u0441\u043A\u043E\u0440\u043E\u0441\u0442\u044C \u0441\u043F\u0430\u0432\u043D\u0430"
   LocalizedName:

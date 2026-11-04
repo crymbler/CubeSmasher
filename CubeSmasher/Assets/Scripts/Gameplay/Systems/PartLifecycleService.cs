@@ -101,16 +101,16 @@ public class PartLifecycleService
     }
 
     /// <summary>
-    /// ѕодт€гивает спавн из апгрейдов: "spawn_parts" Ч сколько кубов на столе,
-    /// "respawn_delay" Ч пауза перед новым кубом, в секундах. «начени€ берутс€ как есть.
+    /// ѕодт€гивает спавн из апгрейдов: StatType.SpawnParts.ToString() Ч сколько кубов на столе,
+    /// StatType.RespawnDelay.ToString() Ч пауза перед новым кубом, в секундах. «начени€ берутс€ как есть.
     /// ≈сли апгрейда нет, остаЄтс€ то, что задано в PhysicsConfig.
     /// </summary>
     public void ApplySpawnUpgrades(IShopService shop)
     {
         if (shop == null) return;
 
-        _partsPerWave = ReadUpgradeValue(shop, "spawn_parts", _physics.StartPartsPerWave);
-        _respawnDelay = Mathf.Max(MinRespawnDelay, ReadUpgradeValue(shop, "respawn_delay", _respawnDelay));
+        _partsPerWave = ReadUpgradeValue(shop, StatType.SpawnParts.ToString(), _physics.StartPartsPerWave);
+        _respawnDelay = Mathf.Max(MinRespawnDelay, ReadUpgradeValue(shop, StatType.RespawnDelay.ToString(), _respawnDelay));
     }
 
     private static float ReadUpgradeValue(IShopService shop, string id, float fallback)

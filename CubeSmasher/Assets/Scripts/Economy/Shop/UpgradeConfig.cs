@@ -8,7 +8,10 @@ public enum UpgradeCategory { Tap, Passive } // Чтобы знать, в какой List сохран
 public class UpgradeConfig : ScriptableObject
 {
     [Header("Идентификация (Связь с SavesYG)")]
-    public string Id;                  // Должен быть уникальным (например: "hammer_damage")
+    public StatType Stat;   // Что улучшает апгрейд (выбирается из списка)
+
+    /// <summary>Ключ для сохранения. Берётся из Stat, поэтому опечаток нет.</summary>
+    public string Id => Stat.ToString();
     public UpgradeCategory Category;   // Tap (молот) или Passive (гараж/детали)
 
     [Header("Визуал UI")]
