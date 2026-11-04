@@ -35,9 +35,7 @@ public class ShopModel : IShopService
         foreach (var config in _availableUpgrades)
         {
             // Выбираем нужный список на основе категории (Tap или Passive)
-            List<UpgradeData> targetList = config.Category == UpgradeCategory.Tap
-                ? YG2.saves.tapUpgrades
-                : YG2.saves.passiveUpgrades;
+            List<UpgradeData> targetList = YG2.saves.upgrades;
 
             // Ищем, есть ли уже сохранение для этого апгрейда
             UpgradeData data = targetList.FirstOrDefault(u => u.id == config.Id);
@@ -73,8 +71,7 @@ public class ShopModel : IShopService
     // Метод для получения текущих данных апгрейда (используем в UI и для получения Урона/Радиуса)
     public UpgradeData GetUpgradeData(string id)
     {
-        return YG2.saves.tapUpgrades.FirstOrDefault(u => u.id == id)
-            ?? YG2.saves.passiveUpgrades.FirstOrDefault(u => u.id == id);
+        return YG2.saves.upgrades.FirstOrDefault(u => u.id == id);
     }
 
     // Метод для получения базовых настроек (имя, иконка, макс. уровень)

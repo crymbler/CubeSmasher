@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Localization;
 
 public enum GrowthType { Linear, Exponential }
-public enum UpgradeCategory { Tap, Passive } // Чтобы знать, в какой List сохранять
 
 [CreateAssetMenu(fileName = "New Upgrade", menuName = "Tycoon/Upgrade Config")]
 public class UpgradeConfig : ScriptableObject
@@ -12,7 +11,6 @@ public class UpgradeConfig : ScriptableObject
 
     /// <summary>Ключ для сохранения. Берётся из Stat, поэтому опечаток нет.</summary>
     public string Id => Stat.ToString();
-    public UpgradeCategory Category;   // Tap (молот) или Passive (гараж/детали)
 
     [Header("Визуал UI")]
     public string UpgradeName;

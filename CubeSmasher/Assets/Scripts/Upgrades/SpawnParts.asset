@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: SpawnParts
   m_EditorClassIdentifier: 
   Stat: 4
-  Category: 0
   UpgradeName: "\u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0434\u0435\u0442\u0430\u043B\u0435\u0439"
   LocalizedName:
     m_TableReference:

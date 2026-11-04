@@ -52,9 +52,6 @@ namespace YG
         /// <summary>Надетая тарелка. Пусто — берётся предмет по умолчанию.</summary>
         public string equippedDish = "";
 
-        // Твои списки. Мы будем использовать tapUpgrades для молота, 
-        // а passiveUpgrades оставим для Гаража и деталей!
-        public List<UpgradeData> passiveUpgrades = new List<UpgradeData>();
-        public List<UpgradeData> tapUpgrades = new List<UpgradeData>();
+        public List<UpgradeData> upgrades = new List<UpgradeData>();
     }
 }
