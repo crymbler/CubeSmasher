@@ -63,7 +63,9 @@ namespace CubeSmasher.Settings
             }
         }
 
-        public void Open()
+        public bool IsOpen => gameObject.activeSelf;
+
+    public void Open()
         {
             gameObject.SetActive(true);
             SetHidden(true);

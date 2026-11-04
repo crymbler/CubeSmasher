@@ -35,7 +35,6 @@ namespace CubeSmasher.Infrastructure
         private readonly AudioSource _music;
         private readonly AudioSource[] _sfxPool;
         private readonly AudioMixer _mixer;
-        private readonly float _sfxBaseVolume;
         private int _nextSfxIndex;
 
         public AudioService(AudioMixer mixer)
@@ -98,9 +97,6 @@ namespace CubeSmasher.Infrastructure
                 if (sfxGroup != null) _sfxPool[i].outputAudioMixerGroup = sfxGroup;
             }
 
-            // Без микшера громкость SFX хранится тут и применяется к каждому
-            // источнику пула перед проигрыванием (volume у PlayOneShot — множитель).
-            _sfxBaseVolume = 1f;
 
             ApplyVolumes(YG2.saves.musicVolume, YG2.saves.soundVolume);
 
