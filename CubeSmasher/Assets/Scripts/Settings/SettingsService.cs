@@ -6,70 +6,50 @@ using YG;
 namespace CubeSmasher.Settings
 {
     /// <summary>
-    /// Громкость музыки и звука. Отдельный сервис, потому что трогает сразу три вещи:
-    /// сохранение (YG2.saves), микшер (AudioService) и UI.
-    ///
-    /// Значения живут в сохранении YG2 (musicVolume / soundVolume), поэтому переживают
-    /// перезапуск и синхронизируются с облаком Яндекс.Игр. Меняются только через
-    /// свойства: каждое изменение сразу применяется к микшеру и сохраняется.
+    /// Громкость музыки и звука. Значения живут в сохранении YG2.
+    /// Ползунок применяет громкость сразу, а запись на диск делается один раз —
+    /// при закрытии окна.
     /// </summary>
     public class SettingsService
     {
         private readonly AudioService _audio;
-        private readonly ISaveService _saveService;
+        private readonly ISaveService _save;
 
-        /// <summary>Громкость менялась, но ещё не записана.</summary>
-        private bool _dirty;
-
-        public SettingsService(AudioService audio, ISaveService saveService)
+        public SettingsService(AudioService audio, ISaveService save)
         {
             _audio = audio;
-            _saveService = saveService;
-
+            _save = save;
             Apply();
         }
 
-        /// <summary>Громкость музыки 0..1.</summary>
         public float MusicVolume
         {
             get => YG2.saves.musicVolume;
             set
             {
                 YG2.saves.musicVolume = Mathf.Clamp01(value);
-                Apply();
-                _dirty = true;
+                _audio.SetMusic(value);
             }
         }
 
-        /// <summary>Громкость звуков 0..1.</summary>
         public float SoundVolume
         {
             get => YG2.saves.soundVolume;
             set
             {
                 YG2.saves.soundVolume = Mathf.Clamp01(value);
-                Apply();
-                _dirty = true;
+                _audio.SetSound(value);
             }
         }
 
-        /// <summary>
-        /// Записать накопленные изменения громкости. Вызывается при закрытии окна,
-        /// а не на каждое движение ползунка: ползунок шлёт событие на каждый пиксель,
-        /// и запись в PlayerPrefs плюс облако на каждое движение вешала игру.
-        /// </summary>
-        public void Flush()
-        {
-            if (!_dirty) return;
-
-            _dirty = false;
-            _saveService.Save();
-        }
-
-        /// <summary>Применить сохранённые значения к микшеру.</summary>
         public void Apply()
         {
-            if (_audio != null) _audio.ApplyVolumes(YG2.saves.musicVolume, YG2.saves.soundVolume);
+            _audio.ApplyVolumes(YG2.saves.musicVolume, YG2.saves.soundVolume);
+        }
+
+        public void Save()
+        {
+            _save.Save();
         }
     }
 }

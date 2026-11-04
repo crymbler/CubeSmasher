@@ -103,6 +103,28 @@ namespace CubeSmasher.Infrastructure
             _sfxBaseVolume = 1f;
 
             ApplyVolumes(YG2.saves.musicVolume, YG2.saves.soundVolume);
+
+            // Bootstrapper создаёт AudioService раньше, чем YG2 загрузит сохранение.
+            // Пока не загружено, в микшер уходят значения по умолчанию (0.5).
+            YG2.onGetSDKData -= ApplySavedVolumes;
+            YG2.onGetSDKData += ApplySavedVolumes;
+        }
+
+        private void ApplySavedVolumes()
+        {
+            ApplyVolumes(YG2.saves.musicVolume, YG2.saves.soundVolume);
+        }
+
+        public void SetMusic(float volume)
+        {
+            if (_mixer != null) _mixer.SetFloat(MusicParam, ToDecibels(volume));
+            else _music.volume = Mathf.Clamp01(volume);
+        }
+
+        public void SetSound(float volume)
+        {
+            if (_mixer != null) _mixer.SetFloat(SoundParam, ToDecibels(volume));
+            else SetSfxVolume(Mathf.Clamp01(volume));
         }
 
         /// <summary>Включить музыку. Повторный вызов с тем же клипом ничего не меняет.</summary>
