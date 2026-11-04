@@ -4,5 +4,4 @@ public enum UpgradeType
     HammerRadius = 1,     // Радиус сплеша
     CritChance = 2,       // Шанс крита
     BigPartsChance = 3,   // Твоя идея: шанс, что упадет сразу огромная деталь
-    MaxPartsLimit = 4     // Твоя идея: увеличение лимита деталей на экране
 }
