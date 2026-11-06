@@ -1,19 +1,23 @@
 {
-    "idSave": 1994,
-    "lastSaveTime": 1793702700,
+    "idSave": 2022,
+    "lastSaveTime": 1793965648,
     "bestScore": 0,
     "isAdsRemoved": false,
-    "level": 4,
-    "stageDetails": 83,
+    "level": 5,
+    "stageDetails": 13,
     "hasPendingLocalSave": true,
-    "lastGarageCarIndex": 25,
+    "lastGarageCarIndex": 1,
     "openedGarageCars": [
         0,
         4,
-        1
+        1,
+        5,
+        6,
+        7,
+        2
     ],
     "garageOpenMigrated": true,
-    "balance": 277414.9200556278,
+    "balance": 296256.1700370312,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 0.5819287896156311,
@@ -23,31 +27,30 @@
     ],
     "equippedHammer": "model_17",
     "equippedDish": "dish_3",
-    "passiveUpgrades": [],
-    "tapUpgrades": [
+    "upgrades": [
         {
-            "id": "hammer_damage",
-            "level": 8,
-            "price": 201.13556385040284,
-            "value": 31.85472869873047,
+            "id": "HammerDamage",
+            "level": 1,
+            "price": 50.0,
+            "value": 10.0,
             "isLocked": false
         },
         {
-            "id": "hammer_radius",
+            "id": "HammerRadius",
             "level": 1,
             "price": 100.0,
             "value": 1.5,
-            "isLocked": true
+            "isLocked": false
         },
         {
-            "id": "respawn_delay",
+            "id": "RespawnDelay",
             "level": 1,
             "price": 1000.0,
             "value": 2.0,
             "isLocked": true
         },
         {
-            "id": "spawn_parts",
+            "id": "SpawnParts",
             "level": 1,
             "price": 1000000.0,
             "value": 2.0,
