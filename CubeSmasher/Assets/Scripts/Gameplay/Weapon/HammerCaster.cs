@@ -1,160 +1,120 @@
-using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// РњРѕР»РѕС‚: РѕР±СЉРµРґРёРЅСЏРµС‚ РЅР°РІРµРґРµРЅРёРµ Рё Р°РЅРёРјР°С†РёСЋ (HammerCast) СЃ С†РёС„СЂР°РјРё СѓСЂРѕРЅР° (HammerDamageText).
+/// РЎС‡РёС‚Р°РµС‚ СѓСЂРѕРЅ РѕРґРЅРѕРіРѕ СѓРґР°СЂР° СЃ СѓС‡С‘С‚РѕРј РєСЂРёС‚Р° Рё Р±СЊС‘С‚ РІСЃС‘ РІ СЂР°РґРёСѓСЃРµ.
+/// Р—РЅР°С‡РµРЅРёСЏ СЃС‚Р°С‚РѕРІ РїСЂРёС…РѕРґСЏС‚ СЃРЅР°СЂСѓР¶Рё (WeaponInitializer Р±РµСЂС‘С‚ РёС… РёР· StatService).
+/// </summary>
 public class HammerCaster : MonoBehaviour
 {
-    [Header("Настройки луча и удара")]
+    [Header("РќР°СЃС‚СЂРѕР№РєРё Р»СѓС‡Р° Рё СѓРґР°СЂР°")]
     [SerializeField] private Camera _camera;
     [SerializeField] private float _hitRadius = 1.5f;
     [SerializeField] private float _maxDistance = 100f;
     [SerializeField] private LayerMask _hitMask;
 
-    [Header("Иерархия кувалды")]
+    [Header("РРµСЂР°СЂС…РёСЏ РєСѓРІР°Р»РґС‹")]
     [SerializeField] private Transform _cursorTarget;
     [SerializeField] private Transform _swingPivot;
     [SerializeField] private float _followSpeed = 25f;
 
-    [Header("Анимация")]
+    [Header("РђРЅРёРјР°С†РёСЏ")]
     [SerializeField] private float _idleAngle = -20f;
-    [SerializeField] private float _windupAngle = -60f; // Угол замаха (отклонение назад)
+    [SerializeField] private float _windupAngle = -60f;
     [SerializeField] private float _hitAngle = 90f;
-    [SerializeField] private float _windupTime = 0.1f; // Время на замах (очень быстро)
-    [SerializeField] private float _swingTime = 0.1f;  // Время на сам удар
+    [SerializeField] private float _windupTime = 0.1f;
+    [SerializeField] private float _swingTime = 0.1f;
     [SerializeField] private float _returnTime = 0.25f;
 
-    [Header("Эффекты")]
+    [Header("Р­С„С„РµРєС‚С‹")]
     [SerializeField] private DamagePopup _damagePopupPrefab;
+    [SerializeField] private Color _normalDamageColor = Color.white;
+    [SerializeField] private Color _critDamageColor = Color.red;
 
-    private float _currentDamage = 10f;
-    private bool _isSwinging = false;
+    private HammerCast _cast;
+    private HammerDamageText _damageText;
+
+    private float _damage = 10f;
+    private float _critChance;
+    private float _critDamage = 2f;
 
     private void Start()
     {
         if (_camera == null) _camera = Camera.main;
+
+        _cast = new HammerCast(this, _camera, _cursorTarget, _swingPivot, _hitMask,
+                               _maxDistance, _followSpeed,
+                               _idleAngle, _windupAngle, _hitAngle,
+                               _windupTime, _swingTime, _returnTime);
+
+        _damageText = new HammerDamageText(_damagePopupPrefab)
+        {
+            NormalColor = _normalDamageColor,
+            CritColor = _critDamageColor
+        };
+
+        _cast.Hit += HandleHit;
         _swingPivot.localRotation = Quaternion.Euler(_idleAngle, 0, 0);
 
-        // Скрываем курсор, чтобы не мешался (останется только молот)
         Cursor.visible = false;
     }
 
     private void Update()
     {
-        MoveHammer();
+        _cast.Move();
 
-        if (Input.GetMouseButtonDown(0) && !_isSwinging)
-        {
-            StartCoroutine(SwingRoutine());
-        }
+        if (Input.GetMouseButtonDown(0) && !_cast.IsSwinging)
+            _cast.Swing();
     }
 
-    public void SetDamage(float damage)
+    /// <summary>РЈСЂРѕРЅ, СЂР°РґРёСѓСЃ, СЃРєРѕСЂРѕСЃС‚СЊ, РєСЂРёС‚ вЂ” РёР· StatService С‡РµСЂРµР· WeaponInitializer.</summary>
+    public void SetCombatStats(float damage, float radius, float attackSpeed,
+                               float critChance, float critDamage)
     {
-        _currentDamage = damage;
+        _damage = damage;
+
+        if (radius > 0f) _hitRadius = Mathf.Clamp(radius, MinHitRadius, MaxHitRadius);
+        if (_cast != null) _cast.SpeedMultiplier = Mathf.Max(0.1f, attackSpeed);
+
+        _critChance = Mathf.Clamp01(critChance);
+        _critDamage = Mathf.Max(1f, critDamage);
     }
 
-    /// <summary>
-    /// Радиус удара. Приходит из апгрейда hammer_radius.
-    /// Ограничен: в ассете апгрейда BaseValue = 10, без рамки молот бил бы по всему столу.
-    /// </summary>
-    public void SetHitRadius(float radius)
+    /// <summary>Р¦РІРµС‚Р° С†РёС„СЂ СѓСЂРѕРЅР° вЂ” РёР· HammerConfig.</summary>
+    public void SetDamageColors(Color normal, Color crit)
     {
-        if (radius <= 0f) return;
-        _hitRadius = Mathf.Clamp(radius, MinHitRadius, MaxHitRadius);
+        _normalDamageColor = normal;
+        _critDamageColor = crit;
+
+        if (_damageText == null) return;
+        _damageText.NormalColor = normal;
+        _damageText.CritColor = crit;
     }
 
     private const float MinHitRadius = 0.5f;
     private const float MaxHitRadius = 6f;
 
-    private void MoveHammer()
+    private void HandleHit(Vector3 position)
     {
-        if (_isSwinging) return;
-
-        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-        Vector3 targetPosition;
-
-        if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance, _hitMask))
-        {
-            targetPosition = hit.point;
-        }
-        else
-        {
-            targetPosition = ray.GetPoint(10f);
-        }
-
-        // Перемещаем цель за мышкой
-        _cursorTarget.position = Vector3.Lerp(_cursorTarget.position, targetPosition, Time.deltaTime * _followSpeed);
-
-        // Фиксируем ротацию, чтобы молот всегда смотрел ровно, не подстраиваясь под камеру
-        _cursorTarget.rotation = Quaternion.identity;
-    }
-
-    private IEnumerator SwingRoutine()
-    {
-        _isSwinging = true;
-
-        Quaternion idleRotation = Quaternion.Euler(_idleAngle, 0, 0);
-        Quaternion windupRotation = Quaternion.Euler(_windupAngle, 0, 0);
-        Quaternion hitRotation = Quaternion.Euler(_hitAngle, 0, 0);
-
-        // Фаза 1: Замах (Wind-up) - быстро отводим молот назад
-        float t = 0;
-        while (t < 1)
-        {
-            t += Time.deltaTime / _windupTime;
-            _swingPivot.localRotation = Quaternion.Lerp(idleRotation, windupRotation, t);
-            yield return null;
-        }
-
-        // Фаза 2: Удар (Strike) - резко опускаем вниз
-        t = 0;
-        while (t < 1)
-        {
-            t += Time.deltaTime / _swingTime;
-            _swingPivot.localRotation = Quaternion.Lerp(windupRotation, hitRotation, t);
-            yield return null;
-        }
-
-        Hit(); // Наносим урон, когда молот внизу
-
-        // Фаза 3: Возврат (Return) - плавно возвращаемся в исходное положение
-        t = 0;
-        while (t < 1)
-        {
-            t += Time.deltaTime / _returnTime;
-            _swingPivot.localRotation = Quaternion.Lerp(hitRotation, idleRotation, t);
-            yield return null;
-        }
-
-        _swingPivot.localRotation = idleRotation;
-        _isSwinging = false;
-    }
-
-    private void Hit()
-    {
-        Collider[] hits = Physics.OverlapSphere(_cursorTarget.position, _hitRadius, _hitMask);
+        Collider[] hits = Physics.OverlapSphere(position, _hitRadius, _hitMask);
         if (hits.Length > 0) PlayHitSound();
+
+        // РљСЂРёС‚ Р±СЂРѕСЃР°РµС‚СЃСЏ РѕРґРёРЅ СЂР°Р· РЅР° РІР·РјР°С…, Р° РЅРµ РЅР° РєР°Р¶РґСѓСЋ РґРµС‚Р°Р»СЊ: РёРЅР°С‡Рµ РїСЂРё РїРѕРїР°РґР°РЅРёРё
+        // РїРѕ С‚СЂС‘Рј РєСѓР±Р°Рј РѕРґРёРЅ Р±С‹Р» Р±С‹ РєСЂРёС‚РѕРј, Р° РґСЂСѓРіРѕР№ РЅРµС‚ вЂ” РІС‹РіР»СЏРґРёС‚ РєР°Рє Р±Р°Рі
+        bool isCrit = Random.value < _critChance;
+        float damage = isCrit ? _damage * _critDamage : _damage;
 
         foreach (Collider hit in hits)
         {
-            if (hit.TryGetComponent(out IDestructible destructible))
-            {
-                destructible.TakeDamage(_currentDamage);
+            if (!hit.TryGetComponent(out IDestructible destructible)) continue;
 
-                // Спавним вылетающий урон со случайным смещением, чтобы цифры не слипались
-                if (_damagePopupPrefab != null)
-                {
-                    Vector3 randomOffset = new Vector3(Random.Range(-0.5f, 0.5f), 1f, Random.Range(-0.5f, 0.5f));
-                    DamagePopup popup = Instantiate(_damagePopupPrefab, hit.transform.position + randomOffset, Quaternion.identity);
-                    popup.Setup(_currentDamage);
-                }
-            }
+            destructible.TakeDamage(damage);
+            if (_damageText != null) _damageText.Show(hit.transform.position, damage, isCrit);
         }
     }
 
     /// <summary>
-    /// Звук удара играет один раз за взмах, даже если молот попал по нескольким
-    /// деталям сразу: иначе при попадании по трём кубам прозвучали бы три удара
-    /// одновременно, и звук превратился бы в треск.
+    /// Р—РІСѓРє СѓРґР°СЂР° РёРіСЂР°РµС‚ РѕРґРёРЅ СЂР°Р· Р·Р° РІР·РјР°С…, РґР°Р¶Рµ РµСЃР»Рё РјРѕР»РѕС‚ РїРѕРїР°Р» РїРѕ РЅРµСЃРєРѕР»СЊРєРёРј РґРµС‚Р°Р»СЏРј СЃСЂР°Р·Сѓ.
     /// </summary>
     private void PlayHitSound()
     {

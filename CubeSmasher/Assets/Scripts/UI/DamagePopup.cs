@@ -8,8 +8,11 @@ public class DamagePopup : MonoBehaviour
     [SerializeField] private float _floatSpeed = 3f;
     [SerializeField] private float _lifetime = 1f;
 
-    public void Setup(float damageAmount)
+    public void Setup(float damageAmount) => Setup(damageAmount, _textMesh.color);
+
+    public void Setup(float damageAmount, Color color)
     {
+        _textMesh.color = color;
         _textMesh.text = damageAmount.ToString("F0"); // F0 округляет до целого числа
         StartCoroutine(AnimateRoutine());
     }

@@ -20,6 +20,9 @@ namespace CubeSmasher.Data.Configs
         [Tooltip("Машины гаража и их пассивный доход")]
         public GarageConfig Garage;
 
+        [Tooltip("Стартовые значения молота: урон, радиус, скорость удара, крит, цвета цифр")]
+        public HammerConfig Hammer;
+
         [Tooltip("Косметика: молоты и тарелки. Пусто — магазин косметики недоступен")]
         public CosmeticConfig Cosmetics;
     }

@@ -34,6 +34,10 @@ public struct GarageCarData
     /// Показывается только у открытой машины. У старых ассетов пусто.</summary>
     [TextArea] public string Characteristics;
 
+    [Header("Бонусы в игре")]
+    [Tooltip("Что даёт эта машина, когда выбрана. Пусто — бонусов нет")]
+    public CarBonus Bonus;
+
     public GameObject ModelPrefab; // 3D-модель машины
     public Sprite MiniIcon;        // 2D-иконка для интерфейса
 }
