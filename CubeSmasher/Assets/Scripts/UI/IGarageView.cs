@@ -19,6 +19,9 @@ public interface IGarageView
     /// <summary>Игрок нажал "Открыть" у доступной машины.</summary>
     event Action<int> CarOpenRequested;
 
+    /// <summary>Игрок нажал "Выбрать" у открытой машины: она становится активной.</summary>
+    event Action<int> CarSelectRequested;
+
     /// <summary>Показать машину в одном из трёх состояний. См. GarageCarState.</summary>
     void ShowCar(int index, string name, string description, string characteristics,
                  double incomePerSecond, GarageCarState state, bool isSelected, int unlockStage,

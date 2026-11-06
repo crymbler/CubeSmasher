@@ -16,7 +16,8 @@ public class GaragePresenter : IDisposable
         _view = view ?? throw new ArgumentNullException(nameof(view));
 
         _view.CarSelected += HandleCarSelected;
-        _view.CarOpenRequested += HandleActionRequested;
+        _view.CarOpenRequested += HandleCarOpenRequested;
+        _view.CarSelectRequested += HandleCarSelectRequested;
         _garage.ViewChanged += HandleSelectionChanged;      // показать другую машину
         _garage.SelectionChanged += HandleSelectionChanged; // выбрали другую для игры
         _garage.CarAvailable += HandleCarStateChanged;
@@ -59,18 +60,14 @@ public class GaragePresenter : IDisposable
     /// Кнопка на карточке: у доступной машины это "Открыть", у открытой — "Выбрать".
     /// Вторая кнопка в префабе не нужна.
     /// </summary>
-    private void HandleActionRequested(int index)
+    private void HandleCarOpenRequested(int index)
     {
-        switch (_garage.GetState(index))
-        {
-            case GarageCarState.Available:
-                if (_garage.Open(index)) _view.PlayUnlockEffect();
-                break;
+        if (_garage.Open(index)) _view.PlayUnlockEffect();
+    }
 
-            case GarageCarState.Opened:
-                _garage.TrySelect(index);
-                break;
-        }
+    private void HandleCarSelectRequested(int index)
+    {
+        _garage.TrySelect(index);
     }
 
     private void HandleCarOpened(int index)
@@ -95,7 +92,8 @@ public class GaragePresenter : IDisposable
     public void Dispose()
     {
         _view.CarSelected -= HandleCarSelected;
-        _view.CarOpenRequested -= HandleActionRequested;
+        _view.CarOpenRequested -= HandleCarOpenRequested;
+        _view.CarSelectRequested -= HandleCarSelectRequested;
         _garage.ViewChanged -= HandleSelectionChanged;
         _garage.SelectionChanged -= HandleSelectionChanged;
         _garage.CarAvailable -= HandleCarStateChanged;

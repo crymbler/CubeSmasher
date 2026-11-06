@@ -16,6 +16,7 @@ public class GarageView : MonoBehaviour, IGarageView
     public event Action OnClosed;
     public event Action<int> CarSelected;
     public event Action<int> CarOpenRequested;
+    public event Action<int> CarSelectRequested;
 
     [Header("Экран")]
     [SerializeField] private GameObject _window;
@@ -46,6 +47,12 @@ public class GarageView : MonoBehaviour, IGarageView
     [SerializeField] private GameObject _openButtonRoot;
     [SerializeField] private Button _openButton;
     [SerializeField] private TextMeshProUGUI _openButtonText;
+
+    [Header("Кнопка выбора машины")]
+    [Tooltip("Корень кнопки. Показывается только у открытой машины")]
+    [SerializeField] private GameObject _selectButtonRoot;
+    [SerializeField] private Button _selectButton;
+    [SerializeField] private TextMeshProUGUI _selectButtonText;
 
     [Header("Листание")]
     [SerializeField] private Button _prevButton;
@@ -102,6 +109,7 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_prevButton != null) _prevButton.onClick.AddListener(Prev);
         if (_nextButton != null) _nextButton.onClick.AddListener(Next);
         if (_openButton != null) _openButton.onClick.AddListener(RequestOpen);
+        if (_selectButton != null) _selectButton.onClick.AddListener(RequestSelect);
 
         ApplyResponsiveLayout();
     }
@@ -236,6 +244,8 @@ public class GarageView : MonoBehaviour, IGarageView
 
     private void RequestOpen() => CarOpenRequested?.Invoke(_index);
 
+    private void RequestSelect() => CarSelectRequested?.Invoke(_index);
+
     public void SetCarCount(Sprite[] icons, GarageCarState[] states)
     {
         _count = icons != null ? icons.Length : 0;
@@ -334,17 +344,14 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_lockText != null && state == GarageCarState.Locked)
             _lockText.text = UiText.Get("gar.status.locked", unlockStage);
 
-        // Одна кнопка на карточке: у доступной "Открыть", у открытой невыбранной "Выбрать",
-        // у открытой и выбранной — "Выбрано" и кнопка неактивна
-        if (_openButtonRoot != null) _openButtonRoot.SetActive(available || opened);
-        if (_openButton != null) _openButton.interactable = !(opened && isSelected);
+        // Две отдельные кнопки: "Открыть" только у доступной, "Выбрать" только у открытой.
+        // Текст у каждой свой, поэтому локализация не путается
+        if (_openButtonRoot != null) _openButtonRoot.SetActive(available);
+        if (_openButtonText != null && available) _openButtonText.text = UiText.Get("gar.open");
 
-        if (_openButtonText != null)
-        {
-            if (available) _openButtonText.text = UiText.Get("gar.open");
-            else if (opened && isSelected) _openButtonText.text = UiText.Get("gar.selected");
-            else if (opened) _openButtonText.text = UiText.Get("gar.select");
-        }
+        if (_selectButtonRoot != null) _selectButtonRoot.SetActive(opened);
+        if (_selectButton != null) _selectButton.interactable = !isSelected;
+        if (_selectButtonText != null && opened) _selectButtonText.text = UiText.Get("gar.select");
 
         // Модель видна у доступной и открытой, у закрытой её нет
         ReplaceModel(opened || available ? modelPrefab : null);
@@ -436,5 +443,6 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_prevButton != null) _prevButton.onClick.RemoveAllListeners();
         if (_nextButton != null) _nextButton.onClick.RemoveAllListeners();
         if (_openButton != null) _openButton.onClick.RemoveAllListeners();
+        if (_selectButton != null) _selectButton.onClick.RemoveAllListeners();
     }
 }
