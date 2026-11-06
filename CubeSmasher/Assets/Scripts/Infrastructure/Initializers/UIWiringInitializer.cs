@@ -78,6 +78,13 @@ namespace CubeSmasher.Infrastructure.Initializers
                 topHudPresenter.UpdateIncome(income.CurrentIncomePerSecond);
 
                 Action<int> refreshIncome = _ => topHudPresenter.UpdateIncome(income.CurrentIncomePerSecond);
+
+                // Сменили машину для игры -> доход в HUD меняется
+                if (subs != null && services.TryGet(out IGarageService garage))
+                {
+                    subs.Track(() => garage.SelectionChanged += refreshIncome,
+                               () => garage.SelectionChanged -= refreshIncome);
+                }
                 if (subs != null)
                 {
                     subs.Track(() => stageModel.OnStageCompleted += refreshIncome,

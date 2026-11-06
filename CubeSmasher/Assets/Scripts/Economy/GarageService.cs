@@ -19,8 +19,11 @@ public class GarageService : IGarageService
     private readonly HashSet<int> _available = new HashSet<int>();
     private readonly HashSet<int> _opened = new HashSet<int>();
     private readonly ISaveService _saveService;
-    private int _selected;
 
+    private int _selected;   // выбрана для игры: даёт доход и бонусы
+    private int _viewed;     // показана в гараже: только интерфейс
+
+    public event Action<int> ViewChanged;
     public event Action<int> CarAvailable;
     public event Action<int> CarOpened;
     public event Action<int> SelectionChanged;
@@ -35,11 +38,14 @@ public class GarageService : IGarageService
 
         int saved = YG2.saves.lastGarageCarIndex;
         _selected = saved >= 0 && saved < _cars.Length ? saved : 0;
+        _viewed = _selected;
     }
 
     public GarageCarData[] AllCars => _cars;
 
     public int SelectedIndex => _selected;
+
+    public int ViewedIndex => _viewed;
 
     public bool IsAvailable(int index) => _available.Contains(index);
 
@@ -52,7 +58,7 @@ public class GarageService : IGarageService
         return GarageCarState.Locked;
     }
 
-    /// <summary>Открыть доступную машину. Доход начинает идти сразу после этого.</summary>
+    /// <summary>Открыть доступную машину. Выбранной для игры она не становится.</summary>
     public bool Open(int index)
     {
         if (index < 0 || index >= _cars.Length) return false;
@@ -61,18 +67,28 @@ public class GarageService : IGarageService
         _opened.Add(index);
         SaveOpened();
 
-        // Открытие не выбирает машину: для игры её нужно выбрать кнопкой "Выбрать".
-        // Иначе доход и бонусы переключались бы при каждом открытии
         CarOpened?.Invoke(index);
         return true;
     }
 
+    /// <summary>
+    /// Показать машину в гараже. Доступно для любой машины: иначе игрок не долистает
+    /// до доступной и не увидит кнопку "Открыть".
+    /// </summary>
+    public bool View(int index)
+    {
+        if (index < 0 || index >= _cars.Length) return false;
+        if (index == _viewed) return true;
+
+        _viewed = index;
+        ViewChanged?.Invoke(index);
+        return true;
+    }
+
+    /// <summary>Выбрать машину для игры. Только открытую: доход и бонусы даёт выбранная.</summary>
     public bool TrySelect(int index)
     {
         if (index < 0 || index >= _cars.Length) return false;
-
-        // Листать можно любую, но выбрать для игры — только открытую:
-        // доход и бонусы даёт выбранная машина
         if (!_opened.Contains(index)) return false;
 
         if (index == _selected) return true;

@@ -334,8 +334,8 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_lockText != null && state == GarageCarState.Locked)
             _lockText.text = UiText.Get("gar.status.locked", unlockStage);
 
-        // Одна кнопка на карточке: "Открыть" у доступной, "Выбрать" у открытой,
-        // "Выбрано" и неактивна у уже выбранной
+        // Одна кнопка на карточке: у доступной "Открыть", у открытой невыбранной "Выбрать",
+        // у открытой и выбранной — "Выбрано" и кнопка неактивна
         if (_openButtonRoot != null) _openButtonRoot.SetActive(available || opened);
         if (_openButton != null) _openButton.interactable = !(opened && isSelected);
 

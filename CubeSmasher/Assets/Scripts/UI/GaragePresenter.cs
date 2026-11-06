@@ -17,7 +17,8 @@ public class GaragePresenter : IDisposable
 
         _view.CarSelected += HandleCarSelected;
         _view.CarOpenRequested += HandleActionRequested;
-        _garage.SelectionChanged += HandleSelectionChanged;
+        _garage.ViewChanged += HandleSelectionChanged;      // показать другую машину
+        _garage.SelectionChanged += HandleSelectionChanged; // выбрали другую для игры
         _garage.CarAvailable += HandleCarStateChanged;
         _garage.CarOpened += HandleCarOpened;
 
@@ -36,9 +37,13 @@ public class GaragePresenter : IDisposable
     /// </summary>
     public void Refresh() => ShowSelected();
 
+    /// <summary>
+    /// Игрок ткнул в иконку или стрелку: это только просмотр.
+    /// Выбор машины для игры — отдельной кнопкой на карточке.
+    /// </summary>
     private void HandleCarSelected(int index)
     {
-        _garage.TrySelect(index);
+        _garage.View(index);
     }
 
     private void HandleSelectionChanged(int index) => ShowSelected();
@@ -47,7 +52,7 @@ public class GaragePresenter : IDisposable
     {
         // Иконка в ленте обновляется всегда, даже если машина не выбрана
         _view.SetCarState(index, _garage.GetState(index));
-        if (index == _garage.SelectedIndex) ShowSelected();
+        if (index == _garage.ViewedIndex) ShowSelected();
     }
 
     /// <summary>
@@ -71,7 +76,7 @@ public class GaragePresenter : IDisposable
     private void HandleCarOpened(int index)
     {
         _view.SetCarState(index, _garage.GetState(index));
-        if (index == _garage.SelectedIndex) ShowSelected();
+        if (index == _garage.ViewedIndex) ShowSelected();
     }
 
     private void ShowSelected()
@@ -79,7 +84,7 @@ public class GaragePresenter : IDisposable
         GarageCarData[] cars = _garage.AllCars;
         if (cars.Length == 0) return;
 
-        int i = _garage.SelectedIndex;
+        int i = _garage.ViewedIndex;
         GarageCarData car = cars[i];
 
         _view.ShowCar(i, car.GetName(), car.GetDescription(), car.Characteristics,
@@ -91,6 +96,7 @@ public class GaragePresenter : IDisposable
     {
         _view.CarSelected -= HandleCarSelected;
         _view.CarOpenRequested -= HandleActionRequested;
+        _garage.ViewChanged -= HandleSelectionChanged;
         _garage.SelectionChanged -= HandleSelectionChanged;
         _garage.CarAvailable -= HandleCarStateChanged;
         _garage.CarOpened -= HandleCarOpened;
