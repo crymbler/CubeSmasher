@@ -80,10 +80,10 @@ namespace CubeSmasher.Infrastructure.Initializers
                 Action<int> refreshIncome = _ => topHudPresenter.UpdateIncome(income.CurrentIncomePerSecond);
 
                 // Сменили машину для игры -> доход в HUD меняется
-                if (subs != null && services.TryGet(out IGarageService garage))
+                if (subs != null && services.TryGet(out IGarageService incomeGarage))
                 {
-                    subs.Track(() => garage.SelectionChanged += refreshIncome,
-                               () => garage.SelectionChanged -= refreshIncome);
+                    subs.Track(() => incomeGarage.SelectionChanged += refreshIncome,
+                               () => incomeGarage.SelectionChanged -= refreshIncome);
                 }
                 if (subs != null)
                 {
@@ -93,9 +93,10 @@ namespace CubeSmasher.Infrastructure.Initializers
             }
 
             // Гараж: окно выбора машин
+            GaragePresenter garagePresenter = null;
             if (services.TryGet(out IGarageService garage) && _garageView != null)
             {
-                var garagePresenter = new GaragePresenter(garage, _garageView);
+                garagePresenter = new GaragePresenter(garage, _garageView);
                 services.Register(garagePresenter);
 
                 CubeSmasher.Settings.LocalizationRefresher.LanguageReady += garagePresenter.Refresh;
@@ -199,7 +200,11 @@ namespace CubeSmasher.Infrastructure.Initializers
                 if (_garageView != null)
                 {
                     subs.Track(() => _garageView.OnOpened += gamePause.Enable, () => _garageView.OnOpened -= gamePause.Enable);
-                    subs.Track(() => _garageView.OnOpened += garagePresenter.Refresh, () => _garageView.OnOpened -= garagePresenter.Refresh);
+                    if (garagePresenter != null)
+                    {
+                        subs.Track(() => _garageView.OnOpened += garagePresenter.Refresh,
+                                   () => _garageView.OnOpened -= garagePresenter.Refresh);
+                    }
                     subs.Track(() => _garageView.OnOpened += cursorHider.Show, () => _garageView.OnOpened -= cursorHider.Show);
                     subs.Track(() => _garageView.OnClosed += gamePause.Disable, () => _garageView.OnClosed -= gamePause.Disable);
                     subs.Track(() => _garageView.OnClosed += cursorHider.Hide, () => _garageView.OnClosed -= cursorHider.Hide);
