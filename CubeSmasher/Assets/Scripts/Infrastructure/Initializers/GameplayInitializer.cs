@@ -38,10 +38,10 @@ namespace CubeSmasher.Infrastructure.Initializers
             services.Register(lifecycle);
 
             // Спавн зависит от апгрейдов: применяем, когда оба сервиса уже созданы
-            if (services.TryGet(out IShopService shop))
+            if (services.TryGet(out StatService stats))
             {
-                lifecycle.ApplySpawnUpgrades(shop);
-                shop.OnUpgradePurchased += _ => lifecycle.ApplySpawnUpgrades(shop);
+                lifecycle.ApplySpawnUpgrades(stats);
+                stats.Changed += () => lifecycle.ApplySpawnUpgrades(stats);
             }
         }
     }

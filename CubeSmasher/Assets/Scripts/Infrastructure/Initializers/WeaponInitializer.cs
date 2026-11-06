@@ -1,6 +1,5 @@
 using CubeSmasher.Core.Interfaces;
 using CubeSmasher.Data.Configs;
-using UnityEngine;
 
 namespace CubeSmasher.Infrastructure.Initializers
 {
@@ -10,35 +9,35 @@ namespace CubeSmasher.Infrastructure.Initializers
     public class WeaponInitializer : IGameInitializer
     {
         private readonly HammerCaster _hammerCaster;
-        private readonly StatService _stats;
         private readonly HammerConfig _hammerConfig;
 
-        public WeaponInitializer(HammerCaster hammerCaster, StatService stats, HammerConfig hammerConfig)
+        public WeaponInitializer(HammerCaster hammerCaster, HammerConfig hammerConfig)
         {
             _hammerCaster = hammerCaster;
-            _stats = stats;
             _hammerConfig = hammerConfig;
         }
 
         public void Initialize()
         {
-            if (_hammerCaster == null || _stats == null) return;
+            if (_hammerCaster == null) return;
+            if (!ServiceLocator.Instance.TryGet(out StatService stats)) return;
 
-            Apply();
-            _stats.Changed += Apply;
+            Apply(stats);
+            stats.Changed += () => Apply(stats);
         }
 
-        private void Apply()
+        private void Apply(StatService stats)
         {
             if (_hammerCaster == null) return;
 
             _hammerCaster.SetCombatStats(
-                _stats.Get(StatType.HammerDamage),
-                _stats.Get(StatType.HammerRadius),
-                _stats.Get(StatType.AttackSpeed),
-                _stats.Get(StatType.CritChance),
-                _stats.Get(StatType.CritDamage));
+                stats.Get(StatType.HammerDamage),
+                stats.Get(StatType.HammerRadius),
+                stats.Get(StatType.AttackSpeed),
+                stats.Get(StatType.CritChance),
+                stats.Get(StatType.CritDamage));
 
+            // Цвета цифр урона задаются в HammerConfig
             if (_hammerConfig != null)
                 _hammerCaster.SetDamageColors(_hammerConfig.NormalDamageColor, _hammerConfig.CritDamageColor);
         }

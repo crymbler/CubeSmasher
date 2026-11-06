@@ -308,7 +308,7 @@ public class GarageView : MonoBehaviour, IGarageView
     }
 
     public void ShowCar(int index, string name, string description, string characteristics,
-                        double incomePerSecond, GarageCarState state, int unlockStage,
+                        double incomePerSecond, GarageCarState state, bool isSelected, int unlockStage,
                         GameObject modelPrefab)
     {
         _index = index;
@@ -334,10 +334,17 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_lockText != null && state == GarageCarState.Locked)
             _lockText.text = UiText.Get("gar.status.locked", unlockStage);
 
-        // Кнопка "Открыть" только у доступной
-        if (_openButtonRoot != null) _openButtonRoot.SetActive(available);
-        if (_openButtonText != null && available)
-            _openButtonText.text = UiText.Get("gar.open");
+        // Одна кнопка на карточке: "Открыть" у доступной, "Выбрать" у открытой,
+        // "Выбрано" и неактивна у уже выбранной
+        if (_openButtonRoot != null) _openButtonRoot.SetActive(available || opened);
+        if (_openButton != null) _openButton.interactable = !(opened && isSelected);
+
+        if (_openButtonText != null)
+        {
+            if (available) _openButtonText.text = UiText.Get("gar.open");
+            else if (opened && isSelected) _openButtonText.text = UiText.Get("gar.selected");
+            else if (opened) _openButtonText.text = UiText.Get("gar.select");
+        }
 
         // Модель видна у доступной и открытой, у закрытой её нет
         ReplaceModel(opened || available ? modelPrefab : null);

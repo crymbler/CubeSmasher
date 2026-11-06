@@ -101,7 +101,7 @@ public class Bootstrapper : MonoBehaviour
         {
             new EconomyInitializer(_gameSettings, saveService, _upgradeConfigs),
             new GameplayInitializer(_gameSettings, _carPartPrefab, _poolContainer),
-            new WeaponInitializer(_hammerCaster),
+            new WeaponInitializer(_hammerCaster, _gameSettings.Hammer),
             new AudioInitializer(_audioMixer, _musicClip, _clickClip, _hammerHitClip, _unlockClip, _splitClip),
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
                                     _openShopButton, _openGarageButton, _upgradeConfigs,

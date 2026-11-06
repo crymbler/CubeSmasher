@@ -16,7 +16,7 @@ public class GaragePresenter : IDisposable
         _view = view ?? throw new ArgumentNullException(nameof(view));
 
         _view.CarSelected += HandleCarSelected;
-        _view.CarOpenRequested += HandleCarOpenRequested;
+        _view.CarOpenRequested += HandleActionRequested;
         _garage.SelectionChanged += HandleSelectionChanged;
         _garage.CarAvailable += HandleCarStateChanged;
         _garage.CarOpened += HandleCarOpened;
@@ -41,14 +41,6 @@ public class GaragePresenter : IDisposable
         _garage.TrySelect(index);
     }
 
-    private void HandleCarOpenRequested(int index)
-    {
-        if (!_garage.Open(index)) return;
-
-        // Эффект только при успешном открытии
-        _view.PlayUnlockEffect();
-    }
-
     private void HandleSelectionChanged(int index) => ShowSelected();
 
     private void HandleCarStateChanged(int index)
@@ -56,6 +48,24 @@ public class GaragePresenter : IDisposable
         // Иконка в ленте обновляется всегда, даже если машина не выбрана
         _view.SetCarState(index, _garage.GetState(index));
         if (index == _garage.SelectedIndex) ShowSelected();
+    }
+
+    /// <summary>
+    /// Кнопка на карточке: у доступной машины это "Открыть", у открытой — "Выбрать".
+    /// Вторая кнопка в префабе не нужна.
+    /// </summary>
+    private void HandleActionRequested(int index)
+    {
+        switch (_garage.GetState(index))
+        {
+            case GarageCarState.Available:
+                if (_garage.Open(index)) _view.PlayUnlockEffect();
+                break;
+
+            case GarageCarState.Opened:
+                _garage.TrySelect(index);
+                break;
+        }
     }
 
     private void HandleCarOpened(int index)
@@ -73,13 +83,14 @@ public class GaragePresenter : IDisposable
         GarageCarData car = cars[i];
 
         _view.ShowCar(i, car.GetName(), car.GetDescription(), car.Characteristics,
-                      car.IncomePerSecond, _garage.GetState(i), car.UnlockStage, car.ModelPrefab);
+                      car.IncomePerSecond, _garage.GetState(i), i == _garage.SelectedIndex,
+                      car.UnlockStage, car.ModelPrefab);
     }
 
     public void Dispose()
     {
         _view.CarSelected -= HandleCarSelected;
-        _view.CarOpenRequested -= HandleCarOpenRequested;
+        _view.CarOpenRequested -= HandleActionRequested;
         _garage.SelectionChanged -= HandleSelectionChanged;
         _garage.CarAvailable -= HandleCarStateChanged;
         _garage.CarOpened -= HandleCarOpened;

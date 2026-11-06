@@ -34,22 +34,23 @@ public class PassiveIncome : IPassiveIncomeService
         }
     }
 
-    // Этот метод будет вызываться каждый раз, когда игрок переходит на новую стадию
+    /// <summary>
+    /// Доход даёт только выбранная машина, и только если она открыта.
+    /// Сумму по всем открытым машинам убрали: теперь игрок выбирает одну.
+    /// </summary>
     public void RecalculateIncome(int currentStage)
     {
         CurrentIncomePerSecond = 0;
 
-        // Если машин в конфиге нет — выходим
-        if (_config == null || _config.GarageCars == null) return;
+        if (_config == null || _config.GarageCars == null || _config.GarageCars.Length == 0) return;
 
-        // Суммируем доход открытых машин; открытость берём из GarageService
-        for (int i = 0; i < _config.GarageCars.Length; i++)
-        {
-            // Доход даёт только открытая игроком машина. Доступная, но не открытая — ещё нет.
-            if (_garage != null ? _garage.IsOpened(i) : currentStage >= _config.GarageCars[i].UnlockStage)
-            {
-                CurrentIncomePerSecond += _config.GarageCars[i].IncomePerSecond;
-            }
-        }
+        int selected = _garage != null ? _garage.SelectedIndex : 0;
+        if (selected < 0 || selected >= _config.GarageCars.Length) return;
+
+        bool opened = _garage != null
+            ? _garage.IsOpened(selected)
+            : currentStage >= _config.GarageCars[selected].UnlockStage;
+
+        if (opened) CurrentIncomePerSecond = _config.GarageCars[selected].IncomePerSecond;
     }
 }

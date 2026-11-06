@@ -21,7 +21,7 @@ public interface IGarageView
 
     /// <summary>Показать машину в одном из трёх состояний. См. GarageCarState.</summary>
     void ShowCar(int index, string name, string description, string characteristics,
-                 double incomePerSecond, GarageCarState state, int unlockStage,
+                 double incomePerSecond, GarageCarState state, bool isSelected, int unlockStage,
                  GameObject modelPrefab);
 
     /// <summary>Отыграть эффект открытия: партиклы и звук. Вызывается после CarOpenRequested.</summary>

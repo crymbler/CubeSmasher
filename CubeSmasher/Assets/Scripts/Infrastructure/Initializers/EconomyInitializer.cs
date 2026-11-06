@@ -48,6 +48,10 @@ namespace CubeSmasher.Infrastructure.Initializers
 
             var shopModel = new ShopModel(wallet, _upgradeConfigs, _saveService);
             services.Register<IShopService>(shopModel);
+
+            // Итоговые значения статов: значение апгрейда плюс бонус выбранной машины
+            var statService = new StatService(_settings.Hammer, _settings.Physics, shopModel, garage);
+            services.Register(statService);
             services.Register(shopModel); // презентеры магазина работают с конкретной моделью
 
             // Косметика: только если конфиг назначен. Без него молот и тарелка
@@ -78,10 +82,15 @@ namespace CubeSmasher.Infrastructure.Initializers
                 passiveIncome.RecalculateIncome(stageModel.CurrentStage);
             };
 
+            // Игрок выбрал другую машину -> доход меняется на доход выбранной
+            Action<int> onCarSelected = _ => passiveIncome.RecalculateIncome(stageModel.CurrentStage);
+
             if (subs != null)
             {
                 subs.Track(() => garage.CarOpened += onCarOpened,
                            () => garage.CarOpened -= onCarOpened);
+                subs.Track(() => garage.SelectionChanged += onCarSelected,
+                           () => garage.SelectionChanged -= onCarSelected);
             }
 
             // Все подписки — через Subscriptions, чтобы снимались при уничтожении Bootstrapper.

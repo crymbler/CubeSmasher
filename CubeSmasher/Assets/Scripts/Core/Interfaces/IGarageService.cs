@@ -20,13 +20,15 @@ namespace CubeSmasher.Core.Interfaces
         /// <summary>Состояние машины для интерфейса.</summary>
         GarageCarState GetState(int index);
 
-        /// <summary>Открыть доступную машину. Возвращает false, если она закрыта или уже открыта.</summary>
+        /// <summary>Открыть доступную машину. Возвращает false, если она закрыта или уже открыта.
+        /// Открытие не делает машину выбранной.</summary>
         bool Open(int index);
 
         /// <summary>Индекс выбранной машины (то, что показано в гараже).</summary>
         int SelectedIndex { get; }
 
-        /// <summary>Выбрать машину. Возвращает false, если она закрыта или индекс некорректен.</summary>
+        /// <summary>Выбрать машину для игры. Возвращает false, если она не открыта или индекс некорректный.
+        /// Выбранная машина даёт пассивный доход и бонусы.</summary>
         bool TrySelect(int index);
 
         /// <summary>Пересчитать открытые машины по текущей стадии.</summary>

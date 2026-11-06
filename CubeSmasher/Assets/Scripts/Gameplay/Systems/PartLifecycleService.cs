@@ -105,18 +105,12 @@ public class PartLifecycleService
     /// StatType.RespawnDelay.ToString() — пауза перед новым кубом, в секундах. Значения берутся как есть.
     /// Если апгрейда нет, остаётся то, что задано в PhysicsConfig.
     /// </summary>
-    public void ApplySpawnUpgrades(IShopService shop)
+    public void ApplySpawnUpgrades(StatService stats)
     {
-        if (shop == null) return;
+        if (stats == null) return;
 
-        _partsPerWave = ReadUpgradeValue(shop, StatType.SpawnParts.ToString(), _physics.StartPartsPerWave);
-        _respawnDelay = Mathf.Max(MinRespawnDelay, ReadUpgradeValue(shop, StatType.RespawnDelay.ToString(), _respawnDelay));
-    }
-
-    private static float ReadUpgradeValue(IShopService shop, string id, float fallback)
-    {
-        YG.UpgradeData data = shop.GetUpgradeData(id);
-        return data != null ? (float)data.value : fallback;
+        _partsPerWave = Mathf.Max(1, stats.Get(StatType.SpawnParts));
+        _respawnDelay = Mathf.Max(MinRespawnDelay, stats.Get(StatType.RespawnDelay));
     }
 
     public void Tick(float deltaTime)

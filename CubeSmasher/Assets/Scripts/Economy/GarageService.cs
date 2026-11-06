@@ -59,15 +59,10 @@ public class GarageService : IGarageService
         if (!_available.Contains(index) || _opened.Contains(index)) return false;
 
         _opened.Add(index);
-
-        // Открытая машина сразу становится выбранной: игрок ждёт увидеть её характеристики
-        bool selectionChanged = index != _selected;
-        _selected = index;
-        YG2.saves.lastGarageCarIndex = index;
-
         SaveOpened();
 
-        if (selectionChanged) SelectionChanged?.Invoke(index);
+        // Открытие не выбирает машину: для игры её нужно выбрать кнопкой "Выбрать".
+        // Иначе доход и бонусы переключались бы при каждом открытии
         CarOpened?.Invoke(index);
         return true;
     }
@@ -76,8 +71,10 @@ public class GarageService : IGarageService
     {
         if (index < 0 || index >= _cars.Length) return false;
 
-        // Листать можно любую машину: закрытую, доступную и открытую.
-        // Иначе игрок не долистает до доступной и не увидит кнопку "Открыть".
+        // Листать можно любую, но выбрать для игры — только открытую:
+        // доход и бонусы даёт выбранная машина
+        if (!_opened.Contains(index)) return false;
+
         if (index == _selected) return true;
 
         _selected = index;
