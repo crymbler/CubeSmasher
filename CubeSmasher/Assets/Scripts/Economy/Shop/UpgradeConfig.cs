@@ -9,8 +9,12 @@ public class UpgradeConfig : ScriptableObject
     [Header("Идентификация (Связь с SavesYG)")]
     public StatType Stat;   // Что улучшает апгрейд (выбирается из списка)
 
-    /// <summary>Ключ для сохранения. Берётся из Stat, поэтому опечаток нет.</summary>
-    public string Id => Stat.ToString();
+    /// <summary>
+    /// Ключ для сохранения. Собирается из стата И стадии открытия, поэтому уникален:
+    /// у одного стата может быть несколько тиров, и они не перезапишут друг друга.
+    /// ВНИМАНИЕ: менять UnlockStageLevel у выпущенного апгрейда нельзя - слетит прогресс.
+    /// </summary>
+    public string Id => Stat + "_" + UnlockStageLevel;
 
     [Header("Визуал UI")]
     public string UpgradeName;
@@ -53,18 +57,21 @@ public class UpgradeConfig : ScriptableObject
     public bool ValueDecreases;
 
     /// <summary>
-    /// Строка 'было -> станет' для карточки. Пусто на максимальном уровне.
-    /// Принято: уровень 0 даёт значение 0, уровень N даёт CalculateValue(N).
+    /// Строка "было -> станет" для карточки магазина. Пусто на максимальном уровне.
+    /// otherContribution - вклад базы, остальных тиров и бонуса машины, чтобы показывать
+    /// итоговую характеристику, а не прибавку одного тира.
     /// </summary>
-    public string FormatDelta(int currentLevel)
+    public string FormatDelta(int currentLevel, float otherContribution = 0f)
     {
         if (currentLevel >= MaxLevel) return string.Empty;
 
-        float from = currentLevel <= 0 ? 0f : CalculateValue(currentLevel);
-        float to = CalculateValue(currentLevel + 1);
-        string fmt = "F" + Mathf.Clamp(Decimals, 0, 3);
+        float from = otherContribution + CalculateValue(currentLevel);
+        float to   = otherContribution + CalculateValue(currentLevel + 1);
+
+        string fmt  = "F" + Mathf.Clamp(Decimals, 0, 3);
         string stat = string.IsNullOrEmpty(StatNameKey) ? string.Empty : UiText.Get(StatNameKey) + " ";
         string unit = string.IsNullOrEmpty(UnitKey) ? string.Empty : " " + UiText.Get(UnitKey);
+
         return stat + from.ToString(fmt) + unit + " \u2192 " + to.ToString(fmt) + unit;
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
+using CubeSmasher.Infrastructure;
 
 /// <summary>
 /// ѕрезентер магазина: св€зывает IShopView с IShopService и IWallet.
@@ -88,8 +89,19 @@ public class ShopPresenter : IDisposable
             IsLocked = isLocked,
             IsMaxLevel = isMaxLevel,
             CanAfford = canAfford,
-            Delta = config.FormatDelta(data.level)
+            Delta = config.FormatDelta(data.level, StatContribution(config))
         });
+    }
+
+    /// <summary>
+    /// ¬клад базы, остальных тиров этого стата и бонуса машины.
+    /// Ќужен, чтобы карточка показывала итоговую характеристику, а не прибавку одного тира:
+    /// у урона п€ть тиров, и Ђ0.00 -> 6.00ї без этой поправки сбивает с толку.
+    /// </summary>
+    private float StatContribution(UpgradeConfig config)
+    {
+        if (!ServiceLocator.Instance.TryGet(out StatService stats)) return 0f;
+        return stats.GetContributionExcept(config.Stat, config);
     }
 
     public void Dispose()

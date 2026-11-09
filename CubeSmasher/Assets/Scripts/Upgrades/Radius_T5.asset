@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58fa6d727ed99214ba0ed0a292c4d696, type: 3}
-  m_Name: SpawnParts
+  m_Name: Radius_T5
   m_EditorClassIdentifier: 
-  Stat: 4
-  UpgradeName: "\u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0434\u0435\u0442\u0430\u043B\u0435\u0439"
+  Stat: 1
+  UpgradeName: "\u0420\u0430\u0434\u0438\u0443\u0441 V"
   LocalizedName:
     m_TableReference:
       m_TableCollectionName: 
@@ -24,17 +24,17 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   Icon: {fileID: 0}
-  MaxLevel: 2
-  UnlockStageLevel: 30
-  BasePrice: 1000000
-  PriceMultiplier: 10
+  MaxLevel: 6
+  UnlockStageLevel: 35
+  BasePrice: 200000000000
+  PriceMultiplier: 1.38
   ValueGrowthType: 0
-  BaseValue: 2
-  ValueStep: 1
+  BaseValue: 0
+  ValueStep: 0.06
   ValueMultiplier: 0
-  StatNameKey: 
+  StatNameKey: stat.radius
   UnitKey: 
-  Decimals: 0
+  Decimals: 2
   ValueDecreases: 0
   references:
     version: 2

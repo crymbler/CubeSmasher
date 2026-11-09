@@ -13,6 +13,8 @@ public class ShopModel : IShopService
     // Событие для UI и игровых систем: "Апгрейд куплен, обновите картинку и статы!"
     public event Action<string> OnUpgradePurchased;
 
+    public IReadOnlyList<UpgradeConfig> AllConfigs => _availableUpgrades;
+
     public ShopModel(IWallet wallet, List<UpgradeConfig> availableUpgrades, ISaveService saveService)
     {
         _wallet = wallet;

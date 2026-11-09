@@ -16,30 +16,48 @@ public class StatService
     private readonly PhysicsConfig _physics;
     private readonly IShopService _shop;
     private readonly IGarageService _garage;
+    private readonly StageModel _stage;
 
     public StatService(HammerConfig hammer, PhysicsConfig physics,
-                       IShopService shop, IGarageService garage)
+                       IShopService shop, IGarageService garage, StageModel stage = null)
     {
         _hammer = hammer;
         _physics = physics;
         _shop = shop;
         _garage = garage;
+        _stage = stage;
 
         if (_shop != null) _shop.OnUpgradePurchased += _ => Changed?.Invoke();
         if (_garage != null) _garage.SelectionChanged += _ => Changed?.Invoke();
     }
 
-    /// <summary>Итоговое значение стата: апгрейд плюс бонус выбранной машины.</summary>
-    public float Get(StatType stat) => UpgradeOrBase(stat) + CarBonus(stat);
+    /// <summary>
+    /// Итоговое значение стата: база из конфига + вклад ВСЕХ открытых тиров этого стата
+    /// + бонус выбранной машины. Тиров у одного стата несколько, поэтому складываем.
+    /// </summary>
+    public float Get(StatType stat) => BaseValue(stat) + UpgradeSum(stat) + CarBonus(stat);
 
-    private float UpgradeOrBase(StatType stat)
+    /// <summary>Итог без одного конкретного тира: для карточки магазина.</summary>
+    public float GetContributionExcept(StatType stat, UpgradeConfig except)
+        => BaseValue(stat) + UpgradeSum(stat, except) + CarBonus(stat);
+
+    private float UpgradeSum(StatType stat, UpgradeConfig except = null)
     {
-        if (_shop != null)
+        if (_shop == null || _shop.AllConfigs == null) return 0f;
+
+        int stage = _stage != null ? _stage.CurrentStage : 0;
+        float sum = 0f;
+
+        for (int i = 0; i < _shop.AllConfigs.Count; i++)
         {
-            var data = _shop.GetUpgradeData(stat.ToString());
-            if (data != null) return (float)data.value;
+            UpgradeConfig cfg = _shop.AllConfigs[i];
+            if (cfg == null || cfg.Stat != stat || cfg == except) continue;
+            if (stage < cfg.UnlockStageLevel) continue;
+
+            var data = _shop.GetUpgradeData(cfg.Id);
+            if (data != null) sum += (float)data.value;
         }
-        return BaseValue(stat);
+        return sum;
     }
 
     private float BaseValue(StatType stat)

@@ -13,6 +13,9 @@ namespace CubeSmasher.Core.Interfaces
         /// </summary>
         UpgradeData GetUpgradeData(string id);
 
+        /// <summary>Все конфиги апгрейдов, подключённые в игре.</summary>
+        System.Collections.Generic.IReadOnlyList<UpgradeConfig> AllConfigs { get; }
+
         /// <summary>Конфиг улучшения: название, иконка, лимиты, стадия разблокировки.</summary>
         UpgradeConfig GetConfig(string id);
 

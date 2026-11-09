@@ -50,7 +50,7 @@ namespace CubeSmasher.Infrastructure.Initializers
             services.Register<IShopService>(shopModel);
 
             // Итоговые значения статов: значение апгрейда плюс бонус выбранной машины
-            var statService = new StatService(_settings.Hammer, _settings.Physics, shopModel, garage);
+            var statService = new StatService(_settings.Hammer, _settings.Physics, shopModel, garage, stageModel);
             services.Register(statService);
             services.Register(shopModel); // презентеры магазина работают с конкретной моделью
 
