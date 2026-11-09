@@ -481,7 +481,7 @@ RectTransform:
   m_Father: {fileID: 8767802863465220437}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.3, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -761,7 +761,7 @@ MonoBehaviour:
   _buyButton: {fileID: 5733745211278309254}
   _buttonBackground: {fileID: 8042898905960782875}
   _levelBar: {fileID: 3837236586104771555}
-  _levelFill: {fileID: 3837236586104771555}
+  _levelFill: {fileID: 7229672880596380390}
   _deltaText: {fileID: 1146068421034399222}
   _affordableColor: {r: 0.2, g: 0.8, b: 0.2, a: 1}
   _expensiveColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

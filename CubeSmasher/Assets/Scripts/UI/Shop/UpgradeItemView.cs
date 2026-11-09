@@ -71,16 +71,25 @@ public class UpgradeItemView : MonoBehaviour
         if (_levelProgress == null)
         {
             if (_levelBar == null) _levelBar = transform.Find("LevelBar") as RectTransform;
+            if (_levelBar == null) return;
 
-            // Путь Track/Fill может не совпасть, если префаб пересобрали руками.
-            // Тогда ищем заливку по имени среди детей полосы.
-            if (_levelFill == null && _levelBar != null)
+            // Заливка должна быть ДОЧЕРНИМ объектом полосы. Если в префабе случайно
+            // указали саму LevelBar, растягивался бы весь бар: он вылезал за карточку
+            // и удлинялся с каждой покупкой. Поэтому ссылку на корень отбрасываем.
+            if (_levelFill == _levelBar) _levelFill = null;
+
+            if (_levelFill == null)
             {
-                _levelFill = _levelBar.Find("Track/Fill") as RectTransform;
-                if (_levelFill == null) _levelFill = FindByName(_levelBar, "Fill");
+                _levelFill = _levelBar.Find("Track/Fill") as RectTransform
+                             ?? FindByName(_levelBar, "Fill");
             }
 
-            if (_levelBar == null || _levelFill == null) return;
+            if (_levelFill == null)
+            {
+                Debug.LogWarning($"В {name}: не найдена заливка шкалы уровня", this);
+                _levelProgress = null;
+                return;
+            }
 
             _levelProgress = AnimatedProgressBar.For(_levelBar).WithFill(_levelFill);
         }
@@ -95,6 +104,7 @@ public class UpgradeItemView : MonoBehaviour
     {
         foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
         {
+            if (child == root) continue;               // корень не может быть заливкой
             if (child.name == name) return child as RectTransform;
         }
         return null;

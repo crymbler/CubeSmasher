@@ -66,7 +66,10 @@ public class AnimatedProgressBar : MonoBehaviour
     /// <summary>Для баров через anchorMax.x: указать заливку кодом.</summary>
     public AnimatedProgressBar WithFill(RectTransform fill)
     {
-        if (fill != null) _fill = fill;
+        // Заливка обязана быть дочерним объектом бара. Если передали сам бар,
+        // растягивался бы весь контейнер: полоса вылезала бы за карточку
+        // и удлинялась с каждым повышением уровня
+        if (fill != null && fill != transform) _fill = fill;
         return this;
     }
 
@@ -281,7 +284,7 @@ public class AnimatedProgressBar : MonoBehaviour
             _slider.value = Mathf.Lerp(_slider.minValue, _slider.maxValue, v);
             return;
         }
-        if (_fill != null)
+        if (_fill != null && _fill != transform)
         {
             Vector2 max = _fill.anchorMax;
             max.x = v;
