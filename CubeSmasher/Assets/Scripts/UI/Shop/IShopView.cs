@@ -16,6 +16,9 @@ public struct UpgradeRowData
     public bool IsMaxLevel;
     public bool CanAfford;
     public string Delta;
+
+    /// <summary>Позиция карточки в списке: меньше - выше. Задаёт презентер.</summary>
+    public int Order;
 }
 
 /// <summary>
@@ -28,4 +31,7 @@ public interface IShopView
 
     /// <summary>Обновить строку улучшения (создаёт строку, если её ещё нет).</summary>
     void Render(string id, UpgradeRowData row);
+
+    /// <summary>Убрать карточку из списка: апгрейд прокачан до максимума.</summary>
+    void Hide(string id);
 }

@@ -25,12 +25,18 @@ public class ShopPresenter : IDisposable
         _configs = configs;
 
         _view.BuyRequested += HandleBuyRequested;
-        _shop.OnUpgradePurchased += RefreshUpgrade;
+        _shop.OnUpgradePurchased += HandleUpgradePurchased;
         _wallet.OnBalanceChanged += HandleBalanceChanged;
         _stage.OnStageCompleted += HandleStageCompleted;
 
         RefreshAll();
     }
+
+    /// <summary>
+    /// јпгрейд куплен. ѕерерисовываем весь список, а не одну карточку:
+    /// пор€док зависит от стадии открыти€, и одна карточка с order=0 прыгнула бы наверх.
+    /// </summary>
+    private void HandleUpgradePurchased(string id) => RefreshAll();
 
     private void HandleBuyRequested(string id)
     {
@@ -58,28 +64,60 @@ public class ShopPresenter : IDisposable
         RefreshAll();
     }
 
+    /// <summary>ѕор€док карточек: открытые раньше - выше, внутри стадии по стату и цене.</summary>
+    private sealed class ConfigOrder : System.Collections.Generic.IComparer<UpgradeConfig>
+    {
+        public int Compare(UpgradeConfig a, UpgradeConfig b)
+        {
+            if (a == null || b == null) return 0;
+
+            int byStage = a.UnlockStageLevel.CompareTo(b.UnlockStageLevel);
+            if (byStage != 0) return byStage;
+
+            int byStat = a.Stat.CompareTo(b.Stat);
+            if (byStat != 0) return byStat;
+
+            return a.BasePrice.CompareTo(b.BasePrice);
+        }
+    }
+
     private void RefreshAll()
     {
         if (_configs == null) return;
 
-        foreach (UpgradeConfig config in _configs)
+        // —ортируем копию: пор€док нужен дл€ отображени€, сам список не трогаем
+        var ordered = new List<UpgradeConfig>(_configs);
+        ordered.Sort(new ConfigOrder());
+
+        int order = 0;
+        foreach (UpgradeConfig config in ordered)
         {
-            RefreshUpgrade(config.Id);
+            if (config == null) continue;
+            RefreshUpgrade(config.Id, order++);
         }
     }
 
-    private void RefreshUpgrade(string id)
+    private void RefreshUpgrade(string id, int order = 0)
     {
         var data = _shop.GetUpgradeData(id);
         UpgradeConfig config = _shop.GetConfig(id);
         if (data == null || config == null) return;
 
         bool isMaxLevel = data.level >= config.MaxLevel;
+
+        // ѕрокачан до максимума - убираем карточку совсем, покупать больше нечего
+        if (isMaxLevel)
+        {
+            _view.Hide(id);
+            return;
+        }
+
         bool isLocked = _stage.CurrentStage < config.UnlockStageLevel;
-        bool canAfford = !isMaxLevel && !isLocked && _wallet.Balance >= data.price;
+        bool canAfford = !isLocked && _wallet.Balance >= data.price;
 
         _view.Render(id, new UpgradeRowData
         {
+            Order = order,
             Name = config.DisplayName,
             Icon = config.Icon,
             Level = data.level,

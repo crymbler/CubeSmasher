@@ -74,6 +74,27 @@ public class ShopView : MonoBehaviour, IShopView
                         row.CanAfford, row.IsMaxLevel, row.IsLocked, row.UnlockStage);
         item.SetLevelProgress(row.MaxLevel > 0 ? (float)row.Level / row.MaxLevel : 0f);
         item.SetDelta(row.Delta);
+
+        // Порядок задаёт презентер: карточки выстраиваются по стадии открытия,
+        // а не в том порядке, в каком их перебрал foreach
+        item.transform.SetSiblingIndex(row.Order);
+    }
+
+    /// <summary>
+    /// Апгрейд прокачан до максимума - карточка больше не нужна, убираем совсем.
+    /// Оставлять её в списке незачем: купить нельзя, а место занимает.
+    /// </summary>
+    public void Hide(string id)
+    {
+        if (!_items.TryGetValue(id, out UpgradeItemView item)) return;
+
+        if (item != null)
+        {
+            item.OnBuyClicked -= RaiseBuyRequested;
+            Destroy(item.gameObject);
+        }
+
+        _items.Remove(id);
     }
 
     private UpgradeItemView GetOrCreateItem(string id)

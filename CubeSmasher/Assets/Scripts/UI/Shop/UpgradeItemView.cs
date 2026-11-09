@@ -71,13 +71,33 @@ public class UpgradeItemView : MonoBehaviour
         if (_levelProgress == null)
         {
             if (_levelBar == null) _levelBar = transform.Find("LevelBar") as RectTransform;
-            if (_levelFill == null && _levelBar != null) _levelFill = _levelBar.Find("Track/Fill") as RectTransform;
-            if (_levelBar == null || _levelFill == null) return; // в этой карточке шкалы нет
+
+            // ѕуть Track/Fill может не совпасть, если префаб пересобрали руками.
+            // “огда ищем заливку по имени среди детей полосы.
+            if (_levelFill == null && _levelBar != null)
+            {
+                _levelFill = _levelBar.Find("Track/Fill") as RectTransform;
+                if (_levelFill == null) _levelFill = FindByName(_levelBar, "Fill");
+            }
+
+            if (_levelBar == null || _levelFill == null) return;
 
             _levelProgress = AnimatedProgressBar.For(_levelBar).WithFill(_levelFill);
         }
 
-        _levelProgress.SetValue(value);
+        // instant: шкала должна сто€ть на текущем уровне сразу, а не доезжать до него.
+        // »наче при открытии магазина все полоски стартуют с середины/нул€ и выгл€д€т сломанными
+        _levelProgress.SetValue(value, instant: true);
+    }
+
+    /// <summary>ѕоиск дочернего RectTransform по имени на любой глубине.</summary>
+    private static RectTransform FindByName(Transform root, string name)
+    {
+        foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+        {
+            if (child.name == name) return child as RectTransform;
+        }
+        return null;
     }
 
     /// <summary>—трока 'было -> станет'. ѕуста€ строка скрывает поле.</summary>
