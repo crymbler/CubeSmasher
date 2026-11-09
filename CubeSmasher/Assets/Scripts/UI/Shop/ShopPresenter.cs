@@ -97,7 +97,7 @@ public class ShopPresenter : IDisposable
         }
     }
 
-    private void RefreshUpgrade(string id, int order = 0)
+    private void RefreshUpgrade(string id, int order)
     {
         var data = _shop.GetUpgradeData(id);
         UpgradeConfig config = _shop.GetConfig(id);
@@ -145,7 +145,7 @@ public class ShopPresenter : IDisposable
     public void Dispose()
     {
         _view.BuyRequested -= HandleBuyRequested;
-        _shop.OnUpgradePurchased -= RefreshUpgrade;
+        _shop.OnUpgradePurchased -= HandleUpgradePurchased;
         _wallet.OnBalanceChanged -= HandleBalanceChanged;
         _stage.OnStageCompleted -= HandleStageCompleted;
     }
