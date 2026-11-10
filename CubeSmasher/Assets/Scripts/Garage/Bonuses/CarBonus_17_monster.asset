@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Bonuses:
   - Stat: 7
-    Value: 0.08
+    Value: 0.35
