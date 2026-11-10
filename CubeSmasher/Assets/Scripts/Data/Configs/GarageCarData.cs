@@ -8,6 +8,9 @@
 public struct GarageCarData
 {
     public string CarName;
+
+    /// <summary>Идентификатор машины для перевода: car.{Key} и car.{Key}.desc в UI.</summary>
+    public string Key;
     public int UnlockStage;
     public double IncomePerSecond;
     [TextArea] public string Description;
@@ -17,8 +20,8 @@ public struct GarageCarData
     public UnityEngine.Localization.LocalizedString LocalizedName;
 
     /// <summary>Название на текущем языке.</summary>
-    public string GetName() => LocalizedName != null && !LocalizedName.IsEmpty
-        ? LocalizedName.GetLocalizedString()
+    public string GetName() => !string.IsNullOrEmpty(Key)
+        ? UiText.Get("car." + Key)
         : CarName;
 
     [Header("Описание (локализация)")]
@@ -26,8 +29,8 @@ public struct GarageCarData
     public UnityEngine.Localization.LocalizedString LocalizedDescription;
 
     /// <summary>Описание на текущем языке.</summary>
-    public string GetDescription() => LocalizedDescription != null && !LocalizedDescription.IsEmpty
-        ? LocalizedDescription.GetLocalizedString()
+    public string GetDescription() => !string.IsNullOrEmpty(Key)
+        ? UiText.Get("car." + Key + ".desc")
         : Description;
 
     /// <summary>Баффы машины в свободной форме: "+5% к урону, +2 к радиусу".

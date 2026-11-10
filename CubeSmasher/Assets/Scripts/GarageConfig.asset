@@ -13,24 +13,23 @@ MonoBehaviour:
   m_Name: GarageConfig
   m_EditorClassIdentifier: 
   GarageCars:
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
+  - CarName: "\u0425\u044D\u0442\u0447\u0431\u0435\u043A"
+    Key: hatchback
     UnlockStage: 1
     IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430, \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E \u043D\u0430\u0447\u0438\u043D\u0430\u0442\u044C"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -38,54 +37,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 25139e117f496b6697783e31025f6897, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0441\u0435\u0434\u0430\u043D"
+  - CarName: "\u0421\u0435\u0434\u0430\u043D"
+    Key: sedan
     UnlockStage: 2
     IncomePerSecond: 1
-    Description: "\u0441\u0435\u0434\u0430\u043D"
+    Description: "\u041D\u0430\u0434\u0451\u0436\u043D\u044B\u0439 \u0441\u0435\u043C\u0435\u0439\u043D\u044B\u0439 \u0441\u0435\u0434\u0430\u043D"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.sedan
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
         m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.sedan
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u043C\u0438\u043D\u0438\u0432\u044D\u043D"
-    UnlockStage: 5
-    IncomePerSecond: 10
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0438\u043D\u0438\u0432\u044D\u043D
-      \u043C\u0438\u043D\u0438\u0432\u044D\u043D\u043C\u0438\u043D\u0438\u0432\u044D\u043D\u043C\u0438\u043D\u0438\u0432\u044D\u043D
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.minivan
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -93,25 +64,107 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 89c213b55e383f703ad765e5328de808, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0441\u043F\u043E\u0440\u0442"
+  - CarName: "\u041C\u0438\u043D\u0438\u0432\u044D\u043D"
+    Key: minivan
+    UnlockStage: 3
+    IncomePerSecond: 1
+    Description: "\u041F\u0440\u043E\u0441\u0442\u043E\u0440\u043D\u044B\u0439 \u043C\u0438\u043D\u0438\u0432\u044D\u043D"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    Characteristics: 
+    Bonus: {fileID: 11400000, guid: 387381597298cfc27b950315379ea025, type: 2}
+    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
+    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
+  - CarName: "\u0421\u043F\u043E\u0440\u0442\u043A\u0430\u0440"
+    Key: sport
+    UnlockStage: 4
+    IncomePerSecond: 1
+    Description: "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u0441\u043F\u043E\u0440\u0442\u043A\u0430\u0440"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    Characteristics: 
+    Bonus: {fileID: 11400000, guid: 3372452eaf1cecc2c4fdf044e2aee50e, type: 2}
+    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
+    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
+  - CarName: "\u041F\u0438\u043A\u0430\u043F"
+    Key: pickup
+    UnlockStage: 7
+    IncomePerSecond: 2
+    Description: "\u041F\u0438\u043A\u0430\u043F \u0441 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u043C \u043A\u0443\u0437\u043E\u0432\u043E\u043C"
+    LocalizedName:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    LocalizedDescription:
+      m_TableReference:
+        m_TableCollectionName: UI
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    Characteristics: 
+    Bonus: {fileID: 11400000, guid: 6e0ec37e17bb0eb4eb14ba36594d1df1, type: 2}
+    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
+    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
+  - CarName: "\u041A\u0440\u043E\u0441\u0441\u043E\u0432\u0435\u0440"
+    Key: crossover
     UnlockStage: 10
-    IncomePerSecond: 20
-    Description: "\u0432\u0444\u0446\u0444\u0446\u0432\u0444\u0432\u0444\u0446\u0432\u0444\u0446\u0444\u0446\u0432\u0432\u0446"
+    IncomePerSecond: 4
+    Description: "\u0413\u043E\u0440\u043E\u0434\u0441\u043A\u043E\u0439 \u043A\u0440\u043E\u0441\u0441\u043E\u0432\u0435\u0440"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.sport
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -119,27 +172,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 3e12a9b5707578a35c89de1433f8d7f3, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u041A\u0443\u043F\u0435"
+    Key: coupe
+    UnlockStage: 13
+    IncomePerSecond: 10
+    Description: "\u0414\u0432\u0443\u0445\u0434\u0432\u0435\u0440\u043D\u043E\u0435 \u043A\u0443\u043F\u0435"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -147,27 +199,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 37f31444b7ea5439dd89a12ff1ffd123, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u0423\u043D\u0438\u0432\u0435\u0440\u0441\u0430\u043B"
+    Key: wagon
+    UnlockStage: 17
+    IncomePerSecond: 28
+    Description: "\u0423\u043D\u0438\u0432\u0435\u0440\u0441\u0430\u043B \u0441 \u0431\u043E\u043B\u044C\u0448\u0438\u043C \u0431\u0430\u0433\u0430\u0436\u043D\u0438\u043A\u043E\u043C"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -175,27 +226,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 54be8c54c6591f1f6449c158a3d9278d, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u0412\u043D\u0435\u0434\u043E\u0440\u043E\u0436\u043D\u0438\u043A"
+    Key: suv
+    UnlockStage: 21
+    IncomePerSecond: 75
+    Description: "\u0412\u043D\u0435\u0434\u043E\u0440\u043E\u0436\u043D\u0438\u043A \u0434\u043B\u044F \u043B\u044E\u0431\u043E\u0439 \u0434\u043E\u0440\u043E\u0433\u0438"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -203,27 +253,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: f082ff5771f348ba0439801e86443e8e, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u041A\u0430\u0431\u0440\u0438\u043E\u043B\u0435\u0442"
+    Key: cabrio
+    UnlockStage: 25
+    IncomePerSecond: 214
+    Description: "\u041A\u0430\u0431\u0440\u0438\u043E\u043B\u0435\u0442 \u0441 \u043E\u0442\u043A\u0438\u0434\u043D\u044B\u043C \u0432\u0435\u0440\u0445\u043E\u043C"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -231,27 +280,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 92d360fbfe4b9ce97ed7f5c5e81ee04c, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u0424\u0443\u0440\u0433\u043E\u043D"
+    Key: van
+    UnlockStage: 29
+    IncomePerSecond: 561
+    Description: "\u0413\u0440\u0443\u0437\u043E\u0432\u043E\u0439 \u0444\u0443\u0440\u0433\u043E\u043D"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -259,27 +307,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 14d60189ff3c4436e4cd2b5c42bffbf7, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u0420\u0430\u043B\u043B\u0438-\u043A\u0430\u0440"
+    Key: rally
+    UnlockStage: 32
+    IncomePerSecond: 1222
+    Description: "\u041C\u0430\u0448\u0438\u043D\u0430 \u0434\u043B\u044F \u0440\u0430\u043B\u043B\u0438"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -287,27 +334,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 3291242d25360b5a5dbb134478ed1379, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u041C\u0430\u0441\u043B\u043A\u0430\u0440"
+    Key: muscle
+    UnlockStage: 37
+    IncomePerSecond: 4173
+    Description: "\u041C\u043E\u0449\u043D\u044B\u0439 \u043C\u0430\u0441\u043B\u043A\u0430\u0440"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -315,27 +361,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 4bba25d758b0035a0bcbe5452f9ce869, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u041B\u0438\u043C\u0443\u0437\u0438\u043D"
+    Key: limo
+    UnlockStage: 41
+    IncomePerSecond: 11310
+    Description: "\u0414\u043B\u0438\u043D\u043D\u044B\u0439 \u043B\u0438\u043C\u0443\u0437\u0438\u043D"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -343,27 +388,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 3f5fbb1e4b44ab659659ac6a2b0b4d3d, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u0413\u043E\u043D\u043E\u0447\u043D\u044B\u0439 \u0431\u043E\u043B\u0438\u0434"
+    Key: racer
+    UnlockStage: 46
+    IncomePerSecond: 31751
+    Description: "\u0413\u043E\u043D\u043E\u0447\u043D\u044B\u0439 \u0431\u043E\u043B\u0438\u0434"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -371,27 +415,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 87596a72e2df07f8b892b546c9ef4fd3, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u0413\u0438\u043F\u0435\u0440\u043A\u0430\u0440"
+    Key: hypercar
+    UnlockStage: 50
+    IncomePerSecond: 80731
+    Description: "\u0413\u0438\u043F\u0435\u0440\u043A\u0430\u0440 \u0441 \u043E\u0433\u0440\u043E\u043C\u043D\u044B\u043C \u0434\u0432\u0438\u0433\u0430\u0442\u0435\u043B\u0435\u043C"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -399,27 +442,26 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: 185be61ba113b3af81bb245a81076703, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
+  - CarName: "\u041C\u043E\u043D\u0441\u0442\u0440-\u0442\u0440\u0430\u043A"
+    Key: monster
+    UnlockStage: 56
+    IncomePerSecond: 330440
+    Description: "\u041C\u043E\u043D\u0441\u0442\u0440-\u0442\u0440\u0430\u043A, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0434\u0430\u0432\u0438\u0442 \u0432\u0441\u0451"
     LocalizedName:
       m_TableReference:
         m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: car.hatchback
+        m_Key: 
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
     LocalizedDescription:
       m_TableReference:
-        m_TableCollectionName: 
+        m_TableCollectionName: UI
       m_TableEntryReference:
         m_KeyId: 0
         m_Key: 
@@ -427,709 +469,6 @@ MonoBehaviour:
       m_WaitForCompletion: 0
       m_LocalVariables: []
     Characteristics: 
-    Bonus: {fileID: 0}
+    Bonus: {fileID: 11400000, guid: a7bcd748dc929d92b02797641b430a03, type: 2}
     ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  - CarName: "\u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    UnlockStage: 1
-    IncomePerSecond: 1
-    Description: "\u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u043A\u0430
-      \u0441 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043D\u0443\u0436\u043D\u043E
-      \u043D\u0430\u0447\u0430\u0442\u044C"
-    LocalizedName:
-      m_TableReference:
-        m_TableCollectionName: UI
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: car.hatchback
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    LocalizedDescription:
-      m_TableReference:
-        m_TableCollectionName: 
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: 
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    Characteristics: 
-    Bonus: {fileID: 0}
-    ModelPrefab: {fileID: 8584628543275633131, guid: eda7eb1f90db55f4cbc5bab2116a6b7b, type: 3}
-    MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
-  references:
-    version: 2
-    RefIds: []
