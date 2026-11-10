@@ -206,7 +206,8 @@ public class PartLifecycleService
 
         // Ќаграда за каждую разбитую деталь; чем глубже поколение, тем дороже осколок
         double reward = _economy.BasePartReward
-                        * Mathf.Pow(_economy.PartRewardMultiplier, destroyedPart.Generation);
+                        * Mathf.Pow(_economy.PartRewardMultiplier, destroyedPart.Generation)
+                        * Math.Pow(_economy.StageRewardMultiplier, Math.Max(0, _stageModel.CurrentStage - 1));
 
         _wallet.Add(reward);
         _stageModel.AddProgress(1);

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class FractureCalculator
 {
+    private const float HpGrowthPerStage = 1.13f;
+
     // Теперь кубы делятся почти всегда, создавая хаос
     public bool TrySplit(int generation, float baseSplitChance)
     {
@@ -24,6 +26,6 @@ public class FractureCalculator
 
         // Умножаем на сложность стадии (каждая стадия делает детали толще)
         if (stage < 1) stage = 1;
-        return baseHp * Mathf.Pow(1.25f, stage - 1); // T3: было 1.45, см. docs/TASKS.md
+        return baseHp * Mathf.Pow(HpGrowthPerStage, stage - 1);
     }
 }

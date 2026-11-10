@@ -67,8 +67,8 @@ public class StageModel
 
     private void CalculateRequiredDetails()
     {
-        // Простая математика: 1 уровень = 50 осколков, каждый следующий на 25 больше
-        // Можно вынести эту формулу в EconomyConfig, если захочешь
-        _requiredDetails = _currentStage == 0 ? 10 : 50 + (_currentStage - 1) * 25;
+        _requiredDetails = _currentStage == 0
+            ? 6
+            : (int)Math.Round(25 + 9 * _currentStage + 1.1 * _currentStage * _currentStage);
     }
 }

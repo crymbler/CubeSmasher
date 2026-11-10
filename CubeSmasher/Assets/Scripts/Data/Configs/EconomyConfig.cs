@@ -15,5 +15,8 @@ namespace CubeSmasher.Data.Configs
 
         [Tooltip("Множитель награды за каждое следующее поколение осколка")]
         public float PartRewardMultiplier = 1.25f;
+
+        [Tooltip("Множитель награды за каждую следующую стадию. Растёт вместе с HP деталей, иначе монет на единицу HP падает")]
+        public float StageRewardMultiplier = 1.14f;
     }
 }
