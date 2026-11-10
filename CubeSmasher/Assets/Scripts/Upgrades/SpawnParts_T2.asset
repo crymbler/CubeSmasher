@@ -24,7 +24,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   Icon: {fileID: 0}
-  MaxLevel: 2
+  MaxLevel: 1
   UnlockStageLevel: 20
   BasePrice: 10000000
   PriceMultiplier: 10

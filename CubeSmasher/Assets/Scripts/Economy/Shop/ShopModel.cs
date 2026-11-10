@@ -10,7 +10,7 @@ public class ShopModel : IShopService
     private readonly ISaveService _saveService;
     private readonly List<UpgradeConfig> _availableUpgrades;
 
-    // Событие для UI и игровых систем: "Апгрейд куплен, обновите картинку и статы!"
+    // РЎРѕР±С‹С‚РёРµ РґР»СЏ UI Рё РёРіСЂРѕРІС‹С… СЃРёСЃС‚РµРј: Р°РїРіСЂРµР№Рґ РєСѓРїР»РµРЅ, РѕР±РЅРѕРІРёС‚Рµ РєР°СЂС‚РёРЅРєСѓ Рё СЃС‚Р°С‚С‹
     public event Action<string> OnUpgradePurchased;
 
     public IReadOnlyList<UpgradeConfig> AllConfigs => _availableUpgrades;
@@ -24,65 +24,68 @@ public class ShopModel : IShopService
         InitializeSaves();
     }
 
-    // Синхронизация наших конфигов с сохранениями YG2
     private void InitializeSaves()
     {
         bool isDataChanged = false;
 
-        // Получаем текущую стадию игрока (если 0, считаем как 1)
-        // Стадии начинаются с 0: подменять её на 1 нельзя, иначе улучшения
-        // со стадией 1 окажутся купленными раньше времени.
-        int currentStage = YG2.saves.level < 0 ? 0 : YG2.saves.level;
-
-        foreach (var config in _availableUpgrades)
+        // РЈСЂРѕРІРµРЅСЊ 0 РѕР·РЅР°С‡Р°РµС‚ "РЅРёС‡РµРіРѕ РЅРµ РєСѓРїР»РµРЅРѕ". РџРѕРєСѓРїРєР° РїРѕРґРЅРёРјР°РµС‚ РµРіРѕ РґРѕ 1,
+        // РїРѕСЌС‚РѕРјСѓ РїСЂРё MaxLevel 10 РёРіСЂРѕРє РґРµР»Р°РµС‚ СЂРѕРІРЅРѕ 10 РїРѕРєСѓРїРѕРє.
+        foreach (UpgradeConfig config in _availableUpgrades)
         {
-            // Выбираем нужный список на основе категории (Tap или Passive)
-            List<UpgradeData> targetList = YG2.saves.upgrades;
+            if (config == null) continue;
 
-            // Ищем, есть ли уже сохранение для этого апгрейда
-            UpgradeData data = targetList.FirstOrDefault(u => u.id == config.Id);
+            UpgradeData data = YG2.saves.upgrades.FirstOrDefault(u => u.id == config.Id);
 
-            // Если сохранения нет, создаем его (игрок новенький или мы добавили апгрейд)
             if (data == null)
             {
                 data = new UpgradeData
                 {
                     id = config.Id,
-                    level = 1,
-                    // Теперь проверяем блокировку по текущей стадии игрока
-                    isLocked = currentStage < config.UnlockStageLevel
+                    level = 0,
+                    price = config.CalculatePrice(0),
+                    value = config.CalculateValue(0)
                 };
 
-                // Считаем стартовые значения по формулам из конфига
-                data.price = config.CalculatePrice(data.level);
-                data.value = config.CalculateValue(data.level);
+                YG2.saves.upgrades.Add(data);
+                isDataChanged = true;
+                continue;
+            }
 
-                targetList.Add(data);
+            // РЎС‚Р°СЂС‹Рµ СЃРѕС…СЂР°РЅРµРЅРёСЏ СЃС‡РёС‚Р°Р»Рё Р±Р°Р·Сѓ СЃ 1: СѓСЂРѕРІРµРЅСЊ 1 Р·РЅР°С‡РёР» "РЅРёС‡РµРіРѕ РЅРµ РєСѓРїР»РµРЅРѕ".
+            // РЎРґРІРёРіР°РµРј РѕРґРёРЅ СЂР°Р·, РёРЅР°С‡Рµ Сѓ РёРіСЂРѕРєР° РїРѕСЏРІРёС‚СЃСЏ Р»РёС€РЅСЏСЏ РїРѕРєСѓРїРєР°.
+            if (!YG2.saves.upgradeLevelMigrated && data.level > 0)
+            {
+                data.level--;
                 isDataChanged = true;
             }
+
+            if (data.level < 0) data.level = 0;
+
+            // Р¦РµРЅР° Рё СЃРёР»Р° РІСЃРµРіРґР° Р±РµСЂСѓС‚СЃСЏ РёР· РєРѕРЅС„РёРіР°, Р° РЅРµ РёР· СЃРѕС…СЂР°РЅРµРЅРёСЏ:
+            // СЃРѕС…СЂР°РЅС‘РЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РјРѕРіР»Рё РѕСЃС‚Р°С‚СЊСЃСЏ РѕС‚ РїСЂРѕС€Р»РѕР№ С„РѕСЂРјСѓР»С‹
+            data.price = config.CalculatePrice(data.level);
+            data.value = config.CalculateValue(data.level);
         }
 
-        // Если мы добавили новые апгрейды в список, сразу сохраняем их в облако
-        //if (isDataChanged)
-        //{
-        //    YG2.SaveProgress();
-        //}
+        if (!YG2.saves.upgradeLevelMigrated)
+        {
+            YG2.saves.upgradeLevelMigrated = true;
+            isDataChanged = true;
+        }
+
+        if (isDataChanged) _saveService.Save();
     }
 
-
-    // Метод для получения текущих данных апгрейда (используем в UI и для получения Урона/Радиуса)
     public UpgradeData GetUpgradeData(string id)
     {
         return YG2.saves.upgrades.FirstOrDefault(u => u.id == id);
     }
 
-    // Метод для получения базовых настроек (имя, иконка, макс. уровень)
     public UpgradeConfig GetConfig(string id)
     {
         return _availableUpgrades.FirstOrDefault(c => c.Id == id);
     }
 
-    // Логика покупки (вызывается из UI)
     public bool TryPurchaseUpgrade(string id)
     {
         UpgradeData data = GetUpgradeData(id);
@@ -90,31 +93,21 @@ public class ShopModel : IShopService
 
         if (data == null || config == null) return false;
 
-        // Флаг в сохранении мог быть записан старым кодом, поэтому стадию проверяем заново
+        // РЎС‚Р°РґРёСЋ РїСЂРѕРІРµСЂСЏРµРј РїСЂРё РєР°Р¶РґРѕР№ РїРѕРєСѓРїРєРµ. Р Р°РЅСЊС€Рµ Р·РґРµСЃСЊ Р±С‹Р» С„Р»Р°Рі isLocked,
+        // Р·Р°РїРёСЃР°РЅРЅС‹Р№ РѕРґРёРЅ СЂР°Р· РїСЂРё СЃРѕР·РґР°РЅРёРё: Р°РїРіСЂРµР№Рґ, Р·Р°РєСЂС‹С‚С‹Р№ РЅР° СЃС‚Р°СЂС‚Рµ, С‚Р°Рє Рё
+        // РѕСЃС‚Р°РІР°Р»СЃСЏ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅРЅС‹Рј, РґР°Р¶Рµ РєРѕРіРґР° СЃС‚Р°РґРёСЏ СѓР¶Рµ РїСЂРѕР№РґРµРЅР°.
         int currentStage = YG2.saves.level < 0 ? 0 : YG2.saves.level;
         if (currentStage < config.UnlockStageLevel) return false;
-        if (data.isLocked) return false;
-        if (data.level >= config.MaxLevel) return false; // Достигнут лимит
+        if (data.level >= config.MaxLevel) return false;
 
-        // Пытаемся списать деньги из Кошелька
-        if (_wallet.TrySpend(data.price))
-        {
-            // Повышаем уровень
-            data.level++;
+        if (!_wallet.TrySpend(data.price)) return false;
 
-            // Пересчитываем новую цену и силу по формулам из Конфига
-            data.price = config.CalculatePrice(data.level);
-            data.value = config.CalculateValue(data.level);
+        data.level++;
+        data.price = config.CalculatePrice(data.level);
+        data.value = config.CalculateValue(data.level);
 
-            // Сохраняем прогресс в облако Яндекса
-            _saveService.Save();
-
-            // Кричим всем системам, что апгрейд обновился
-            OnUpgradePurchased?.Invoke(id);
-
-            return true;
-        }
-
-        return false;
+        _saveService.Save();
+        OnUpgradePurchased?.Invoke(id);
+        return true;
     }
 }

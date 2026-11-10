@@ -36,6 +36,12 @@ namespace YG
         /// считались открытыми. Флаг не даёт потерять доход при обновлении.</summary>
         public bool garageOpenMigrated = false;
 
+        /// <summary>
+        /// Уровни апгрейдов переехали с базы 1 на базу 0: первая покупка даёт уровень 1.
+        /// Флаг не даёт сдвинуть уровни повторно.
+        /// </summary>
+        public bool upgradeLevelMigrated;
+
         public double balance = 1;
         public double clickPerSecond = 1;
         public double tapPower = 1;

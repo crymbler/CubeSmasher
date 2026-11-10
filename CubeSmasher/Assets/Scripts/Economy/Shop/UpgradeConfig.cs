@@ -76,21 +76,30 @@ public class UpgradeConfig : ScriptableObject
     }
 
     // Математика для расчета СЛЕДУЮЩЕГО уровня
-    public double CalculatePrice(int nextLevel)
+    /// <summary>
+    /// Цена перехода с уровня level на level + 1. Уровень 0 - ничего не куплено,
+    /// поэтому первая покупка стоит ровно BasePrice.
+    /// </summary>
+    public double CalculatePrice(int level)
     {
-        if (nextLevel > MaxLevel) return double.MaxValue;
-        return BasePrice * Mathf.Pow(PriceMultiplier, nextLevel - 1);
+        if (level < 0) level = 0;
+        if (level >= MaxLevel) return double.MaxValue;
+        return BasePrice * Mathf.Pow(PriceMultiplier, level);
     }
 
-    public float CalculateValue(int nextLevel)
+    /// <summary>
+    /// Вклад апгрейда на уровне level. Уровень 0 - вклада нет, стат не тронут.
+    /// Так шкала начинается с нуля, а MaxLevel 10 значит ровно 10 покупок.
+    /// </summary>
+    public float CalculateValue(int level)
     {
+        if (level <= 0) return 0f;
+
         if (ValueGrowthType == GrowthType.Linear)
         {
-            return BaseValue + (ValueStep * (nextLevel - 1));
+            return BaseValue + ValueStep * level;
         }
-        else
-        {
-            return BaseValue * Mathf.Pow(ValueMultiplier, nextLevel - 1);
-        }
+
+        return BaseValue * Mathf.Pow(ValueMultiplier, level - 1);
     }
 }
