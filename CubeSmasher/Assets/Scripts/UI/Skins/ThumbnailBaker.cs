@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 namespace CubeSmasher.UI.Skins
 {
     /// <summary>
-    /// Превращает 3D-модель в спрайт для карточки магазина.
+    /// Превращает 3D-модель в спрайт для карточки магазина и иконок машин гаража (в редакторе).
     ///
     /// Зачем: в слоте нужно видеть сам молот, а не цветной прямоугольник.
     /// UI не умеет показывать 3D-объекты напрямую, поэтому модель рендерится
@@ -27,7 +27,7 @@ namespace CubeSmasher.UI.Skins
     /// Кэш общий на всё приложение: каждый предмет рендерится один раз,
     /// сколько бы раз игрок ни открывал магазин.
     /// </summary>
-    public static class CosmeticThumbnailBaker
+    public static class ThumbnailBaker
     {
         private const int Size = 256;
         private const float Fov = 20f;
@@ -51,7 +51,7 @@ namespace CubeSmasher.UI.Skins
             if (string.IsNullOrEmpty(cacheKey)) return null;
             if (Cache.TryGetValue(cacheKey, out Sprite cached)) return cached;
 
-            Sprite baked = Bake(modelPrefab, material);
+            Sprite baked = ToSprite(Render(modelPrefab, material));
             Cache[cacheKey] = baked;
             return baked;
         }
@@ -62,13 +62,13 @@ namespace CubeSmasher.UI.Skins
             {
                 if (pair.Value == null) continue;
 
-                if (pair.Value.texture != null) Object.Destroy(pair.Value.texture);
-                Object.Destroy(pair.Value);
+                if (pair.Value.texture != null) Discard(pair.Value.texture);
+                Discard(pair.Value);
             }
             Cache.Clear();
         }
 
-        private static Sprite Bake(GameObject modelPrefab, Material material)
+        public static Texture2D Render(GameObject modelPrefab, Material material)
         {
             if (modelPrefab == null) return null;
 
@@ -92,7 +92,7 @@ namespace CubeSmasher.UI.Skins
 
             if (!TryGetBounds(instance, out Bounds bounds))
             {
-                Object.Destroy(instance);
+                Discard(instance);
                 return null;
             }
 
@@ -102,7 +102,6 @@ namespace CubeSmasher.UI.Skins
             Camera camera = null;
             RenderTexture renderTexture = null;
             Texture2D texture = null;
-            Sprite sprite = null;
 
             try
             {
@@ -125,10 +124,6 @@ namespace CubeSmasher.UI.Skins
                 texture.Apply();
 
                 RenderTexture.active = previous;
-
-                sprite = Sprite.Create(texture, new Rect(0f, 0f, Size, Size),
-                                       new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
-                sprite.name = "Thumbnail";
             }
             finally
             {
@@ -142,20 +137,39 @@ namespace CubeSmasher.UI.Skins
                 {
                     camera.targetTexture = null;
                     camera.enabled = false;
-                    Object.Destroy(camera.gameObject);
+                    Discard(camera.gameObject);
                 }
 
                 if (renderTexture != null)
                 {
                     renderTexture.Release();
-                    Object.Destroy(renderTexture);
+                    Discard(renderTexture);
                 }
 
-                Object.Destroy(rig);
-                Object.Destroy(instance);
+                Discard(rig);
+                Discard(instance);
             }
 
+            return texture;
+        }
+
+        private static Sprite ToSprite(Texture2D texture)
+        {
+            if (texture == null) return null;
+
+            Sprite sprite = Sprite.Create(texture, new Rect(0f, 0f, Size, Size),
+                                          new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
+            sprite.name = "Thumbnail";
             return sprite;
+        }
+
+        // Object.Destroy в редакторе не работает, там нужен DestroyImmediate
+        private static void Discard(Object obj)
+        {
+            if (obj == null) return;
+
+            if (Application.isPlaying) Object.Destroy(obj);
+            else Object.DestroyImmediate(obj);
         }
 
         private static Camera CreateCamera(Transform parent, Bounds bounds, Vector3 origin)

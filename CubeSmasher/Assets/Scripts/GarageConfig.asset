@@ -373,7 +373,7 @@ MonoBehaviour:
     ModelPrefab: {fileID: 4746046463797814302, guid: bc8322977ed59c14d9d8eaa72414f996, type: 3}
     MiniIcon: {fileID: 21300000, guid: d7480e1c899014545bdafa4bb17cd30d, type: 3}
   - CarName: "\u0413\u043E\u043D\u043E\u0447\u043D\u044B\u0439 \u0445\u044D\u0442\u0447\u0431\u044D\u043A"
-    Key: limo
+    Key: hothatch
     UnlockStage: 41
     IncomePerSecond: 11310
     Description: "\u0414\u043B\u0438\u043D\u043D\u044B\u0439 \u043B\u0438\u043C\u0443\u0437\u0438\u043D"

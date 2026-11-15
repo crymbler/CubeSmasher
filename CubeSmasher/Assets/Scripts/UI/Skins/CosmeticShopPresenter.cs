@@ -125,7 +125,7 @@ namespace CubeSmasher.UI.Skins
                 YanPrice = GetYanPrice(item.PurchaseId),
                 UnlockStage = item.UnlockStage,
                 IsPremium = item.IsPremium,
-                Preview = CosmeticThumbnailBaker.Get(
+                Preview = ThumbnailBaker.Get(
                     ThumbnailKey(groupId, item), item.ModelPrefab, item.Material)
             };
         }
