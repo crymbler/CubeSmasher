@@ -30,7 +30,8 @@ MonoBehaviour:
   - {fileID: 3289245971641299442, guid: cbbbc373236affa48a534a67555768ae, type: 3}
   SpawnRadius: 4
   StartPartsPerWave: 2
-  InitialPartScale: 0.7
+  RespawnDelay: 2
+  InitialPartScale: 1
   PoolCapacity: 250
   BaseSplitChance: 0.85
-  SplitScaleMultiplier: 0.5
+  SplitScaleMultiplier: 0.25

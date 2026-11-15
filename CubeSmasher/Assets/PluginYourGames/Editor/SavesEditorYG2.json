@@ -1,59 +1,217 @@
 {
-    "idSave": 2022,
-    "lastSaveTime": 1793965648,
+    "idSave": 2162,
+    "lastSaveTime": 1794646317,
     "bestScore": 0,
     "isAdsRemoved": false,
     "level": 5,
-    "stageDetails": 13,
+    "stageDetails": 23,
     "hasPendingLocalSave": true,
-    "lastGarageCarIndex": 1,
+    "lastGarageCarIndex": 3,
     "openedGarageCars": [
         0,
-        4,
         1,
-        5,
-        6,
-        7,
-        2
+        4,
+        2,
+        3
     ],
     "garageOpenMigrated": true,
-    "balance": 296256.1700370312,
+    "upgradeLevelMigrated": true,
+    "balance": 62942.18158054352,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
-    "soundVolume": 0.5819287896156311,
-    "musicVolume": 0.1481289267539978,
-    "ownedCosmetics": [
-        "hammer/model_17"
-    ],
-    "equippedHammer": "model_17",
-    "equippedDish": "dish_3",
+    "soundVolume": 0.5,
+    "musicVolume": 0.5,
+    "ownedCosmetics": [],
+    "equippedHammer": "",
+    "equippedDish": "",
     "upgrades": [
         {
-            "id": "HammerDamage",
-            "level": 1,
-            "price": 50.0,
-            "value": 10.0,
-            "isLocked": false
-        },
-        {
-            "id": "HammerRadius",
-            "level": 1,
-            "price": 100.0,
-            "value": 1.5,
-            "isLocked": false
-        },
-        {
-            "id": "RespawnDelay",
-            "level": 1,
-            "price": 1000.0,
-            "value": 2.0,
+            "id": "AttackSpeed_2",
+            "level": 5,
+            "price": 1.7976931348623157e308,
+            "value": 0.29999998211860659,
             "isLocked": true
         },
         {
-            "id": "SpawnParts",
+            "id": "AttackSpeed_9",
+            "level": 0,
+            "price": 25000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "AttackSpeed_17",
+            "level": 0,
+            "price": 4000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "AttackSpeed_27",
+            "level": 0,
+            "price": 1200000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "AttackSpeed_37",
+            "level": 0,
+            "price": 400000000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "CritChance_8",
+            "level": 0,
+            "price": 20000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "CritChance_16",
+            "level": 0,
+            "price": 3000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "CritChance_26",
+            "level": 0,
+            "price": 1000000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "CritChance_36",
+            "level": 0,
+            "price": 300000000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "CritDamage_10",
+            "level": 0,
+            "price": 30000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "CritDamage_18",
+            "level": 0,
+            "price": 5000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "CritDamage_28",
+            "level": 0,
+            "price": 1500000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "CritDamage_38",
+            "level": 0,
+            "price": 500000000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "HammerDamage_0",
+            "level": 9,
+            "price": 299.3701934814453,
+            "value": 54.0,
+            "isLocked": false
+        },
+        {
+            "id": "HammerDamage_6",
+            "level": 0,
+            "price": 8000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "HammerDamage_14",
+            "level": 0,
+            "price": 1500000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "HammerDamage_24",
+            "level": 0,
+            "price": 400000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "HammerDamage_34",
+            "level": 0,
+            "price": 120000000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "HammerRadius_1",
+            "level": 2,
+            "price": 153.7600040435791,
+            "value": 0.11999999731779099,
+            "isLocked": true
+        },
+        {
+            "id": "HammerRadius_7",
+            "level": 0,
+            "price": 12000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "HammerRadius_15",
+            "level": 0,
+            "price": 2000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "HammerRadius_25",
+            "level": 0,
+            "price": 600000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "HammerRadius_35",
+            "level": 0,
+            "price": 200000000000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "RespawnDelay_2",
+            "level": 2,
+            "price": 971.9999313354492,
+            "value": -0.30000001192092898,
+            "isLocked": true
+        },
+        {
+            "id": "RespawnDelay_11",
+            "level": 0,
+            "price": 50000.0,
+            "value": 0.0,
+            "isLocked": true
+        },
+        {
+            "id": "SpawnParts_3",
             "level": 1,
-            "price": 1000000.0,
-            "value": 2.0,
+            "price": 1.7976931348623157e308,
+            "value": 1.0,
+            "isLocked": true
+        },
+        {
+            "id": "SpawnParts_20",
+            "level": 0,
+            "price": 10000000.0,
+            "value": 0.0,
             "isLocked": true
         }
     ]
