@@ -187,7 +187,7 @@ namespace CubeSmasher.UI.Skins
             camera.nearClipPlane = 0.01f;
 
             // Наклон сверху-сбоку: так у молота видно и ручку, и боёк
-            Vector3 direction = new Vector3(0.55f, 0.45f, -1f).normalized;
+            Vector3 offset = new Vector3(-0.7f, 0.4f, -0.6f).normalized;
             float radius = Mathf.Max(0.01f, bounds.extents.magnitude);
             float distance = radius / Mathf.Sin(Fov * 0.5f * Mathf.Deg2Rad) * 1.15f;
 
@@ -205,7 +205,7 @@ namespace CubeSmasher.UI.Skins
             camera.cullingMask = 1 << 0;
 
             Vector3 lookAt = bounds.center;
-            go.transform.position = lookAt - direction * distance;
+            go.transform.position = lookAt + offset * distance;
             go.transform.LookAt(lookAt);
 
             return camera;
