@@ -198,6 +198,230 @@ MonoBehaviour:
     m_Localized: "Dil"
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430434
+    m_Localized: "Se\u00E7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430435
+    m_Localized: "Se\u00E7ildi"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430436
+    m_Localized: "Hasar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430437
+    m_Localized: "Yar\u0131\u00E7ap"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430438
+    m_Localized: "Kritik \u015Fans\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430439
+    m_Localized: "Kritik hasar\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430440
+    m_Localized: "H\u0131z"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430441
+    m_Localized: "Par\u00E7alar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430442
+    m_Localized: "Gecikme"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430443
+    m_Localized: "sn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430444
+    m_Localized: "m"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430445
+    m_Localized: "%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430446
+    m_Localized: "Bonus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430447
+    m_Localized: "\u0130zle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430448
+    m_Localized: "Siz yokken"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430449
+    m_Localized: "{0} al"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430450
+    m_Localized: "Reklam izleyip \u00D72 al"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430451
+    m_Localized: "Reklam {0} sonra"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430452
+    m_Localized: "Reklamlar\u0131 kald\u0131r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430453
+    m_Localized: "Seviyeler aras\u0131nda reklam yok. Tek seferlik sat\u0131n alma."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430454
+    m_Localized: "Premium \u00E7eki\u00E7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430455
+    m_Localized: "Premium tabak"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430456
+    m_Localized: "B"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430457
+    m_Localized: "M"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430458
+    m_Localized: "Mr"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430459
+    m_Localized: "T"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430460
+    m_Localized: "Ba\u015Flamak i\u00E7in k\u00FC\u00E7\u00FCk bir araba"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430461
+    m_Localized: "G\u00FCvenilir aile sedan\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430462
+    m_Localized: "Geni\u015F minivan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430463
+    m_Localized: "H\u0131zl\u0131 bir spor araba"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430464
+    m_Localized: "Pikap"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430465
+    m_Localized: "A\u00E7\u0131k kasal\u0131 pikap"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430466
+    m_Localized: "Crossover"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430467
+    m_Localized: "\u015Eehir crossover arac\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430468
+    m_Localized: "Kupe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430469
+    m_Localized: "\u0130ki kap\u0131l\u0131 kupe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430470
+    m_Localized: "Station wagon"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430471
+    m_Localized: "Geni\u015F bagajl\u0131 station wagon"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430472
+    m_Localized: "SUV"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430473
+    m_Localized: "Her yola uygun SUV"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430474
+    m_Localized: "Kabriyole"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430475
+    m_Localized: "A\u00E7\u0131l\u0131r tavanl\u0131 kabriyole"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430476
+    m_Localized: "Van"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430477
+    m_Localized: "Kargo van"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430478
+    m_Localized: "Ralli arabas\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430479
+    m_Localized: "Ralli i\u00E7in araba"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430480
+    m_Localized: "Maslkar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430481
+    m_Localized: "G\u00FC\u00E7l\u00FC maslkar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430482
+    m_Localized: "Spor hatchback"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430483
+    m_Localized: "G\u00FC\u00E7l\u00FC motorlu kompakt spor hatchback"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430484
+    m_Localized: "Yar\u0131\u015F arabas\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430485
+    m_Localized: "Yar\u0131\u015F arabas\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430486
+    m_Localized: "Hiperkar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430487
+    m_Localized: "Dev motorlu hiperkar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430488
+    m_Localized: "Canavar kamyon"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430489
+    m_Localized: "Her \u015Feyi ezen canavar kamyon"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

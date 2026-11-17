@@ -198,6 +198,230 @@ MonoBehaviour:
     m_Localized: "Language"
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430434
+    m_Localized: "Select"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430435
+    m_Localized: "Selected"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430436
+    m_Localized: "Damage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430437
+    m_Localized: "Radius"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430438
+    m_Localized: "Crit chance"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430439
+    m_Localized: "Crit damage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430440
+    m_Localized: "Speed"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430441
+    m_Localized: "Parts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430442
+    m_Localized: "Delay"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430443
+    m_Localized: "s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430444
+    m_Localized: "m"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430445
+    m_Localized: "%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430446
+    m_Localized: "Bonus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430447
+    m_Localized: "Watch"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430448
+    m_Localized: "While you were away"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430449
+    m_Localized: "Collect {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430450
+    m_Localized: "Collect \u00D72 for an ad"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430451
+    m_Localized: "Ad in {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430452
+    m_Localized: "Remove ads"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430453
+    m_Localized: "No ads between levels. One-time purchase."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430454
+    m_Localized: "Premium hammer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430455
+    m_Localized: "Premium plate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430456
+    m_Localized: "K"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430457
+    m_Localized: "M"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430458
+    m_Localized: "B"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430459
+    m_Localized: "T"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430460
+    m_Localized: "A small car to start with"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430461
+    m_Localized: "A reliable family sedan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430462
+    m_Localized: "A roomy minivan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430463
+    m_Localized: "A fast sports car"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430464
+    m_Localized: "Pickup"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430465
+    m_Localized: "A pickup with an open bed"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430466
+    m_Localized: "Crossover"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430467
+    m_Localized: "A city crossover"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430468
+    m_Localized: "Coupe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430469
+    m_Localized: "A two-door coupe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430470
+    m_Localized: "Wagon"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430471
+    m_Localized: "A wagon with a big trunk"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430472
+    m_Localized: "SUV"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430473
+    m_Localized: "An SUV for any road"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430474
+    m_Localized: "Convertible"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430475
+    m_Localized: "A convertible with a folding roof"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430476
+    m_Localized: "Van"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430477
+    m_Localized: "A cargo van"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430478
+    m_Localized: "Rally car"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430479
+    m_Localized: "A rally car"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430480
+    m_Localized: "Muscle car"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430481
+    m_Localized: "A powerful muscle car"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430482
+    m_Localized: "Hot hatch"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430483
+    m_Localized: "A compact hot hatch with a powerful engine"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430484
+    m_Localized: "Race car"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430485
+    m_Localized: "A race car"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430486
+    m_Localized: "Hypercar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430487
+    m_Localized: "A hypercar with a huge engine"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430488
+    m_Localized: "Monster truck"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430489
+    m_Localized: "A monster truck that crushes everything"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

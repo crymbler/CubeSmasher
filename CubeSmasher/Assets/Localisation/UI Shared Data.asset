@@ -195,6 +195,230 @@ MonoBehaviour:
     m_Key: settings.language
     m_Metadata:
       m_Items: []
+  - m_Id: 401315427430434
+    m_Key: gar.select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430435
+    m_Key: gar.selected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430436
+    m_Key: stat.damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430437
+    m_Key: stat.radius
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430438
+    m_Key: stat.crit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430439
+    m_Key: stat.crit_damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430440
+    m_Key: stat.speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430441
+    m_Key: stat.parts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430442
+    m_Key: stat.delay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430443
+    m_Key: unit.sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430444
+    m_Key: unit.m
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430445
+    m_Key: unit.percent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430446
+    m_Key: ad.reward.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430447
+    m_Key: ad.reward.button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430448
+    m_Key: ad.offline.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430449
+    m_Key: ad.offline.take
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430450
+    m_Key: ad.offline.double
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430451
+    m_Key: ad.countdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430452
+    m_Key: shop.no_ads
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430453
+    m_Key: shop.no_ads.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430454
+    m_Key: shop.premium.hammer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430455
+    m_Key: shop.premium.dish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430456
+    m_Key: num.thousand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430457
+    m_Key: num.million
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430458
+    m_Key: num.billion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430459
+    m_Key: num.trillion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430460
+    m_Key: car.hatchback.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430461
+    m_Key: car.sedan.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430462
+    m_Key: car.minivan.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430463
+    m_Key: car.sport.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430464
+    m_Key: car.pickup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430465
+    m_Key: car.pickup.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430466
+    m_Key: car.crossover
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430467
+    m_Key: car.crossover.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430468
+    m_Key: car.coupe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430469
+    m_Key: car.coupe.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430470
+    m_Key: car.wagon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430471
+    m_Key: car.wagon.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430472
+    m_Key: car.suv
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430473
+    m_Key: car.suv.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430474
+    m_Key: car.cabrio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430475
+    m_Key: car.cabrio.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430476
+    m_Key: car.van
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430477
+    m_Key: car.van.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430478
+    m_Key: car.rally
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430479
+    m_Key: car.rally.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430480
+    m_Key: car.muscle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430481
+    m_Key: car.muscle.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430482
+    m_Key: car.hothatch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430483
+    m_Key: car.hothatch.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430484
+    m_Key: car.racer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430485
+    m_Key: car.racer.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430486
+    m_Key: car.hypercar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430487
+    m_Key: car.hypercar.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430488
+    m_Key: car.monster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 401315427430489
+    m_Key: car.monster.desc
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

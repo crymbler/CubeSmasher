@@ -26,3 +26,59 @@ hammer.premium,Неоновый молот,Neon hammer,Neon çekiç
 dish.default,Обычная тарелка,Common plate,Sıradan tabak
 dish.mid,Синяя тарелка,Blue plate,Mavi tabak
 dish.premium,Неоновая тарелка,Neon plate,Neon tabak
+gar.select,Выбрать,Select,Seç
+gar.selected,Выбрано,Selected,Seçildi
+stat.damage,Урон,Damage,Hasar
+stat.radius,Радиус,Radius,Yarıçap
+stat.crit,Шанс крита,Crit chance,Kritik şansı
+stat.crit_damage,Сила крита,Crit damage,Kritik hasarı
+stat.speed,Скорость,Speed,Hız
+stat.parts,Детали,Parts,Parçalar
+stat.delay,Задержка,Delay,Gecikme
+unit.sec,с,s,sn
+unit.m,м,m,m
+unit.percent,%,%,%
+ad.reward.title,Бонус,Bonus,Bonus
+ad.reward.button,Смотреть,Watch,İzle
+ad.offline.title,Пока вас не было,While you were away,Siz yokken
+ad.offline.take,Забрать {0},Collect {0},{0} al
+ad.offline.double,Забрать ×2 за рекламу,Collect ×2 for an ad,Reklam izleyip ×2 al
+ad.countdown,Реклама через {0},Ad in {0},Reklam {0} sonra
+shop.no_ads,Отключение рекламы,Remove ads,Reklamları kaldır
+shop.no_ads.desc,Без рекламы между уровнями. Покупается один раз.,No ads between levels. One-time purchase.,Seviyeler arasında reklam yok. Tek seferlik satın alma.
+shop.premium.hammer,Премиум-молот,Premium hammer,Premium çekiç
+shop.premium.dish,Премиум-тарелка,Premium plate,Premium tabak
+num.thousand,тыс,K,B
+num.million,млн,M,M
+num.billion,млрд,B,Mr
+num.trillion,трлн,T,T
+car.hatchback.desc,"Маленькая машинка, с которой нужно начинать",A small car to start with,Başlamak için küçük bir araba
+car.sedan.desc,Надёжный семейный седан,A reliable family sedan,Güvenilir aile sedanı
+car.minivan.desc,Просторный минивэн,A roomy minivan,Geniş minivan
+car.sport.desc,Быстрый спорткар,A fast sports car,Hızlı bir spor araba
+car.pickup,Пикап,Pickup,Pikap
+car.pickup.desc,Пикап с открытым кузовом,A pickup with an open bed,Açık kasalı pikap
+car.crossover,Кроссовер,Crossover,Crossover
+car.crossover.desc,Городской кроссовер,A city crossover,Şehir crossover aracı
+car.coupe,Купе,Coupe,Kupe
+car.coupe.desc,Двухдверное купе,A two-door coupe,İki kapılı kupe
+car.wagon,Универсал,Wagon,Station wagon
+car.wagon.desc,Универсал с большим багажником,A wagon with a big trunk,Geniş bagajlı station wagon
+car.suv,Внедорожник,SUV,SUV
+car.suv.desc,Внедорожник для любой дороги,An SUV for any road,Her yola uygun SUV
+car.cabrio,Кабриолет,Convertible,Kabriyole
+car.cabrio.desc,Кабриолет с откидным верхом,A convertible with a folding roof,Açılır tavanlı kabriyole
+car.van,Фургон,Van,Van
+car.van.desc,Грузовой фургон,A cargo van,Kargo van
+car.rally,Ралли-кар,Rally car,Ralli arabası
+car.rally.desc,Машина для ралли,A rally car,Ralli için araba
+car.muscle,Маслкар,Muscle car,Maslkar
+car.muscle.desc,Мощный маслкар,A powerful muscle car,Güçlü maslkar
+car.hothatch,Хот-хэтч,Hot hatch,Spor hatchback
+car.hothatch.desc,Компактный хот-хэтч с мощным мотором,A compact hot hatch with a powerful engine,Güçlü motorlu kompakt spor hatchback
+car.racer,Гоночный болид,Race car,Yarış arabası
+car.racer.desc,Гоночный болид,A race car,Yarış arabası
+car.hypercar,Гиперкар,Hypercar,Hiperkar
+car.hypercar.desc,Гиперкар с огромным двигателем,A hypercar with a huge engine,Dev motorlu hiperkar
+car.monster,Монстр-трак,Monster truck,Canavar kamyon
+car.monster.desc,"Монстр-трак, который давит всё",A monster truck that crushes everything,Her şeyi ezen canavar kamyon
