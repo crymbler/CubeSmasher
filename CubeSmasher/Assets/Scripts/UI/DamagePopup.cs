@@ -34,7 +34,9 @@ public class DamagePopup : MonoBehaviour
             _textMesh.color = startColor;
 
             // «аставл€ем текст смотреть пр€мо в камеру
-            transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
+            Camera cam = Camera.main;
+            if (cam != null)
+                transform.rotation = Quaternion.LookRotation(transform.position - cam.transform.position);
 
             yield return null;
         }
