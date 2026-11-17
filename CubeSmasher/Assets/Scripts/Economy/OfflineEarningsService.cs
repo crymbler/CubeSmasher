@@ -40,8 +40,8 @@ public class OfflineEarningsService
 
         double earned = offlineSeconds * _passiveIncome.CurrentIncomePerSecond;
         _wallet.Add(earned);
+        DevTrace.Money("offline", earned);
 
-        Debug.Log($"[Оффлайн] Игрок отсутствовал {offlineSeconds} сек. Заработано: {earned} монет!");
         return earned;
     }
 }

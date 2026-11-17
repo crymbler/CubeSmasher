@@ -96,9 +96,6 @@ public class CosmeticService : ICosmeticService
         {
             if (string.IsNullOrEmpty(item.PurchaseId))
             {
-                UnityEngine.Debug.LogWarning(
-                    $"[Cosmetic] У {groupId}/{itemId} нет PurchaseId: покупка за яны невозможна. " +
-                    "Создайте товар в консоли разработчика Яндекс.Игр и впишите его id.");
                 return false;
             }
 
@@ -123,7 +120,6 @@ public class CosmeticService : ICosmeticService
             case "hammer": YG2.saves.equippedHammer = itemId; break;
             case "dish": YG2.saves.equippedDish = itemId; break;
             default:
-                UnityEngine.Debug.LogWarning($"[Cosmetic] Неизвестная группа: {groupId}");
                 return false;
         }
 

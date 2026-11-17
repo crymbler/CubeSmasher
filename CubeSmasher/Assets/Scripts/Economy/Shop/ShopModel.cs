@@ -102,6 +102,7 @@ public class ShopModel : IShopService
 
         if (!_wallet.TrySpend(data.price)) return false;
 
+        DevTrace.Purchase(id, data.level + 1, data.price);
         data.level++;
         data.price = config.CalculatePrice(data.level);
         data.value = config.CalculateValue(data.level);

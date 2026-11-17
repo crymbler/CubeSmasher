@@ -88,7 +88,6 @@ namespace CubeSmasher.UI
             TopHudView view = Object.FindFirstObjectByType<TopHudView>(FindObjectsInactive.Include);
             if (view == null)
             {
-                Debug.LogWarning("[HudVisibility] На сцене нет TopHudView: HUD не будет скрываться.");
                 return null;
             }
 
@@ -105,7 +104,6 @@ namespace CubeSmasher.UI
             {
                 Transform match = FindDeep(canvasRoot, name);
                 if (match != null) found.Add(match.gameObject);
-                else Debug.LogWarning("[HudVisibility] Не найден объект HUD: " + name);
             }
 
             _hudObjects = found.ToArray();

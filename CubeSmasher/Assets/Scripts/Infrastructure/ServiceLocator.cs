@@ -38,14 +38,12 @@ namespace CubeSmasher.Infrastructure
         {
             if (service == null)
             {
-                Debug.LogError($"[ServiceLocator] Попытка зарегистрировать null как {typeof(T).Name}");
                 return;
             }
 
             Type type = typeof(T);
             if (_services.ContainsKey(type))
             {
-                Debug.LogWarning($"[ServiceLocator] Сервис {type.Name} уже зарегистрирован — пропускаем");
                 return;
             }
 

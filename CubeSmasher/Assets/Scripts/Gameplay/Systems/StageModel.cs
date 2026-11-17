@@ -56,6 +56,7 @@ public class StageModel
     private void CompleteStage()
     {
         _currentStage++;
+        DevTrace.Stage(_currentStage);
         _currentDetails = 0;
         CalculateRequiredDetails();
 

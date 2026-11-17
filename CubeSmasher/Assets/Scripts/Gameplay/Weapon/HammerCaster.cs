@@ -109,6 +109,7 @@ public class HammerCaster : MonoBehaviour
             if (!hit.TryGetComponent(out IDestructible destructible)) continue;
 
             destructible.TakeDamage(damage);
+            DevTrace.Hit(isCrit);
             if (_damageText != null) _damageText.Show(hit.transform.position, damage, isCrit);
         }
     }

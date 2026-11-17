@@ -77,14 +77,12 @@ public class Bootstrapper : MonoBehaviour
 
         if (_gameSettings == null)
         {
-            Debug.LogError("Не назначен GameSettings в Bootstrapper!");
             return;
         }
 
         // Пустой список вместо null: магазин и презентер по нему итерируются
         if (_upgradeConfigs == null)
         {
-            Debug.LogWarning("Список UpgradeConfig пуст в Bootstrapper, магазин будет без апгрейдов");
             _upgradeConfigs = new List<UpgradeConfig>();
         }
 

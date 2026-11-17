@@ -138,7 +138,6 @@ public class PartLifecycleService
     {
         if (prefab == null)
         {
-            Debug.LogError("[PartLifecycleService] Передан null вместо префаба детали");
             return null;
         }
 
@@ -210,6 +209,7 @@ public class PartLifecycleService
                         * Math.Pow(_economy.StageRewardMultiplier, Math.Max(0, _stageModel.CurrentStage - 1));
 
         _wallet.Add(reward);
+        DevTrace.Money("active", reward);
         _stageModel.AddProgress(1);
 
         // Новые осколки уходят в систему гниения (если она включена)

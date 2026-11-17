@@ -67,7 +67,11 @@ namespace CubeSmasher.Infrastructure.Initializers
             services.Register(offlineEarnings);
 
             // Пассивный доход идёт в кошелёк
-            passiveIncome.OnIncomeGenerated += wallet.Add;
+            passiveIncome.OnIncomeGenerated += amount =>
+            {
+                wallet.Add(amount);
+                DevTrace.Money("passive", amount);
+            };
 
             // На новой стадии пересчитываем доход и сохраняем прогресс
             // Открытие машин и пересчёт дохода по стадии: при старте (сохранённая стадия)
@@ -77,8 +81,9 @@ namespace CubeSmasher.Infrastructure.Initializers
 
             // Игрок открыл машину -> она начинает приносить доход, пересчитываем сразу.
             // Делегат в переменной: отписка лямбдой создаёт новый делегат и не работает.
-            Action<int> onCarOpened = _ =>
+            Action<int> onCarOpened = i =>
             {
+                DevTrace.Event("car_open " + i);
                 passiveIncome.RecalculateIncome(stageModel.CurrentStage);
             };
 

@@ -321,14 +321,9 @@ namespace CubeSmasher.UI.Skins
 
             if (_font != null && !HasCyrillic(_font))
             {
-                Debug.LogWarning("[CosmeticShop] В TMP Settings стоит шрифт без кириллицы. " +
-                                 "Назначьте Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset " +
-                                 "в поле _font на Cosmetic_Shop.");
             }
             else if (_font == null)
             {
-                Debug.LogWarning("[CosmeticShop] Шрифт не задан ни в _font, ни в TMP Settings: " +
-                                 "текст не отрисуется.");
             }
 
             return _font;

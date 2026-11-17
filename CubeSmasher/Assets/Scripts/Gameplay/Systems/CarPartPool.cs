@@ -117,7 +117,6 @@ public class CarPartPool : MonoBehaviour
     {
         if (_prefab == null)
         {
-            Debug.LogError("[CarPartPool] Не назначен _prefab — пул не может создавать объекты");
             return null;
         }
 

@@ -167,7 +167,6 @@ namespace CubeSmasher.UI
 
         private void Warn(string what)
         {
-            Debug.LogWarning("[Locale] " + what + " (ключ: " + Key + ", объект: " + name + ")");
         }
     }
 }

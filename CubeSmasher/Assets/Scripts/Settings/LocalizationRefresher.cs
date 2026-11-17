@@ -88,9 +88,6 @@ namespace CubeSmasher.Settings
 
                 if (h.Status != AsyncOperationStatus.Succeeded || h.Result == null)
                 {
-                    Debug.LogWarning("[Locale] Таблица '" + UiText.Table + "' для языка '" +
-                                     locale.Identifier.Code + "' не загрузилась: " +
-                                     "экраны останутся на прежнем языке.");
                     return;
                 }
 

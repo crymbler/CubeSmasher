@@ -147,6 +147,7 @@ public class LifetimeRewardAd : MonoBehaviour
         {
             _isRewarded = true;
             WalletRef.Add(_currentRewardAmount);
+            DevTrace.Money("gift", _currentRewardAmount);
         }
     }
 
@@ -166,6 +167,7 @@ public class LifetimeRewardAd : MonoBehaviour
             // Досрочное закрытие: компенсация 5% от баланса и короткий КД
             double compensation = WalletRef.Balance * CompensationPercent;
             WalletRef.Add(compensation);
+            DevTrace.Money("refund", compensation);
             if (_rewardText != null) _rewardText.text = UiText.Get("reward.compensation");
             if (_rewardButton != null) _rewardButton.interactable = false;
             _rewardPanel.SetActive(true);

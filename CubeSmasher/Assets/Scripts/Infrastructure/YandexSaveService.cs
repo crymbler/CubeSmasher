@@ -39,7 +39,6 @@ namespace CubeSmasher.Infrastructure
             {
                 // Флаг ставим, чтобы при следующем старте понимать, что облако могло не получить данные
                 YG2.saves.hasPendingLocalSave = true;
-                Debug.LogWarning($"[Save] Облачное сохранение не выполнено, данные сохранены локально: {e.Message}");
             }
         }
 

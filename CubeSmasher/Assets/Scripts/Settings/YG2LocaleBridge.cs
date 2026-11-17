@@ -65,7 +65,6 @@ public class YG2LocaleBridge : MonoBehaviour
         // не было ни строчки. Теперь каждый исход виден.
         if (!LocalizationSettings.InitializationOperation.IsDone)
         {
-            Debug.LogWarning("[Locale] Локализация ещё не готова, смена отложена: " + lang);
             return;
         }
 
@@ -73,8 +72,6 @@ public class YG2LocaleBridge : MonoBehaviour
 
         if (locales == null)
         {
-            Debug.LogWarning("[Locale] Список локалей пуст. Проверьте " +
-                             "Window → Asset Management → Localization Scene Controls.");
             return;
         }
 
@@ -82,18 +79,14 @@ public class YG2LocaleBridge : MonoBehaviour
 
         if (locale == null)
         {
-            Debug.LogWarning("[Locale] Нет локали для языка '" + lang +
-                             "'. Проверьте Assets/Localisation: должны быть ru, en, tr.");
             return;
         }
 
         if (LocalizationSettings.SelectedLocale == locale)
         {
-            Debug.Log("[Locale] Язык уже активен: " + locale.Identifier.Code);
             return;
         }
 
         LocalizationSettings.SelectedLocale = locale;
-        Debug.Log("[Locale] Язык переключён на " + locale.Identifier.Code);
     }
 }

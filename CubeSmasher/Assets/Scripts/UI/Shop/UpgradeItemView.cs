@@ -86,7 +86,6 @@ public class UpgradeItemView : MonoBehaviour
 
             if (_levelFill == null)
             {
-                Debug.LogWarning($"В {name}: не найдена заливка шкалы уровня", this);
                 _levelProgress = null;
                 return;
             }
