@@ -94,7 +94,7 @@ public class LifetimeRewardAd : MonoBehaviour
         _currentRewardAmount = WalletRef.Balance * percent;
         
         // Обновляем текст (F0 округлит число для красивого отображения в UI, без десятых долей)
-        _rewardText.text = $"+ {_currentRewardAmount:F0}";
+        _rewardText.text = $"+ {NumberFormat.Short(_currentRewardAmount)}";
 
         _rewardButton.interactable = true;
         _rewardPanel.SetActive(true);

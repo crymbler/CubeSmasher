@@ -14,13 +14,11 @@ public class TopHudView : MonoBehaviour, ITopHudView
     [Header("ƒоход")]
     [SerializeField] private TextMeshProUGUI _incomeText;
 
-    // ќбновл€ет текст денег. ToString("N0") добавит пробелы между тыс€чами (1 000 000).
-    // ≈сли у теб€ осталс€ твой NumberFormatter, можешь использовать его здесь.
     public void UpdateBalance(double balance)
     {
         if (_balanceText != null)
         {
-            _balanceText.text = balance.ToString("N0");
+            _balanceText.text = NumberFormat.Short(balance);
         }
     }
 
@@ -44,7 +42,7 @@ public class TopHudView : MonoBehaviour, ITopHudView
     {
         if (_incomeText == null) return;
         _incomeText.text = incomePerSecond > 0
-            ? UiText.Get("hud.income", incomePerSecond.ToString("N0"))
+            ? UiText.Get("hud.income", NumberFormat.Short(incomePerSecond))
             : string.Empty;
     }
 }

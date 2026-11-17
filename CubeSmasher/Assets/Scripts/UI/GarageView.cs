@@ -334,7 +334,7 @@ public class GarageView : MonoBehaviour, IGarageView
         if (_incomeText != null)
         {
             _incomeText.text = opened
-                ? UiText.Get("gar.income", incomePerSecond.ToString("N0"))
+                ? UiText.Get("gar.income", NumberFormat.Short(incomePerSecond))
                 : string.Empty;
         }
         if (_statsText != null) _statsText.text = opened ? characteristics : string.Empty;

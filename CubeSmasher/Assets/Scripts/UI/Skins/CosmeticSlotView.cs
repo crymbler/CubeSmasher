@@ -129,7 +129,7 @@ namespace CubeSmasher.UI.Skins
                 case CosmeticSlotState.ForCoins:
                     background = _coinBackground;
                     accent = _coinAccent;
-                    price = slot.CoinPrice.ToString("N0");
+                    price = NumberFormat.Full(slot.CoinPrice);
                     state = UiText.Get("shop.buy_coins", price);
                     break;
 

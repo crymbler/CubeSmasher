@@ -13,7 +13,7 @@ public class DamagePopup : MonoBehaviour
     public void Setup(float damageAmount, Color color)
     {
         _textMesh.color = color;
-        _textMesh.text = damageAmount.ToString("F0"); // F0 округляет до целого числа
+        _textMesh.text = NumberFormat.Short(damageAmount); // F0 округляет до целого числа
         StartCoroutine(AnimateRoutine());
     }
 
