@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CubeSmasher.Core.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 namespace CubeSmasher.Infrastructure.Initializers
 {
@@ -42,6 +43,12 @@ namespace CubeSmasher.Infrastructure.Initializers
             _openShopButton = openShopButton;
             _openGarageButton = openGarageButton;
             _upgradeConfigs = upgradeConfigs;
+        }
+
+        private static void ShowMenuInterstitial()
+        {
+            if (YG2.saves.isAdsRemoved) return;
+            YG2.InterstitialAdvShow();
         }
 
         public void Initialize()
@@ -127,6 +134,7 @@ namespace CubeSmasher.Infrastructure.Initializers
                 CubeSmasher.Settings.LocalizationRefresher.LanguageReady += cosmeticPresenter.RefreshAll;
 
                 _cosmeticShopView.Closed += gamePause.Disable;
+                _cosmeticShopView.Closed += ShowMenuInterstitial;
                 _cosmeticShopView.Closed += cursorHider.Hide;
 
                 if (_openSkinsButton != null)
@@ -154,6 +162,7 @@ namespace CubeSmasher.Infrastructure.Initializers
                     _settingsView.Initialize(settings);
 
                     _settingsView.Closed += gamePause.Disable;
+                    _settingsView.Closed += ShowMenuInterstitial;
                     _settingsView.Closed += cursorHider.Hide;
 
                     if (_openSettingsButton != null)
@@ -194,6 +203,7 @@ namespace CubeSmasher.Infrastructure.Initializers
                     subs.Track(() => _shopView.OnOpened += shopPresenter.Refresh, () => _shopView.OnOpened -= shopPresenter.Refresh);
                     subs.Track(() => _shopView.OnOpened += cursorHider.Show, () => _shopView.OnOpened -= cursorHider.Show);
                     subs.Track(() => _shopView.OnClosed += gamePause.Disable, () => _shopView.OnClosed -= gamePause.Disable);
+                    subs.Track(() => _shopView.OnClosed += ShowMenuInterstitial, () => _shopView.OnClosed -= ShowMenuInterstitial);
                     subs.Track(() => _shopView.OnClosed += cursorHider.Hide, () => _shopView.OnClosed -= cursorHider.Hide);
                 }
 
@@ -207,6 +217,7 @@ namespace CubeSmasher.Infrastructure.Initializers
                     }
                     subs.Track(() => _garageView.OnOpened += cursorHider.Show, () => _garageView.OnOpened -= cursorHider.Show);
                     subs.Track(() => _garageView.OnClosed += gamePause.Disable, () => _garageView.OnClosed -= gamePause.Disable);
+                    subs.Track(() => _garageView.OnClosed += ShowMenuInterstitial, () => _garageView.OnClosed -= ShowMenuInterstitial);
                     subs.Track(() => _garageView.OnClosed += cursorHider.Hide, () => _garageView.OnClosed -= cursorHider.Hide);
                 }
             }

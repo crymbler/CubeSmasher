@@ -15,7 +15,7 @@ MonoBehaviour:
   nameFull: YandexGamesPlatform
   projectSettings:
     showFirstAdv: 1
-    interAdvInterval: 60
+    interAdvInterval: 180
     postponeCallByFail: 0
     setLanguageMod: 1
     saveLocal: 1
