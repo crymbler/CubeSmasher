@@ -48,7 +48,12 @@ namespace CubeSmasher.Infrastructure.Initializers
         private static void ShowMenuInterstitial()
         {
             if (YG2.saves.isAdsRemoved) return;
-            YG2.InterstitialAdvShow();
+            if (!YG2.isTimerAdvCompleted || YG2.nowAdsShow) return;
+
+            if (AdCountdownPanel.Instance != null)
+                AdCountdownPanel.Instance.Play(YG2.InterstitialAdvShow);
+            else
+                YG2.InterstitialAdvShow();
         }
 
         public void Initialize()
