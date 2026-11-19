@@ -130,8 +130,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   secondsPanelObject: {fileID: 8275278891404606936}
   secondObjects:
-  - {fileID: 5614645196961480470}
   - {fileID: 8275278891352812731}
+  - {fileID: 8275278891031627906}
   onShowTimer:
     m_PersistentCalls:
       m_Calls: []
