@@ -111,7 +111,7 @@ MonoBehaviour:
       IsDefault: 0
       ForCoins: 0
       SoftPrice: 10
-      PurchaseId: 
+      PurchaseId: premiumDish
       IsPremium: 1
     - Id: dish_2
       LocalizedName:
@@ -151,7 +151,7 @@ MonoBehaviour:
       SoftPrice: 0
       PurchaseId: 
       IsPremium: 0
-  PaymentsEnabled: 0
+  PaymentsEnabled: 1
   YanRechargePurchaseId: 
   references:
     version: 2
