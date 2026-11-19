@@ -175,7 +175,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430425
-    m_Localized: "Blue plate"
+    m_Localized: "White plate"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430426
@@ -279,7 +279,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430454
-    m_Localized: "Premium hammer"
+    m_Localized: "Lollipop"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430455

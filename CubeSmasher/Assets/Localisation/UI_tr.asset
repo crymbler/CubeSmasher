@@ -175,7 +175,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430425
-    m_Localized: "Mavi tabak"
+    m_Localized: "Beyaz tabak"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430426
@@ -279,7 +279,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430454
-    m_Localized: "Premium \u00E7eki\u00E7"
+    m_Localized: "Lolipop"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430455
