@@ -22,6 +22,7 @@ public class CosmeticService : ICosmeticService
     private readonly IWallet _wallet;
     private readonly ISaveService _saveService;
     private readonly List<string> _owned = new List<string>();
+    private const string RemoveAdPurchaseId = "removeAd";
 
     /// <summary>PurchaseId -> "groupId/itemId". Заполняется при запросе покупки за яны.</summary>
     private readonly Dictionary<string, string> _pendingPurchases = new Dictionary<string, string>();
@@ -40,6 +41,7 @@ public class CosmeticService : ICosmeticService
 
         YG2.onPurchaseSuccess += HandlePurchaseSuccess;
         YG2.onPurchaseFailed += HandlePurchaseFailed;
+        YG2.onGetPayments += YG2.ConsumePurchases;
     }
 
     /// <summary>
@@ -51,6 +53,7 @@ public class CosmeticService : ICosmeticService
     {
         YG2.onPurchaseSuccess -= HandlePurchaseSuccess;
         YG2.onPurchaseFailed -= HandlePurchaseFailed;
+        YG2.onGetPayments -= YG2.ConsumePurchases;
     }
 
     public CosmeticGroup[] Groups =>
@@ -163,15 +166,46 @@ public class CosmeticService : ICosmeticService
     private void HandlePurchaseSuccess(string purchaseId)
     {
         if (string.IsNullOrEmpty(purchaseId)) return;
-        if (!_pendingPurchases.TryGetValue(purchaseId, out string key)) return;
 
-        _pendingPurchases.Remove(purchaseId);
+        if (purchaseId == RemoveAdPurchaseId)
+        {
+            YG2.saves.isAdsRemoved = true;
+            YG2.SaveProgress();
+            return;
+        }
+
+        string key;
+        if (_pendingPurchases.TryGetValue(purchaseId, out key))
+        {
+            _pendingPurchases.Remove(purchaseId);
+        }
+        else
+        {
+            key = FindKeyByPurchaseId(purchaseId);
+            if (key == null) return;
+        }
 
         string[] parts = key.Split('/');
         if (parts.Length != 2) return;
 
         Grant(parts[0], parts[1]);
-        YG2.ConsumePurchaseByID(purchaseId);
+    }
+
+    private string FindKeyByPurchaseId(string purchaseId)
+    {
+        CosmeticGroup[] groups = Groups;
+
+        for (int g = 0; g < groups.Length; g++)
+        {
+            if (groups[g].Items == null) continue;
+
+            for (int i = 0; i < groups[g].Items.Length; i++)
+            {
+                if (groups[g].Items[i].PurchaseId == purchaseId)
+                    return Key(groups[g].Id, groups[g].Items[i].Id);
+            }
+        }
+        return null;
     }
 
     private void HandlePurchaseFailed(string purchaseId)
