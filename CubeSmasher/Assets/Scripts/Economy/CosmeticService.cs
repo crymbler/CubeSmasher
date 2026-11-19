@@ -171,6 +171,7 @@ public class CosmeticService : ICosmeticService
         if (parts.Length != 2) return;
 
         Grant(parts[0], parts[1]);
+        YG2.ConsumePurchaseByID(purchaseId);
     }
 
     private void HandlePurchaseFailed(string purchaseId)
