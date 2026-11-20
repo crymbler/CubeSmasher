@@ -603,7 +603,6 @@ MonoBehaviour:
   _hideWhileOpen: []
   _coinSlotPrefab: {fileID: 4425294478559343071, guid: 5027f76d806d9cc408ec8979308ec9dc, type: 3}
   _premiumSlotPrefab: {fileID: 6910305409586506924, guid: 3398b31a69ed68c46b8f2efc413b0c43, type: 3}
-  _font: {fileID: 11400000, guid: 2f9717416c061254c932c165ed022cc8, type: 2}
   _premiumSlotHeight: 420
   _titleHeight: 72
   _groupSpacing: 40

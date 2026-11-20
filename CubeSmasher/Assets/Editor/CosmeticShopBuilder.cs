@@ -129,7 +129,6 @@ public static class CosmeticShopBuilder
         // и прямое обращение к .objectReferenceValue падает NullReferenceException
         var so = new SerializedObject(view);
 
-        SetObject(so, "_font", font);
         SetObject(so, "_groupsContainer", content);
         SetObject(so, "_closeButton", close);
         SetObject(so, "_coinSlotPrefab", coinSlot);

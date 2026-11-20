@@ -30,10 +30,6 @@ namespace CubeSmasher.UI.Skins
         [Tooltip("Крупный премиальный слот за яны. Пусто — используется слот за монеты")]
         [SerializeField] private CosmeticSlotView _premiumSlotPrefab;
 
-        [Header("Шрифт")]
-        [Tooltip("Шрифт с кириллицей: Assets/References/ofont.ru_Franklin Gothic Medium SDF.asset")]
-        [SerializeField] private TMP_FontAsset _font;
-
         [Header("Размеры")]
         [Tooltip("Высота крупного премиального слота. Она же высота ряда со слотами")]
         [SerializeField, Min(160f)] private float _premiumSlotHeight = 420f;
@@ -60,7 +56,6 @@ namespace CubeSmasher.UI.Skins
         private readonly Dictionary<string, CosmeticSlotView> _slots = new Dictionary<string, CosmeticSlotView>();
 
         private float _contentHeight;
-        private bool _fontWarned;
 
         private class GroupUi
         {
@@ -195,11 +190,6 @@ namespace CubeSmasher.UI.Skins
 
             var label = rect.gameObject.AddComponent<TextMeshProUGUI>();
 
-            // Шрифт назначается ПЕРВЫМ. Обращение к label.fontMaterial до этого
-            // бросает ArgumentNullException: у материала ещё нет источника,
-            // и TMP_Text.CreateMaterialInstance получает null на входе.
-            TMP_FontAsset font = ResolveFont();
-            if (font != null) label.font = font;
 
             label.text = text;
             label.fontSize = _titleFontSize;
@@ -302,40 +292,7 @@ namespace CubeSmasher.UI.Skins
             label.alignment = align;
             label.raycastTarget = false;
 
-            TMP_FontAsset font = ResolveFont();
-            if (font != null) label.font = font;
-
             return label;
-        }
-
-        private TMP_FontAsset ResolveFont()
-        {
-            if (_font != null) return _font;
-
-            // Поле могли оставить пустым: берём шрифт проекта, чтобы текст
-            // хотя бы появился и не превращался в квадраты
-            _font = TMP_Settings.defaultFontAsset;
-
-            if (_fontWarned) return _font;
-            _fontWarned = true;
-
-            if (_font != null && !HasCyrillic(_font))
-            {
-            }
-            else if (_font == null)
-            {
-            }
-
-            return _font;
-        }
-
-        /// <summary>
-        /// Есть ли в шрифте русская буква. Дешёвая проверка по таблице символов:
-        /// если «Ы» нет, весь русский текст превратится в квадраты.
-        /// </summary>
-        private static bool HasCyrillic(TMP_FontAsset font)
-        {
-            return font != null && font.HasCharacter('Ы');
         }
 
         /// <summary>Высота контента: по ней ScrollRect понимает, куда можно прокрутить.</summary>
