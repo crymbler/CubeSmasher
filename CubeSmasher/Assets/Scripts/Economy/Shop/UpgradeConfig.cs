@@ -24,9 +24,18 @@ public class UpgradeConfig : ScriptableObject
     public LocalizedString LocalizedName;
 
     /// <summary>Название на текущем языке. Используется в магазине.</summary>
-    public string DisplayName => LocalizedName != null && !LocalizedName.IsEmpty
-        ? LocalizedName.GetLocalizedString()
-        : UpgradeName;
+    public string DisplayName
+    {
+        get
+        {
+            if (LocalizedName != null && !LocalizedName.IsEmpty) return LocalizedName.GetLocalizedString();
+            if (string.IsNullOrEmpty(StatNameKey)) return UpgradeName;
+
+            int space = string.IsNullOrEmpty(UpgradeName) ? -1 : UpgradeName.LastIndexOf(' ');
+            string tier = space >= 0 ? UpgradeName.Substring(space + 1) : string.Empty;
+            return string.IsNullOrEmpty(tier) ? UiText.Get(StatNameKey) : UiText.Get(StatNameKey) + " " + tier;
+        }
+    }
     public Sprite Icon;
 
     [Header("Лимиты")]
