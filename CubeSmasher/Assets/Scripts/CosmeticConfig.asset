@@ -23,7 +23,7 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
-    Title: "\u041C\u043E\u043B\u043E\u0442\u044B"
+    Title: ""
     Items:
     - Id: model_17
       LocalizedName:
@@ -92,7 +92,7 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
-    Title: "\u0422\u0430\u0440\u0435\u043B\u043A\u0438"
+    Title: ""
     Items:
     - Id: dish_1
       LocalizedName:

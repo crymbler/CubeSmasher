@@ -28,6 +28,7 @@ public class ShopPresenter : IDisposable
         _shop.OnUpgradePurchased += HandleUpgradePurchased;
         _wallet.OnBalanceChanged += HandleBalanceChanged;
         _stage.OnStageCompleted += HandleStageCompleted;
+        CubeSmasher.Settings.LocalizationRefresher.LanguageReady += RefreshAll;
 
         RefreshAll();
     }
@@ -148,5 +149,6 @@ public class ShopPresenter : IDisposable
         _shop.OnUpgradePurchased -= HandleUpgradePurchased;
         _wallet.OnBalanceChanged -= HandleBalanceChanged;
         _stage.OnStageCompleted -= HandleStageCompleted;
+        CubeSmasher.Settings.LocalizationRefresher.LanguageReady -= RefreshAll;
     }
 }

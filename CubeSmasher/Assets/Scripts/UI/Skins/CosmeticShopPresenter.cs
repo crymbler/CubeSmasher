@@ -41,6 +41,8 @@ namespace CubeSmasher.UI.Skins
 
             YG2.onGetPayments += HandlePaymentsReady;
 
+            CubeSmasher.Settings.LocalizationRefresher.LanguageReady += RefreshAll;
+
             RefreshAll();
         }
 
@@ -54,6 +56,8 @@ namespace CubeSmasher.UI.Skins
             _wallet.OnBalanceChanged -= HandleBalanceChanged;
 
             YG2.onGetPayments -= HandlePaymentsReady;
+
+            CubeSmasher.Settings.LocalizationRefresher.LanguageReady -= RefreshAll;
         }
 
         /// <summary>Открыть: перерисовать всё, цены в янах могли обновиться.</summary>
