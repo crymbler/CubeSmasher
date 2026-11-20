@@ -24,6 +24,7 @@ namespace CubeSmasher.Infrastructure.Initializers
         private readonly Button _openSkinsButton;
         private readonly CubeSmasher.Settings.SettingsView _settingsView;
         private readonly Button _openSettingsButton;
+        private readonly CubeSmasher.UI.LocalizedUiLabel[] _navLabels;
 
         public UIWiringInitializer(TopHudView topHudView, ShopView shopView, GarageView garageView,
                                    Button openShopButton, Button openGarageButton,
@@ -31,7 +32,8 @@ namespace CubeSmasher.Infrastructure.Initializers
                                    CubeSmasher.UI.Skins.CosmeticShopView cosmeticShopView,
                                    Button openSkinsButton,
                                    CubeSmasher.Settings.SettingsView settingsView,
-                                   Button openSettingsButton)
+                                   Button openSettingsButton,
+                                   CubeSmasher.UI.LocalizedUiLabel[] navLabels)
         {
             _cosmeticShopView = cosmeticShopView;
             _openSkinsButton = openSkinsButton;
@@ -43,6 +45,16 @@ namespace CubeSmasher.Infrastructure.Initializers
             _openShopButton = openShopButton;
             _openGarageButton = openGarageButton;
             _upgradeConfigs = upgradeConfigs;
+            _navLabels = navLabels;
+        }
+
+        private void RefreshNavLabels()
+        {
+            if (_navLabels == null) return;
+            foreach (CubeSmasher.UI.LocalizedUiLabel label in _navLabels)
+            {
+                if (label != null) label.Refresh();
+            }
         }
 
         private static void ShowMenuInterstitial()
@@ -77,6 +89,8 @@ namespace CubeSmasher.Infrastructure.Initializers
             var topHudPresenter = new TopHudPresenter(wallet, _topHudView);
             services.Register(topHudPresenter);
             CubeSmasher.Settings.LocalizationRefresher.LanguageReady += topHudPresenter.Refresh;
+            CubeSmasher.Settings.LocalizationRefresher.LanguageReady += RefreshNavLabels;
+            RefreshNavLabels();
             if (subs != null)
             {
                 subs.Track(() => stageModel.OnProgressChanged += topHudPresenter.UpdateMachineProgress,

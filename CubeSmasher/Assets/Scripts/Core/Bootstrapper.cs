@@ -57,6 +57,7 @@ public class Bootstrapper : MonoBehaviour
     [Tooltip("Ёкран косметики: молоты и тарелки. ѕусто Ч кнопка скинов не работает")]
     [SerializeField] private CubeSmasher.UI.Skins.CosmeticShopView _cosmeticShopView;
     [SerializeField] private Button _openSkinsButton;
+    [SerializeField] private CubeSmasher.UI.LocalizedUiLabel[] _navLabels;
 
     [Header("UI - √араж")]
     [SerializeField] private GarageView _garageView;
@@ -104,7 +105,7 @@ public class Bootstrapper : MonoBehaviour
             new UIWiringInitializer(_topHudView, _shopView, _garageView,
                                     _openShopButton, _openGarageButton, _upgradeConfigs,
                                     _cosmeticShopView, _openSkinsButton,
-                                    _settingsView, _openSettingsButton)
+                                    _settingsView, _openSettingsButton, _navLabels)
         };
 
         foreach (IGameInitializer initializer in initializers)
