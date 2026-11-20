@@ -23,7 +23,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 07e596ca4d3684d4db9a9ccd4922be18, type: 3}
   MaxLevel: 5
   UnlockStageLevel: 18
   BasePrice: 5000000

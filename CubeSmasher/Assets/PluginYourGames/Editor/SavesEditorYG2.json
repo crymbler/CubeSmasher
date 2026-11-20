@@ -1,46 +1,52 @@
 {
+<<<<<<< Updated upstream
     "idSave": 2456,
     "lastSaveTime": 1795076013,
+=======
+    "idSave": 2529,
+    "lastSaveTime": 1795126328,
+>>>>>>> Stashed changes
     "bestScore": 0,
     "isAdsRemoved": false,
-    "level": 21,
-    "stageDetails": 59,
+    "level": 4,
+    "stageDetails": 1,
     "hasPendingLocalSave": true,
-    "lastGarageCarIndex": 8,
+    "lastGarageCarIndex": 3,
     "openedGarageCars": [
         0,
         1,
         2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8
+        3
     ],
     "garageOpenMigrated": true,
     "upgradeLevelMigrated": true,
+<<<<<<< Updated upstream
     "balance": 2379782.406264376,
+=======
+    "balance": 17336.863179006763,
+>>>>>>> Stashed changes
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
-    "soundVolume": 0.5,
-    "musicVolume": 0.5,
-    "ownedCosmetics": [],
+    "soundVolume": 1.0,
+    "musicVolume": 0.05574766919016838,
+    "ownedCosmetics": [
+        "hammer/model_1"
+    ],
     "equippedHammer": "",
     "equippedDish": "",
     "upgrades": [
         {
             "id": "AttackSpeed_2",
-            "level": 5,
-            "price": 1.7976931348623157e308,
-            "value": 0.29999998211860659,
+            "level": 0,
+            "price": 150.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
             "id": "AttackSpeed_9",
-            "level": 1,
-            "price": 32499.998807907104,
-            "value": 0.05999999865889549,
+            "level": 0,
+            "price": 25000.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
@@ -66,9 +72,9 @@
         },
         {
             "id": "CritChance_8",
-            "level": 2,
-            "price": 33799.9963760376,
-            "value": 0.03999999910593033,
+            "level": 0,
+            "price": 20000.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
@@ -94,9 +100,9 @@
         },
         {
             "id": "CritDamage_10",
-            "level": 1,
-            "price": 39600.00157356262,
-            "value": 0.10000000149011612,
+            "level": 0,
+            "price": 30000.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
@@ -122,16 +128,16 @@
         },
         {
             "id": "HammerDamage_0",
-            "level": 10,
-            "price": 1.7976931348623157e308,
-            "value": 60.0,
+            "level": 0,
+            "price": 50.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
             "id": "HammerDamage_6",
-            "level": 6,
-            "price": 35184.36813354492,
-            "value": 144.0,
+            "level": 0,
+            "price": 8000.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
@@ -157,16 +163,16 @@
         },
         {
             "id": "HammerRadius_1",
-            "level": 8,
-            "price": 1.7976931348623157e308,
-            "value": 0.47999998927116396,
+            "level": 0,
+            "price": 100.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
             "id": "HammerRadius_7",
-            "level": 4,
-            "price": 32212.251663208008,
-            "value": 0.23999999463558198,
+            "level": 0,
+            "price": 12000.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
@@ -192,9 +198,9 @@
         },
         {
             "id": "RespawnDelay_2",
-            "level": 4,
-            "price": 1.7976931348623157e308,
-            "value": -0.6000000238418579,
+            "level": 0,
+            "price": 300.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
@@ -206,9 +212,9 @@
         },
         {
             "id": "SpawnParts_3",
-            "level": 1,
-            "price": 1.7976931348623157e308,
-            "value": 1.0,
+            "level": 0,
+            "price": 600.0,
+            "value": 0.0,
             "isLocked": false
         },
         {
