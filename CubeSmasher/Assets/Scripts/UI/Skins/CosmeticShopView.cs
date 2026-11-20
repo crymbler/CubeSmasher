@@ -60,6 +60,7 @@ namespace CubeSmasher.UI.Skins
         private class GroupUi
         {
             public GameObject Root;
+            public TextMeshProUGUI Title;
             public CosmeticSlotView[] Slots;
         }
 
@@ -90,6 +91,8 @@ namespace CubeSmasher.UI.Skins
                 UpdateContentHeight();
             }
 
+            if (ui.Title != null) ui.Title.text = group.Title;
+
             if (ui.Slots == null) return;
 
             int count = Mathf.Min(ui.Slots.Length, group.Slots != null ? group.Slots.Length : 0);
@@ -116,11 +119,12 @@ namespace CubeSmasher.UI.Skins
             float groupHeight = titleBlock + rowHeight;
 
             RectTransform root = NewRect("Group_" + group.GroupId, parent);
+            TextMeshProUGUI titleLabel = null;
             SetTopStretch(root, -_contentHeight, groupHeight);
 
             if (titleHeight > 0f)
             {
-                CreateTitle(group.Title, root, titleHeight);
+                titleLabel = CreateTitle(group.Title, root, titleHeight);
             }
 
             RectTransform row = NewRect("Slots", root);
@@ -180,10 +184,10 @@ namespace CubeSmasher.UI.Skins
             }
 
             _contentHeight += groupHeight + _groupSpacing;
-            return new GroupUi { Root = root.gameObject, Slots = created.ToArray() };
+            return new GroupUi { Root = root.gameObject, Title = titleLabel, Slots = created.ToArray() };
         }
 
-        private void CreateTitle(string text, RectTransform parent, float height)
+        private TextMeshProUGUI CreateTitle(string text, RectTransform parent, float height)
         {
             RectTransform rect = NewRect("Title", parent);
             SetTopStretch(rect, 0f, height);
@@ -203,6 +207,7 @@ namespace CubeSmasher.UI.Skins
             var shadow = rect.gameObject.AddComponent<Shadow>();
             shadow.effectColor = UITheme.MetalDarkest;
             shadow.effectDistance = new Vector2(3f, -3f);
+            return label;
         }
 
         private CosmeticSlotView CreateSlot(CosmeticSlotData data, CosmeticSlotView prefab,
