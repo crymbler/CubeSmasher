@@ -1,8 +1,14 @@
+using CubeSmasher.Data.Configs;
 using UnityEngine;
 
 public class FractureCalculator
 {
-    private const float HpGrowthPerStage = 1.13f;
+    private readonly EconomyConfig _economy;
+
+    public FractureCalculator(EconomyConfig economy)
+    {
+        _economy = economy;
+    }
 
     // Теперь кубы делятся почти всегда, создавая хаос
     public bool TrySplit(int generation, float baseSplitChance)
@@ -20,12 +26,12 @@ public class FractureCalculator
     public float CalculateHP(int generation, int stage)
     {
         // Базовые значения для каждого поколения
-        float baseHp = 50f;
-        if (generation == 1) baseHp = 75f;
-        if (generation == 2) baseHp = 100f;
+        float baseHp = _economy.BaseHp;
+        if (generation == 1) baseHp = _economy.BaseHpGen1;
+        if (generation == 2) baseHp = _economy.BaseHpGen2;
 
         // Умножаем на сложность стадии (каждая стадия делает детали толще)
         if (stage < 1) stage = 1;
-        return baseHp * Mathf.Pow(HpGrowthPerStage, stage - 1);
+        return baseHp * Mathf.Pow(_economy.HpGrowthPerStage, stage - 1);
     }
 }

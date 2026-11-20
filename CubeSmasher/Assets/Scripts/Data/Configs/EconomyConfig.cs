@@ -18,5 +18,18 @@ namespace CubeSmasher.Data.Configs
 
         [Tooltip("Множитель награды за каждую следующую стадию. Растёт вместе с HP деталей, иначе монет на единицу HP падает")]
         public float StageRewardMultiplier = 1.14f;
+
+        [Header("ХП деталей")]
+        [Tooltip("ХП детали по умолчанию (поколение 0 и любые неописанные)")]
+        public float BaseHp = 50f;
+
+        [Tooltip("ХП осколка поколения 1")]
+        public float BaseHpGen1 = 75f;
+
+        [Tooltip("ХП осколка поколения 2")]
+        public float BaseHpGen2 = 100f;
+
+        [Tooltip("Множитель ХП за каждую следующую стадию")]
+        public float HpGrowthPerStage = 1.13f;
     }
 }

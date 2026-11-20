@@ -18,6 +18,8 @@ MonoBehaviour:
   MaxHitRadius: 6
   BaseAttackSpeed: 1
   BaseCritChance: 0.1
-  BaseCritDamage: 2
+  BaseCritDamage: 1.1
+  MaxCritChance: 0.7
+  MaxCritDamage: 1.6
   NormalDamageColor: {r: 1, g: 1, b: 1, a: 1}
   CritDamageColor: {r: 1, g: 0, b: 0, a: 1}

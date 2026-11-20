@@ -30,7 +30,7 @@ MonoBehaviour:
   PriceMultiplier: 1.39
   ValueGrowthType: 0
   BaseValue: 0
-  ValueStep: 0.1
+  ValueStep: 0.025
   ValueMultiplier: 0
   StatNameKey: stat.crit_damage
   UnitKey: 

@@ -30,6 +30,12 @@ namespace CubeSmasher.Data.Configs
         [Tooltip("Во сколько раз урон крита больше обычного")]
         public float BaseCritDamage = 2f;
 
+        [Tooltip("Потолок шанса крита, от 0 до 1")]
+        public float MaxCritChance = 0.7f;
+
+        [Tooltip("Потолок крит-урона, множитель")]
+        public float MaxCritDamage = 1.6f;
+
         [Header("Цвета всплывающих цифр")]
         public Color NormalDamageColor = Color.white;
         public Color CritDamageColor = Color.red;

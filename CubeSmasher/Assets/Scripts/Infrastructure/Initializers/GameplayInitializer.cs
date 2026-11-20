@@ -25,7 +25,7 @@ namespace CubeSmasher.Infrastructure.Initializers
         {
             ServiceLocator services = ServiceLocator.Instance;
 
-            var fractureCalculator = new FractureCalculator();
+            var fractureCalculator = new FractureCalculator(_settings.Economy);
             var decaySystem = new DecaySystem();
 
             services.TryGet(out IWallet wallet);

@@ -1,5 +1,6 @@
 using CubeSmasher.Core.Interfaces;
 using CubeSmasher.Data.Configs;
+using UnityEngine;
 
 namespace CubeSmasher.Infrastructure.Initializers
 {
@@ -30,12 +31,20 @@ namespace CubeSmasher.Infrastructure.Initializers
         {
             if (_hammerCaster == null) return;
 
+            float critChance = stats.Get(StatType.CritChance);
+            float critDamage = stats.Get(StatType.CritDamage);
+            if (_hammerConfig != null)
+            {
+                critChance = Mathf.Min(critChance, _hammerConfig.MaxCritChance);
+                critDamage = Mathf.Min(critDamage, _hammerConfig.MaxCritDamage);
+            }
+
             _hammerCaster.SetCombatStats(
                 stats.Get(StatType.HammerDamage),
                 stats.Get(StatType.HammerRadius),
                 stats.Get(StatType.AttackSpeed),
-                stats.Get(StatType.CritChance),
-                stats.Get(StatType.CritDamage));
+                critChance,
+                critDamage);
 
             // Цвета цифр урона задаются в HammerConfig
             if (_hammerConfig != null)
