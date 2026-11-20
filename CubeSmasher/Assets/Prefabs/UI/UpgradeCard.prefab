@@ -759,6 +759,7 @@ MonoBehaviour:
   _levelText: {fileID: 9179746495420953568}
   _priceText: {fileID: 5376017988492377913}
   _buyButton: {fileID: 5733745211278309254}
+  _buyText: {fileID: 7589339256914596254}
   _buttonBackground: {fileID: 8042898905960782875}
   _levelBar: {fileID: 3837236586104771555}
   _levelFill: {fileID: 7229672880596380390}
