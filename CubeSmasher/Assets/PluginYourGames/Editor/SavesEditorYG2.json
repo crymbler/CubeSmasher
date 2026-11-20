@@ -1,11 +1,6 @@
 {
-<<<<<<< Updated upstream
-    "idSave": 2456,
-    "lastSaveTime": 1795076013,
-=======
     "idSave": 2529,
     "lastSaveTime": 1795126328,
->>>>>>> Stashed changes
     "bestScore": 0,
     "isAdsRemoved": false,
     "level": 4,
@@ -20,11 +15,7 @@
     ],
     "garageOpenMigrated": true,
     "upgradeLevelMigrated": true,
-<<<<<<< Updated upstream
-    "balance": 2379782.406264376,
-=======
     "balance": 17336.863179006763,
->>>>>>> Stashed changes
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 1.0,
