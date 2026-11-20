@@ -11,6 +11,7 @@ public class UpgradeItemView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _levelText;
     [SerializeField] private TextMeshProUGUI _priceText;
     [SerializeField] private Button _buyButton;
+    [SerializeField] private TextMeshProUGUI _buyText;
     [SerializeField] private Image _buttonBackground;
 
     [Header("Ўкала уровн€")]
@@ -44,6 +45,7 @@ public class UpgradeItemView : MonoBehaviour
         if (_iconImage != null) _iconImage.sprite = icon;
         if (_nameText != null) _nameText.text = name;
         if (_levelText != null) _levelText.text = UiText.Get("shop.level", level);
+        if (_buyText != null) _buyText.text = UiText.Get("ui.buy");
 
         if (isLocked)
         {
