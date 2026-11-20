@@ -109,13 +109,6 @@ namespace CubeSmasher.Infrastructure.Initializers
             Action<int> onDetailsSaved = details => YG2.saves.stageDetails = details;
 
             // Межстраничная реклама: плагин сам держит таймер (interAdvInterval).
-            // Здесь только просим показ, если игрок не купил отключение рекламы.
-            Action<int> onStageAd = _ =>
-            {
-                if (YG2.saves.isAdsRemoved) return;
-                YG2.InterstitialAdvShow();
-            };
-
             if (subs != null)
             {
                 subs.Track(() => stageModel.OnStageCompleted += garage.RefreshForStage,
@@ -124,8 +117,6 @@ namespace CubeSmasher.Infrastructure.Initializers
                            () => stageModel.OnStageCompleted -= passiveIncome.RecalculateIncome);
                 subs.Track(() => stageModel.OnStageCompleted += onStageSaved,
                            () => stageModel.OnStageCompleted -= onStageSaved);
-                subs.Track(() => stageModel.OnStageCompleted += onStageAd,
-                           () => stageModel.OnStageCompleted -= onStageAd);
 
                 // Лидерборд по максимальной стадии. Название таблицы — как в консоли Яндекс.Игр.
                 // Плагин сам отправит результат только при включённых лидербордах и авторизации.
