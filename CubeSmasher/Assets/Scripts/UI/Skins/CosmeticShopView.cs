@@ -34,6 +34,7 @@ namespace CubeSmasher.UI.Skins
         [Tooltip("Высота крупного премиального слота. Она же высота ряда со слотами")]
         [SerializeField, Min(160f)] private float _premiumSlotHeight = 420f;
         [Tooltip("Высота заголовка группы. 0 — без заголовков")]
+        [SerializeField] private TextMeshProUGUI _headerText;
         [SerializeField, Min(0f)] private float _titleHeight = 72f;
         [Tooltip("Расстояние между группами")]
         [SerializeField] private float _groupSpacing = 40f;
@@ -71,6 +72,7 @@ namespace CubeSmasher.UI.Skins
 
         public void Open()
         {
+            if (_headerText != null) _headerText.text = UiText.Get("skins.title");
             gameObject.SetActive(true);
             SetHidden(true);
         }
