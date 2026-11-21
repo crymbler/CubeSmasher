@@ -33,5 +33,5 @@ MonoBehaviour:
   RespawnDelay: 2
   InitialPartScale: 1
   PoolCapacity: 250
-  BaseSplitChance: 0.85
-  SplitScaleMultiplier: 0.25
+  BaseSplitChance: 0.75
+  SplitScaleMultiplier: 0.65

@@ -1,10 +1,10 @@
 {
-    "idSave": 2539,
-    "lastSaveTime": 1795180363,
+    "idSave": 2647,
+    "lastSaveTime": 1795205309,
     "bestScore": 0,
     "isAdsRemoved": false,
-    "level": 4,
-    "stageDetails": 1,
+    "level": 12,
+    "stageDetails": 175,
     "hasPendingLocalSave": true,
     "lastGarageCarIndex": 3,
     "openedGarageCars": [
@@ -15,7 +15,7 @@
     ],
     "garageOpenMigrated": true,
     "upgradeLevelMigrated": true,
-    "balance": 89441.86317900676,
+    "balance": 13977.773327214287,
     "clickPerSecond": 1.0,
     "tapPower": 1.0,
     "soundVolume": 1.0,
@@ -28,9 +28,9 @@
     "upgrades": [
         {
             "id": "AttackSpeed_2",
-            "level": 0,
-            "price": 150.0,
-            "value": 0.0,
+            "level": 5,
+            "price": 1.7976931348623157e308,
+            "value": 0.29999998211860659,
             "isLocked": false
         },
         {
@@ -63,9 +63,9 @@
         },
         {
             "id": "CritChance_8",
-            "level": 0,
-            "price": 20000.0,
-            "value": 0.0,
+            "level": 1,
+            "price": 25999.999046325684,
+            "value": 0.019999999552965165,
             "isLocked": false
         },
         {
@@ -119,16 +119,16 @@
         },
         {
             "id": "HammerDamage_0",
-            "level": 0,
-            "price": 50.0,
-            "value": 0.0,
+            "level": 10,
+            "price": 1.7976931348623157e308,
+            "value": 60.0,
             "isLocked": false
         },
         {
             "id": "HammerDamage_6",
-            "level": 0,
-            "price": 8000.0,
-            "value": 0.0,
+            "level": 6,
+            "price": 35184.36813354492,
+            "value": 144.0,
             "isLocked": false
         },
         {
@@ -154,16 +154,16 @@
         },
         {
             "id": "HammerRadius_1",
-            "level": 0,
-            "price": 100.0,
-            "value": 0.0,
+            "level": 8,
+            "price": 1.7976931348623157e308,
+            "value": 0.47999998927116396,
             "isLocked": false
         },
         {
             "id": "HammerRadius_7",
-            "level": 0,
-            "price": 12000.0,
-            "value": 0.0,
+            "level": 1,
+            "price": 15359.999656677246,
+            "value": 0.05999999865889549,
             "isLocked": false
         },
         {
@@ -189,9 +189,9 @@
         },
         {
             "id": "RespawnDelay_2",
-            "level": 0,
-            "price": 300.0,
-            "value": 0.0,
+            "level": 4,
+            "price": 1.7976931348623157e308,
+            "value": -0.6000000238418579,
             "isLocked": false
         },
         {
@@ -203,9 +203,9 @@
         },
         {
             "id": "SpawnParts_3",
-            "level": 0,
-            "price": 600.0,
-            "value": 0.0,
+            "level": 1,
+            "price": 1.7976931348623157e308,
+            "value": 1.0,
             "isLocked": false
         },
         {
