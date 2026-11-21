@@ -145,7 +145,7 @@ MonoBehaviour:
       priceValue: 10
       priceCurrencyCode: YAN
       currencyImageURL: https://yastatic.net/s3/games-static/static-data/images/payments/sdk/currency-icon-s@2x.png
-      consumed: 1
+      consumed: 0
     - id: premiumDish
       title: dish title
       description: dish description
@@ -154,7 +154,7 @@ MonoBehaviour:
       priceValue: 10
       priceCurrencyCode: YAN
       currencyImageURL: https://yastatic.net/s3/games-static/static-data/images/payments/sdk/currency-icon-s@2x.png
-      consumed: 1
+      consumed: 0
   RewardedAdv:
     skipInterAdvAfterReward: 0
     labelAdvSimLabel: 0
