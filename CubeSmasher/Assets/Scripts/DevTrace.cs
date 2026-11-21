@@ -91,8 +91,7 @@ public static class DevTrace
     {
         if (_path == null)
         {
-            _path = Path.Combine(Application.persistentDataPath, "devtrace.log");
-            File.WriteAllText(_path, "");
+            _path = Path.Combine(Application.persistentDataPath, $"devtrace_{System.DateTime.Now:yyyyMMdd_HHmmss}.log");
         }
         Debug.Log("[DevTrace] " + text.TrimEnd());
         File.AppendAllText(_path, text);

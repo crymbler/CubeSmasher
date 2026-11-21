@@ -61,7 +61,7 @@ public class UpgradeItemView : MonoBehaviour
         }
         else
         {
-            _priceText.text = NumberFormat.Full(price);
+            _priceText.text = NumberFormat.Short(price);
             _buttonBackground.color = canAfford ? _affordableColor : _expensiveColor;
             _buyButton.interactable = canAfford;
         }
