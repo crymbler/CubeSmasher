@@ -22,7 +22,6 @@ public class CosmeticService : ICosmeticService
     private readonly IWallet _wallet;
     private readonly ISaveService _saveService;
     private readonly List<string> _owned = new List<string>();
-    private const string RemoveAdPurchaseId = "removeAd";
 
     /// <summary>PurchaseId -> "groupId/itemId". Заполняется при запросе покупки за яны.</summary>
     private readonly Dictionary<string, string> _pendingPurchases = new Dictionary<string, string>();
@@ -166,13 +165,6 @@ public class CosmeticService : ICosmeticService
     private void HandlePurchaseSuccess(string purchaseId)
     {
         if (string.IsNullOrEmpty(purchaseId)) return;
-
-        if (purchaseId == RemoveAdPurchaseId)
-        {
-            YG2.saves.isAdsRemoved = true;
-            YG2.SaveProgress();
-            return;
-        }
 
         string key;
         if (_pendingPurchases.TryGetValue(purchaseId, out key))
