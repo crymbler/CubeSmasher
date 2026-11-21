@@ -17,6 +17,11 @@ namespace CubeSmasher.UI
             _button.onClick.AddListener(Buy);
         }
 
+        private void Start()
+        {
+            Refresh();
+        }
+
         private void OnEnable()
         {
             YG2.onPurchaseSuccess += OnPurchaseSuccess;
@@ -57,7 +62,12 @@ namespace CubeSmasher.UI
 
         private void Buy()
         {
-            if (YG2.saves.isAdsRemoved) return;
+            if (YG2.saves.isAdsRemoved)
+            {
+                Debug.LogWarning("RemoveAds: реклама уже отключена, покупка не отправлена");
+                return;
+            }
+            Debug.Log("RemoveAds: отправка покупки " + ProductId);
             YG2.BuyPayments(ProductId);
         }
 
