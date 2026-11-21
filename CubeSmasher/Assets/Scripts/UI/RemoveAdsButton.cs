@@ -21,6 +21,7 @@ namespace CubeSmasher.UI
         {
             YG2.onPurchaseSuccess += OnPurchaseSuccess;
             YG2.onGetSDKData += Refresh;
+            YG2.onGetPayments += Refresh;
             Refresh();
         }
 
@@ -28,6 +29,7 @@ namespace CubeSmasher.UI
         {
             YG2.onPurchaseSuccess -= OnPurchaseSuccess;
             YG2.onGetSDKData -= Refresh;
+            YG2.onGetPayments -= Refresh;
         }
 
         private void OnDestroy()
@@ -37,7 +39,20 @@ namespace CubeSmasher.UI
 
         private void Refresh()
         {
+            if (!YG2.saves.isAdsRemoved && IsOwned()) GrantAdsRemoval();
             if (YG2.saves.isAdsRemoved) gameObject.SetActive(false);
+        }
+
+        private static bool IsOwned()
+        {
+            var purchase = YG2.PurchaseByID(ProductId);
+            return purchase != null && !purchase.consumed;
+        }
+
+        private static void GrantAdsRemoval()
+        {
+            YG2.saves.isAdsRemoved = true;
+            YG2.SaveProgress();
         }
 
         private void Buy()
@@ -50,8 +65,7 @@ namespace CubeSmasher.UI
         {
             if (purchasedId != ProductId) return;
 
-            YG2.saves.isAdsRemoved = true;
-            YG2.SaveProgress();
+            GrantAdsRemoval();
             Refresh();
         }
     }

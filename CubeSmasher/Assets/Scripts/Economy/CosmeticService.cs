@@ -22,6 +22,7 @@ public class CosmeticService : ICosmeticService
     private readonly IWallet _wallet;
     private readonly ISaveService _saveService;
     private readonly List<string> _owned = new List<string>();
+    private const string RemoveAdsProductId = "RemoveAd";
 
     /// <summary>PurchaseId -> "groupId/itemId". Заполняется при запросе покупки за яны.</summary>
     private readonly Dictionary<string, string> _pendingPurchases = new Dictionary<string, string>();
@@ -40,7 +41,7 @@ public class CosmeticService : ICosmeticService
 
         YG2.onPurchaseSuccess += HandlePurchaseSuccess;
         YG2.onPurchaseFailed += HandlePurchaseFailed;
-        YG2.onGetPayments += YG2.ConsumePurchases;
+        YG2.onGetPayments += ConsumeCosmeticPurchases;
     }
 
     /// <summary>
@@ -52,7 +53,7 @@ public class CosmeticService : ICosmeticService
     {
         YG2.onPurchaseSuccess -= HandlePurchaseSuccess;
         YG2.onPurchaseFailed -= HandlePurchaseFailed;
-        YG2.onGetPayments -= YG2.ConsumePurchases;
+        YG2.onGetPayments -= ConsumeCosmeticPurchases;
     }
 
     public CosmeticGroup[] Groups =>
@@ -160,6 +161,15 @@ public class CosmeticService : ICosmeticService
         _owned.Add(key);
         SaveOwned();
         Purchased?.Invoke(key);
+    }
+
+    private void ConsumeCosmeticPurchases()
+    {
+        foreach (var purchase in YG2.purchases)
+        {
+            if (purchase == null || purchase.consumed || purchase.id == RemoveAdsProductId) continue;
+            YG2.ConsumePurchaseByID(purchase.id, true);
+        }
     }
 
     private void HandlePurchaseSuccess(string purchaseId)
