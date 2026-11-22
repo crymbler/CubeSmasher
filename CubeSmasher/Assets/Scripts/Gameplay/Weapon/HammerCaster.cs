@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -30,9 +31,13 @@ public class HammerCaster : MonoBehaviour
     [SerializeField] private DamagePopup _damagePopupPrefab;
     [SerializeField] private Color _normalDamageColor = Color.white;
     [SerializeField] private Color _critDamageColor = Color.red;
+    [SerializeField] private Color _sparkColor = new Color(1f, 0.75f, 0.2f);
+    [SerializeField] private int _sparkCount = 18;
+    [SerializeField] private float _shockwaveForce = 4f;
 
     private HammerCast _cast;
     private HammerDamageText _damageText;
+    private ParticleSystem _sparks;
 
     private float _damage = 10f;
     private float _critChance;
@@ -53,6 +58,7 @@ public class HammerCaster : MonoBehaviour
             CritColor = _critDamageColor
         };
 
+        _sparks = CreateSparks();
         _cast.Hit += HandleHit;
         _swingPivot.localRotation = Quaternion.Euler(_idleAngle, 0, 0);
 
@@ -97,7 +103,19 @@ public class HammerCaster : MonoBehaviour
     private void HandleHit(Vector3 position)
     {
         Collider[] hits = Physics.OverlapSphere(position, _hitRadius, _hitMask);
-        if (hits.Length > 0) PlayHitSound();
+        if (hits.Length > 0)
+        {
+            PlayHitSound();
+            _sparks.transform.position = position;
+            _sparks.Emit(_sparkCount);
+        }
+
+        var pushed = new HashSet<Rigidbody>();
+        foreach (Collider hit in hits)
+        {
+            if (hit.attachedRigidbody == null || !pushed.Add(hit.attachedRigidbody)) continue;
+            hit.attachedRigidbody.AddExplosionForce(_shockwaveForce, position, _hitRadius, 0f, ForceMode.Impulse);
+        }
 
         // Крит бросается один раз на взмах, а не на каждую деталь: иначе при попадании
         // по трём кубам один был бы критом, а другой нет — выглядит как баг
@@ -117,6 +135,37 @@ public class HammerCaster : MonoBehaviour
     /// <summary>
     /// Звук удара играет один раз за взмах, даже если молот попал по нескольким деталям сразу.
     /// </summary>
+    private ParticleSystem CreateSparks()
+    {
+        var go = new GameObject("Sparks");
+        go.transform.SetParent(transform, false);
+        var ps = go.AddComponent<ParticleSystem>();
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        var main = ps.main;
+        main.loop = false;
+        main.playOnAwake = false;
+        main.duration = 0.5f;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(0.2f, 0.45f);
+        main.startSpeed = new ParticleSystem.MinMaxCurve(3f, 6f);
+        main.startSize = new ParticleSystem.MinMaxCurve(0.06f, 0.14f);
+        main.startColor = _sparkColor;
+        main.gravityModifier = 1f;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.stopAction = ParticleSystemStopAction.None;
+        main.maxParticles = 200;
+
+        var emission = ps.emission;
+        emission.rateOverTime = 0f;
+
+        var shape = ps.shape;
+        shape.shapeType = ParticleSystemShapeType.Sphere;
+        shape.radius = 0.1f;
+
+        go.GetComponent<ParticleSystemRenderer>().sharedMaterial = UnlockEffect.MakeMaterial(_sparkColor);
+        return ps;
+    }
+
     private void PlayHitSound()
     {
         if (!CubeSmasher.Infrastructure.ServiceLocator.Instance.TryGet(
