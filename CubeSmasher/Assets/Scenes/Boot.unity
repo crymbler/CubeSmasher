@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 9f327c06f8120874aa029411cd0352cb, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -817,18 +817,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameSceneName: CubeScene
-  _minShowSeconds: 1.5
-  _progressBar: {fileID: 165031747}
   _fallingCubePrefab: {fileID: 5355824407628037511, guid: cbbbc373236affa48a534a67555768ae, type: 3}
   _cubeCount: 60
-  _camera: {fileID: 1668246330}
-  _depth: 200
-  _areaWidth: 1
-  _bottomReserve: 0.15
   _fallSpeed: 0.55
-  _depthSpread: {x: -4, y: 6}
-  _sizeFraction: {x: 0.05, y: 0.05}
-  _fadeZone: 0.3
+  _area: {x: 8, y: 12}
+  _depthRange: {x: -2, y: 4}
+  _scaleRange: {x: 0.6, y: 1.4}
+  _progressBar: {fileID: 165031747}
+  _minShowSeconds: 1.5
 --- !u!1 &2006239557
 GameObject:
   m_ObjectHideFlags: 0

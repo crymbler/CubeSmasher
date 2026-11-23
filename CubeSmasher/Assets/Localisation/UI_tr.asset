@@ -63,7 +63,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 101328470585344
-    m_Localized: Makine {0}
+    m_Localized: "A\u015Fama {0}"
     m_Metadata:
       m_Items: []
   - m_Id: 101393566183424
@@ -127,15 +127,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430413
-    m_Localized: "KAPLAMALAR"
+    m_Localized: KAPLAMALAR
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430414
-    m_Localized: "\u00C7EK\u0130\u00C7LER"
+    m_Localized: "\xC7EK\u0130\xC7LER"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430415
-    m_Localized: "TABAKLAR"
+    m_Localized: TABAKLAR
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430416
@@ -159,15 +159,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430421
-    m_Localized: "S\u0131radan \u00E7eki\u00E7"
+    m_Localized: "S\u0131radan \xE7eki\xE7"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430422
-    m_Localized: "A\u011F\u0131r \u00E7eki\u00E7"
+    m_Localized: "A\u011F\u0131r \xE7eki\xE7"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430423
-    m_Localized: "Neon \u00E7eki\u00E7"
+    m_Localized: "Neon \xE7eki\xE7"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430424
@@ -175,43 +175,43 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430425
-    m_Localized: "Beyaz tabak"
+    m_Localized: Beyaz tabak
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430426
-    m_Localized: "Neon tabak"
+    m_Localized: Neon tabak
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430430
-    m_Localized: "AYARLAR"
+    m_Localized: AYARLAR
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430431
-    m_Localized: "M\u00FCzik"
+    m_Localized: "M\xFCzik"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430432
-    m_Localized: "Sesler"
+    m_Localized: Sesler
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430433
-    m_Localized: "Dil"
+    m_Localized: Dil
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430434
-    m_Localized: "Se\u00E7"
+    m_Localized: "Se\xE7"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430435
-    m_Localized: "Se\u00E7ildi"
+    m_Localized: "Se\xE7ildi"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430436
-    m_Localized: "Hasar"
+    m_Localized: Hasar
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430437
-    m_Localized: "Yar\u0131\u00E7ap"
+    m_Localized: "Yar\u0131\xE7ap"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430438
@@ -227,27 +227,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430441
-    m_Localized: "Par\u00E7alar"
+    m_Localized: "Par\xE7alar"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430442
-    m_Localized: "Gecikme"
+    m_Localized: Gecikme
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430443
-    m_Localized: "sn"
+    m_Localized: sn
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430444
-    m_Localized: "m"
+    m_Localized: m
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430445
-    m_Localized: "%"
+    m_Localized: '%'
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430446
-    m_Localized: "Bonus"
+    m_Localized: Bonus
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430447
@@ -255,19 +255,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430448
-    m_Localized: "Siz yokken"
+    m_Localized: Siz yokken
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430449
-    m_Localized: "{0} al"
+    m_Localized: '{0} al'
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430450
-    m_Localized: "Reklam izleyip \u00D72 al"
+    m_Localized: "Reklam izleyip \xD72 al"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430451
-    m_Localized: "Reklam {0} sonra"
+    m_Localized: Reklam {0} sonra
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430452
@@ -279,35 +279,35 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430454
-    m_Localized: "Lolipop"
+    m_Localized: Lolipop
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430455
-    m_Localized: "Premium tabak"
+    m_Localized: Premium tabak
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430456
-    m_Localized: "B"
+    m_Localized: B
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430457
-    m_Localized: "M"
+    m_Localized: M
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430458
-    m_Localized: "Mr"
+    m_Localized: Mr
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430459
-    m_Localized: "T"
+    m_Localized: T
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430460
-    m_Localized: "Ba\u015Flamak i\u00E7in k\u00FC\u00E7\u00FCk bir araba"
+    m_Localized: "Ba\u015Flamak i\xE7in k\xFC\xE7\xFCk bir araba"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430461
-    m_Localized: "G\u00FCvenilir aile sedan\u0131"
+    m_Localized: "G\xFCvenilir aile sedan\u0131"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430462
@@ -319,15 +319,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430464
-    m_Localized: "Pikap"
+    m_Localized: Pikap
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430465
-    m_Localized: "A\u00E7\u0131k kasal\u0131 pikap"
+    m_Localized: "A\xE7\u0131k kasal\u0131 pikap"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430466
-    m_Localized: "Crossover"
+    m_Localized: Crossover
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430467
@@ -335,7 +335,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430468
-    m_Localized: "Kupe"
+    m_Localized: Kupe
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430469
@@ -343,7 +343,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430470
-    m_Localized: "Station wagon"
+    m_Localized: Station wagon
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430471
@@ -351,27 +351,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430472
-    m_Localized: "SUV"
+    m_Localized: SUV
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430473
-    m_Localized: "Her yola uygun SUV"
+    m_Localized: Her yola uygun SUV
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430474
-    m_Localized: "Kabriyole"
+    m_Localized: Kabriyole
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430475
-    m_Localized: "A\u00E7\u0131l\u0131r tavanl\u0131 kabriyole"
+    m_Localized: "A\xE7\u0131l\u0131r tavanl\u0131 kabriyole"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430476
-    m_Localized: "Van"
+    m_Localized: Van
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430477
-    m_Localized: "Kargo van"
+    m_Localized: Kargo van
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430478
@@ -379,23 +379,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430479
-    m_Localized: "Ralli i\u00E7in araba"
+    m_Localized: "Ralli i\xE7in araba"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430480
-    m_Localized: "Maslkar"
+    m_Localized: Maslkar
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430481
-    m_Localized: "G\u00FC\u00E7l\u00FC maslkar"
+    m_Localized: "G\xFC\xE7l\xFC maslkar"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430482
-    m_Localized: "Spor hatchback"
+    m_Localized: Spor hatchback
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430483
-    m_Localized: "G\u00FC\u00E7l\u00FC motorlu kompakt spor hatchback"
+    m_Localized: "G\xFC\xE7l\xFC motorlu kompakt spor hatchback"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430484
@@ -407,15 +407,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430486
-    m_Localized: "Hiperkar"
+    m_Localized: Hiperkar
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430487
-    m_Localized: "Dev motorlu hiperkar"
+    m_Localized: Dev motorlu hiperkar
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430488
-    m_Localized: "Canavar kamyon"
+    m_Localized: Canavar kamyon
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430489
