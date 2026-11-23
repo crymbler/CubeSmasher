@@ -10,19 +10,19 @@ using UnityEngine.UI;
 using YG;
 
 /// <summary>
-/// Точка входа. Собирает контейнер сервисов и запускает инициализаторы
-/// в явном порядке. Сама логика живёт в инициализаторах:
-/// экономика, геймплей, оружие, UI.
+/// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+/// пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ:
+/// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ, UI.
 /// </summary>
-[DefaultExecutionOrder(-1000)] // контейнер сервисов должен быть собран раньше всех
+[DefaultExecutionOrder(-1000)] // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 public class Bootstrapper : MonoBehaviour
 {
-    [Header("Настройки")]
-    [Tooltip("Корневой конфиг игры со ссылками на тематические конфиги")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
+    [Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private GameSettings _gameSettings;
     [SerializeField] private HammerCaster _hammerCaster;
 
-    [Header("Пул и Префабы")]
+    [Header("пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private CarPart _carPartPrefab;
     [SerializeField] private Transform _poolContainer;
 
@@ -34,38 +34,39 @@ public class Bootstrapper : MonoBehaviour
     [SerializeField] private List<UpgradeConfig> _upgradeConfigs;
     [SerializeField] private Button _openShopButton;
 
-    [Header("Звук")]
-    [Tooltip("Микшер Master.mixer. Пусто — громкость ставится напрямую у AudioSource")]
+    [Header("пїЅпїЅпїЅпїЅ")]
+    [Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅ Master.mixer. пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ AudioSource")]
     [SerializeField] private UnityEngine.Audio.AudioMixer _audioMixer;
-    [Tooltip("Музыка в цикле. Можно оставить пустым")]
+    [Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private AudioClip _musicClip;
-    [Tooltip("Звук клика по умолчанию для кнопок без своего клипа (ButtonClickSound)")]
+    [Tooltip("пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (ButtonClickSound)")]
     [SerializeField] private AudioClip _clickClip;
-    [Tooltip("Звук удара молота")]
+    [Tooltip("пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private AudioClip _hammerHitClip;
-    [Tooltip("Звук открытия машины. Пусто — звук сгенерируется кодом")]
+    [Tooltip("пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private AudioClip _unlockClip;
-    [Tooltip("Звук раскола детали на осколки")]
+    [Tooltip("пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private AudioClip _splitClip;
 
-    [Header("UI - Настройки")]
-    [Tooltip("Экран настроек: громкость и язык. Пусто — кнопка настроек не работает")]
+    [Header("UI - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
+    [Tooltip("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private CubeSmasher.Settings.SettingsView _settingsView;
     [SerializeField] private Button _openSettingsButton;
 
-    [Header("UI - Скины")]
-    [Tooltip("Экран косметики: молоты и тарелки. Пусто — кнопка скинов не работает")]
+    [Header("UI - пїЅпїЅпїЅпїЅпїЅ")]
+    [Tooltip("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private CubeSmasher.UI.Skins.CosmeticShopView _cosmeticShopView;
     [SerializeField] private Button _openSkinsButton;
     [SerializeField] private CubeSmasher.UI.LocalizedUiLabel[] _navLabels;
 
-    [Header("UI - Гараж")]
+    [Header("UI - пїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private GarageView _garageView;
     [SerializeField] private Button _openGarageButton;
 
     private ServiceLocator _services;
     private PartLifecycleService _partLifecycle;
     private OfflineEarningsService _offlineEarnings;
+    [SerializeField] private OfflineRewardPopup _offlineRewardPopup;
     private IPassiveIncomeService _passiveIncome;
     private TopHudPresenter _topHudPresenter;
     private ShopPresenter _shopPresenter;
@@ -81,21 +82,21 @@ public class Bootstrapper : MonoBehaviour
             return;
         }
 
-        // Пустой список вместо null: магазин и презентер по нему итерируются
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ null: пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (_upgradeConfigs == null)
         {
             _upgradeConfigs = new List<UpgradeConfig>();
         }
 
-        // Сохранение — самый первый сервис, остальные на него опираются
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         var saveService = new YandexSaveService();
         _services.Register<ISaveService>(saveService);
 
-        // Все подписки UI пишутся сюда, чтобы OnDestroy снял их разом
+        // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ UI пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ OnDestroy пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         _subscriptions = new Subscriptions();
         _services.Register(_subscriptions);
 
-        // Порядок инициализации явный: экономика, геймплей, оружие, UI
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ, UI
         var initializers = new List<IGameInitializer>
         {
             new EconomyInitializer(_gameSettings, saveService, _upgradeConfigs),
@@ -113,7 +114,7 @@ public class Bootstrapper : MonoBehaviour
             initializer.Initialize();
         }
 
-        // Ссылки для кадрового обновления и очистки
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         _services.TryGet(out _partLifecycle);
         _services.TryGet(out _offlineEarnings);
         _services.TryGet(out _passiveIncome);
@@ -128,10 +129,13 @@ public class Bootstrapper : MonoBehaviour
             stageModel.ForceUpdateUI();
         }
 
-        // Доход за время отсутствия
-        _offlineEarnings?.Apply();
+        // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        if (_offlineEarnings != null)
+        {
+            _offlineRewardPopup?.Show(_offlineEarnings.GetPendingReward());
+        }
 
-        // Первая волна деталей
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         _partLifecycle?.Begin();
 
         StartCoroutine(AutoSaveRoutine());
@@ -147,17 +151,17 @@ public class Bootstrapper : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Отписка от событий YG2: они статические и переживают смену сцены,
-        // иначе после перезапуска сервис получал бы чужие покупки
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ YG2: пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ,
+        // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (_services != null && _services.TryGet(out CosmeticService cosmetics))
         {
             cosmetics.Dispose();
         }
 
-        // Сначала снимаем подписки UI (в обратном порядке), затем презентеры и контейнер
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ UI (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ), пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         _subscriptions?.Dispose();
 
-        // Презентер гаража не хранится полем: достаём его из контейнера, пока он ещё зарегистрирован
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (_services != null && _services.TryGet(out GaragePresenter garagePresenter))
         {
             garagePresenter.Dispose();

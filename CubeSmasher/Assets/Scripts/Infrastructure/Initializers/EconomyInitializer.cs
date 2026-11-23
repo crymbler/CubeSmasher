@@ -63,7 +63,7 @@ namespace CubeSmasher.Infrastructure.Initializers
                 services.Register(cosmetics); // нужен Dispose для отписки от событий YG2
             }
 
-            var offlineEarnings = new OfflineEarningsService(wallet, passiveIncome);
+            var offlineEarnings = new OfflineEarningsService(passiveIncome);
             services.Register(offlineEarnings);
 
             // Пассивный доход идёт в кошелёк

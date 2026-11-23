@@ -18,6 +18,7 @@ namespace YG
         public long lastSaveTime;
         public int bestScore = 0;
         public bool isAdsRemoved = false;
+        public double pendingOfflineReward = 0;
 
         public int level = 0;
 
