@@ -422,6 +422,18 @@ MonoBehaviour:
     m_Localized: "Her \u015Feyi ezen canavar kamyon"
     m_Metadata:
       m_Items: []
+  - m_Id: 10815594230472704
+    m_Localized: "\xC7evrimd\u0131\u015F\u0131 gelir"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10817741974167552
+    m_Localized: "Reklams\u0131z al"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10817847989395456
+    m_Localized: "Reklamlar\u0131 izleyin"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

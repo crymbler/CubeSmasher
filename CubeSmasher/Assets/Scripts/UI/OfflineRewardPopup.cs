@@ -12,7 +12,6 @@ public class OfflineRewardPopup : MonoBehaviour
     [SerializeField] private GameObject _panel;
     [SerializeField] private TextMeshProUGUI _amountText;
     [SerializeField] private TextMeshProUGUI _captionText;
-    [SerializeField] private TextMeshProUGUI _doubleAmountText;
     [SerializeField] private Button _claimButton;
     [SerializeField] private Button _doubleButton;
 
@@ -49,7 +48,6 @@ public class OfflineRewardPopup : MonoBehaviour
 
         _amount = amount;
         _amountText.text = NumberFormat.Short(amount);
-        _doubleAmountText.text = NumberFormat.Short(amount * 2);
         _claimButton.interactable = true;
         _doubleButton.interactable = true;
         _panel.SetActive(true);
