@@ -255,15 +255,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430448
-    m_Localized: Siz yokken
+    m_Localized: "\u00C7evrimd\u0131\u015F\u0131 gelir"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430449
-    m_Localized: al
+    m_Localized: "Reklams\u0131z al"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430450
-    m_Localized: "Reklam izleyip \xD72 al"
+    m_Localized: "Reklam izle, \u00D72 al"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430451

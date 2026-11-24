@@ -255,15 +255,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430448
-    m_Localized: While you were away
+    m_Localized: "Offline income"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430449
-    m_Localized: Collect
+    m_Localized: "Collect without ad"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430450
-    m_Localized: "Collect \xD72 for an ad"
+    m_Localized: "Watch ad and get \u00D72"
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430451
