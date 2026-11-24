@@ -84,10 +84,9 @@ public static class OfflineRewardPopupBuilder
 
     private static void AttachLocalized(TMP_Text label, string key)
     {
-        var component = label.gameObject.AddComponent<LocalizedUiLabel>();
+        var component = label.gameObject.AddComponent<UiTextLabel>();
         var so = new SerializedObject(component);
-        so.FindProperty("_label").objectReferenceValue = label;
-        so.FindProperty("_key").stringValue = key;
+        so.FindProperty("Key").stringValue = key;
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
