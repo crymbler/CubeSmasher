@@ -259,7 +259,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430449
-    m_Localized: Collect {0}
+    m_Localized: Collect
     m_Metadata:
       m_Items: []
   - m_Id: 401315427430450
@@ -420,18 +420,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 401315427430489
     m_Localized: A monster truck that crushes everything
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10815594230472704
-    m_Localized: Offline income
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10817741974167552
-    m_Localized: Collect without ad
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10817847989395456
-    m_Localized: Watch ad and get
     m_Metadata:
       m_Items: []
   references:

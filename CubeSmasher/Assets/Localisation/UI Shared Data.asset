@@ -419,20 +419,6 @@ MonoBehaviour:
     m_Key: car.monster.desc
     m_Metadata:
       m_Items: []
-  - m_Id: 10815594230472704
-    m_Key: "ad.offline.title\t"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10817741974167552
-    m_Key: 'ad.offline.take
-
-'
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10817847989395456
-    m_Key: 'ad.offline.double '
-    m_Metadata:
-      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
