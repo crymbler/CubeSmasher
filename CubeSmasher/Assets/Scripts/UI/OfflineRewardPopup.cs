@@ -11,7 +11,6 @@ public class OfflineRewardPopup : MonoBehaviour
 
     [SerializeField] private GameObject _panel;
     [SerializeField] private TextMeshProUGUI _amountText;
-    [SerializeField] private TextMeshProUGUI _captionText;
     [SerializeField] private Button _claimButton;
     [SerializeField] private Button _doubleButton;
 
